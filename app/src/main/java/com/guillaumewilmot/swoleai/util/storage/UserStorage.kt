@@ -8,7 +8,7 @@ class UserStorage {
     fun exercises(context: Context?) = context?.fromStorage<List<Int>>(EXERCISES) ?: listOf() //TODO : Fix
 
     companion object {
-        const val USER = "user"
-        const val EXERCISES = "exercises"
+        const val USER = "storage_user"
+        const val EXERCISES = "storage_exercises"
     }
 }

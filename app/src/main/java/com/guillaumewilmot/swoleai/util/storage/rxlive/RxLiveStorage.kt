@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.util.storage.live
+package com.guillaumewilmot.swoleai.util.storage.rxlive
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,11 +8,12 @@ import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.util.storage.SimpleStorage
 import com.guillaumewilmot.swoleai.util.storage.UserStorage
 
-object LiveStorage {
+object RxLiveStorage {
     /**
      * Implementation
      */
 
+    //Keep reference to avoid garbage collection
     lateinit var updateListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     fun registerUpdateListener(context: Context) {
@@ -35,16 +36,18 @@ object LiveStorage {
      */
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val dataHolder = DataHolder()
+    val dataHolder by lazy { DataHolder() }
+
+//    fun dataHolder() = dataHolder
 
     class DataHolder {
-        private val userField: StoredLiveData<UserModel?> = StoredLiveData(UserStorage.USER, SimpleStorage.user::user)
-        private val exercisesField: StoredLiveData<List<Int>> = StoredLiveData(UserStorage.EXERCISES, SimpleStorage.user::exercises)
+        private val userField: RxStoredLiveDataNullable<UserModel> = RxStoredLiveDataNullable(UserStorage.USER, SimpleStorage.user::user)
+        private val exercisesField: RxStoredLiveData<List<Int>> = RxStoredLiveData(UserStorage.EXERCISES, SimpleStorage.user::exercises)
 
         fun user(context: Context) = userField.get(context)
         fun exercises(context: Context) = exercisesField.get(context)
 
-        val dataList: List<StoredLiveData<*>> = listOf(
+        val dataList: List<RxStoredLiveData<*>> = listOf(
             userField,
             exercisesField
         )

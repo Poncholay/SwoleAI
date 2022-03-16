@@ -24,7 +24,7 @@ object SimpleStorage {
 
     fun fromStorage(context: Context, key: String, type: Type): Any? = try {
         val text = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-            .getString("storage_$key", "null")
+            .getString(key, "null")
 
         text?.let {
             Log.d("Storage", "Retrieved in shared preferences $key")
@@ -42,7 +42,7 @@ object SimpleStorage {
             val text = gson.toJson(this)
             PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
                 .edit()
-                .putString("storage_$key", text)
+                .putString(key, text)
                 .commit()
 
             Log.d("Storage", "Stored $key: $text")

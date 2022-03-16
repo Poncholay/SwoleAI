@@ -36,12 +36,17 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
-
     implementation 'com.google.code.gson:gson:2.8.8'
+
+    //Rx
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.3'
+    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
     // Unit test
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'io.mockk:mockk-android:1.12.0'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'io.mockk:mockk:1.12.2'
     testImplementation 'com.github.kxfeng:livedata-ext:1.0.0'
 
     //Implementation test
