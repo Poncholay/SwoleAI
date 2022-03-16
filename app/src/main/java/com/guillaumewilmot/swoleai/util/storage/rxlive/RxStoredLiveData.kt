@@ -11,7 +11,10 @@ open class RxStoredLiveData<T : Any>(
     constructor(
         key: String,
         initializer: KFunction1<Context?, T>
-    ) : this(key, { context -> initializer(context) })
+    ) : this(
+        key = key,
+        initializer = { context -> initializer(context) }
+    )
 
     private lateinit var field: BehaviorSubject<T>
     private fun isInitialized(): Boolean = ::field.isInitialized

@@ -14,7 +14,7 @@ object RxLiveStorage {
      */
 
     //Keep reference to avoid garbage collection
-    lateinit var updateListener: SharedPreferences.OnSharedPreferenceChangeListener
+    private lateinit var updateListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     fun registerUpdateListener(context: Context) {
         updateListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -37,8 +37,6 @@ object RxLiveStorage {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val dataHolder by lazy { DataHolder() }
-
-//    fun dataHolder() = dataHolder
 
     class DataHolder {
         private val userField: RxStoredLiveDataNullable<UserModel> = RxStoredLiveDataNullable(UserStorage.USER, SimpleStorage.user::user)
