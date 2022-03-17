@@ -20,6 +20,7 @@ object RxLiveStorage {
         updateListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             reloadStorage(context, key)
         }
+        @Suppress("DEPRECATION")
         PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(updateListener)
     }
 

@@ -1,10 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+
+    <!-- Theme colors -->
+    <color name="main">#911e28</color>
+    <color name="mainLight">#A74B53</color>
+    <color name="mainDark">#65151C</color>
+    <color name="secondary">#f50057</color>
+    <color name="secondaryLight">#F73378</color>
+    <color name="secondaryDark">#AB003C</color>
+
+    <color name="transparent">#00000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dark_grey0">#9d9d9c</color>
+    <color name="dark_grey2">#636366</color>
+    <color name="dark_grey3">#48484a</color>
+    <color name="dark_grey4">#3A3A3C</color>
+    <color name="dark_grey5">#2C2C2E</color>
+    <color name="dark_grey6">#1c1c1e</color>
+
+    <color name="grey80">#333333</color>
+    <color name="grey50">#7F7F7F</color>
+    <color name="grey30">#B2B2B2</color>
+    <color name="grey15">#D9D9D9</color>
+    <color name="grey5">#F2F2F2</color>
+    <color name="grey3">#F7F7F7</color>
+
+    <color name="error">#f44336</color>
+    <color name="warning">#ff9800</color>
+    <color name="info">#2196f3</color>
+    <color name="success">#4caf50</color>
+    <color name="divider">#000000F0</color>
+
+    <!-- Light-Night dependant -->
+    <color name="colorPrimary">@color/main</color>
+    <color name="colorPrimaryVariant">@color/mainDark</color>
+    <color name="colorOnPrimary">@color/white</color>
+    <color name="colorSecondary">@color/secondaryLight</color>
+    <color name="colorSecondaryVariant">@color/secondaryDark</color>
+    <color name="colorOnSecondary">@color/black</color>
+
+    <color name="textPrimary">@color/black</color>
+    <color name="textSecondary">@color/grey80</color>
+    <color name="textTertiary">@color/grey50</color>
+    <color name="textQuaternary">@color/grey30</color>
+
+    <color name="colorDisabled">@color/dark_grey0</color>
+
+    <!-- Component colors -->
+    <color name="iconTint">@color/white</color>
+    <color name="backgroundIcon">@color/colorPrimary</color>
+    <color name="backgroundCardView">@color/white</color>
+    <color name="backgroundDefault">@color/grey3</color>
+    <color name="backgroundButtonPrimary">@color/colorPrimary</color>
+    <color name="backgroundButtonSecondary">@color/white</color>
 </resources>

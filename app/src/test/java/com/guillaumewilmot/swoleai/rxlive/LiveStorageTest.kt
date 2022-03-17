@@ -6,7 +6,7 @@ import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.util.storage.UserStorage
 import com.guillaumewilmot.swoleai.util.storage.rxlive.Optional
 import com.guillaumewilmot.swoleai.util.storage.rxlive.RxLiveStorage
-import com.guillaumewilmot.swoleai.util.storage.rxlive.carry
+import com.guillaumewilmot.swoleai.util.storage.rxlive.asOptional
 import com.guillaumewilmot.swoleai.util.storage.toStorage
 import io.mockk.spyk
 import io.mockk.verifySequence
@@ -23,10 +23,10 @@ class RxLiveStorageTest : BaseUnitTest() {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     private val mockUser: UserModel = UserModel()
-    private val mockUserOptional: Optional<UserModel> = mockUser.carry()
+    private val mockUserOptional: Optional<UserModel> = mockUser.asOptional()
 
     private val nullUser: UserModel? = null
-    private val nullUserOptional: Optional<UserModel> = null.carry()
+    private val nullUserOptional: Optional<UserModel> = null.asOptional()
 
     private val mockExercises = listOf(1)
 

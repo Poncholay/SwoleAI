@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- region Margin size -->
+    <dimen name="marginRegular">24dp</dimen>
+    <dimen name="marginSmall">16dp</dimen>
+
+    <!-- region Text size -->
+    <dimen name="textParagraphTitleBig">24sp</dimen>
+    <dimen name="textParagraphTitle">20sp</dimen>
+    <dimen name="textParagraphTitleSmall">18sp</dimen>
+    <dimen name="textParagraphPrimary">16sp</dimen>
+    <dimen name="textParagraphRegular">14sp</dimen>
+    <dimen name="textParagraphSecondary">12sp</dimen>
+    <dimen name="textParagraphExtraSmall">10sp</dimen>
+
+    <!-- region Text size -->
+    <dimen name="onboardingIconSize">80dp</dimen>
+    <dimen name="onboardingIconMarginTop">100dp</dimen>
+    <dimen name="buttonHeight">48dp</dimen>
+</resources>

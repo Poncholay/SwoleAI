@@ -5,14 +5,14 @@ import kotlin.reflect.KFunction1
 
 open class RxStoredLiveDataNullable<T : Any>(
     key: String,
-    nonNullInitializer: KFunction1<Context?, T?>
+    nullableInitializer: KFunction1<Context?, T?>
 ) : RxStoredLiveData<Optional<T>>(
     key = key,
     initializer = { context ->
-        nonNullInitializer(context).carry()
+        nullableInitializer(context).asOptional()
     }
 )
 
 data class Optional<T>(val value: T?)
 
-fun <T> T?.carry() = Optional(this)
+fun <T> T?.asOptional() = Optional(this)

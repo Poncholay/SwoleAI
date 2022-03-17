@@ -2,15 +2,70 @@
     <!-- Base application theme. -->
     <style name="Theme.SwoleAi" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/main</item>
+        <item name="colorPrimaryVariant">@color/mainDark</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/secondaryLight</item>
+        <item name="colorSecondaryVariant">@color/secondaryDark</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <!-- Text -->
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/textSecondary</item>
+        <item name="android:textColorTertiary">@color/textTertiary</item>
+        <item name="android:textColor">@color/textPrimary</item>
+
+        <!--  Status bar-->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="windowActionModeOverlay">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <!-- Default Components -->
+        <item name="cardViewStyle">@style/CardViewStyle</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+    </style>
+
+    <style name="CardViewStyle" parent="CardView">
+        <item name="cardBackgroundColor">@color/backgroundCardView</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/textParagraphRegular</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <!-- Components -->
+
+    <style name="ButtonMainStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:background">@drawable/background_button_primary</item>
+        <item name="android:textSize">@dimen/textParagraphRegular</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_height">@dimen/buttonHeight</item>
+    </style>
+
+    <style name="ButtonSecondaryStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/textParagraphRegular</item>
+        <item name="android:background">@drawable/background_button_secondary</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_height">@dimen/buttonHeight</item>
     </style>
 </resources>

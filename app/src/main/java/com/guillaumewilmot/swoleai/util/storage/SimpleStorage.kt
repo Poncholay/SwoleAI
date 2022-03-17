@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
+@Suppress("DEPRECATION")
 object SimpleStorage {
     private val gson by lazy { Gson() }
 

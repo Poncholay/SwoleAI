@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/topImageContainer"
+            android:layout_width="@dimen/onboardingIconSize"
+            android:layout_height="@dimen/onboardingIconSize"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/onboardingIconMarginTop"
+            android:background="@drawable/background_icon_round"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/topImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_hand"
+                app:tint="@color/iconTint" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/greetingText"
+            style="@style/TextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="36dp"
+            android:text="@string/app_onboarding_greeting_text"
+            android:textAlignment="center"
+            android:textFontWeight="600"
+            android:textSize="@dimen/textParagraphTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topImageContainer" />
+
+        <TextView
+            android:id="@+id/descriptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginRegular"
+            android:layout_marginTop="@dimen/marginRegular"
+            android:layout_marginEnd="@dimen/marginRegular"
+            android:gravity="center"
+            android:text="@string/app_onboarding_description_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/greetingText" />
+
+        <com.afollestad.viewpagerdots.DotsIndicator
+            android:id="@+id/viewPagerDots"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_marginBottom="80dp"
+            app:dot_drawable="@drawable/onboarding_viewpager_indicator_selected"
+            app:dot_drawable_unselected="@drawable/onboarding_viewpager_indicator_unselected"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.guillaumewilmot.swoleai.view.AnimatedButton
+            android:id="@+id/continueButton"
+            style="@style/ButtonMainStyle"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/marginRegular"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/app_onboarding_greeting_continue_button_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewPagerDots"
+            app:layout_constraintVertical_bias="1.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

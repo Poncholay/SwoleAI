@@ -43,6 +43,9 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
+    //UI
+    implementation 'com.afollestad:viewpagerdots:1.0.0'
+
     // Unit test
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
