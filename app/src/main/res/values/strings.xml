@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SwoleAi</string>
-    <string name="app_onboarding_description_text">Hey there, you tryna get swole? I\'m here to help. I just need a bit of information about you to get started.</string>
+    <string name="app_onboarding_description_text">So you wanna get swole? I\'m here to help.\nI\'ll just need to ask you a few questions about yourself so I can get started.</string>
     <string name="app_onboarding_greeting_text">Hi there</string>
     <string name="app_onboarding_greeting_continue_button_text">Let\'s get Swole</string>
 </resources>

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".SwoleAiApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,20 +14,16 @@
         android:theme="@style/Theme.SwoleAi">
 
         <activity
-            android:name=".features.splash.SplashActivity"
+            android:name=".features.home.HomeActivity"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.App.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".features.home.HomeActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".features.onboarding.OnboardingActivity"

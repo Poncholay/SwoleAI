@@ -6,13 +6,16 @@ import android.os.PersistableBundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.afollestad.viewpagerdots.DotsIndicator
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.features.home.HomeActivity
 import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.databinding.ActivityOnboardingBinding
 import com.guillaumewilmot.swoleai.features.onboarding.greeting.OnboardingGreetingFragment
+import dagger.hilt.android.AndroidEntryPoint
 
-class OnboardingActivity : ParentActivity() {
+@AndroidEntryPoint
+class OnboardingActivity : ParentActivity(), AttachViewPagerIndicator {
 
     private lateinit var binding: ActivityOnboardingBinding
 
@@ -30,26 +33,17 @@ class OnboardingActivity : ParentActivity() {
         )
     }
 
-    enum class Step {
-        GREETING,
-        ENTER_NAME,
-        ENTER_PHONE,
-        ENTER_BIRTHDATE,
-        ENTER_EMERGENCY
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
-
-        //TODO : Just trying null safety
-        binding.viewPager.offscreenPageLimit = Step.values().size
-
         setContentView(binding.root)
 
-        setContentView(R.layout.activity_onboarding)
         setupViewpager()
+    }
+
+    override fun attachIndicator(dotsIndicator: DotsIndicator) {
+        dotsIndicator.attachViewPager(binding.viewPager)
     }
 
     private fun setupViewpager() {
@@ -102,5 +96,17 @@ class OnboardingActivity : ParentActivity() {
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(position: Int): Fragment = createFragment(position)
         override fun getCount() = remainingSteps.size
+    }
+
+    /**
+     * Subclasses
+     */
+
+    enum class Step {
+        GREETING,
+        ENTER_NAME,
+        ENTER_PHONE,
+        ENTER_BIRTHDATE,
+        ENTER_EMERGENCY
     }
 }

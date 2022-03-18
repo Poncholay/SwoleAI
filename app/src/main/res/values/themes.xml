@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.SwoleAi" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.SwoleAi" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/main</item>
         <item name="colorPrimaryVariant">@color/mainDark</item>
@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="android:colorBackground">@color/backgroundDefault</item>
 
         <!-- Text -->
         <item name="android:textColorPrimary">@color/textPrimary</item>
@@ -32,6 +34,15 @@
         <item name="android:textViewStyle">@style/TextViewStyle</item>
     </style>
 
+    <!-- Splash -->
+    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/main</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- <item name="windowSplashScreenAnimationDuration">200</item>  -->
+        <item name="postSplashScreenTheme">@style/Theme.SwoleAi</item>
+    </style>
+
+    <!-- Components -->
     <style name="CardViewStyle" parent="CardView">
         <item name="cardBackgroundColor">@color/backgroundCardView</item>
     </style>
@@ -43,8 +54,7 @@
         <item name="android:textColor">@color/textPrimary</item>
     </style>
 
-    <!-- Components -->
-
+    <!-- Default components -->
     <style name="ButtonMainStyle" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textFontWeight">400</item>

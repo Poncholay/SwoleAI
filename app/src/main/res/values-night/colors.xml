@@ -8,15 +8,16 @@
     <color name="colorSecondaryVariant">@color/secondaryLight</color>
     <color name="colorOnSecondary">@color/black</color>
 
-    <color name="textPrimary">@color/black</color>
-    <color name="textSecondary">@color/grey80</color>
-    <color name="textTertiary">@color/grey50</color>
-    <color name="textQuaternary">@color/grey30</color>
+    <color name="textPrimary">@color/white</color>
+    <color name="textSecondary">#e0e0e0</color>
+    <color name="textTertiary">#A0A0A0</color>
+    <color name="textQuaternary">#6C6C6C</color>
 
     <color name="colorDisabled">@color/dark_grey0</color>
 
     <!-- Component colors -->
     <color name="iconTint">@color/colorPrimary</color>
+    <color name="backgroundIcon">@color/transparent</color>
     <color name="backgroundCardView">@color/dark_grey6</color>
     <color name="backgroundDefault">@color/black</color>
     <color name="backgroundButtonPrimary">@color/colorPrimary</color>

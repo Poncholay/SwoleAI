@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
+import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -42,9 +43,9 @@ object SimpleStorage {
         obj.apply {
             val text = gson.toJson(this)
             PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-                .edit()
-                .putString(key, text)
-                .commit()
+                .edit(commit = true) {
+                    putString(key, text)
+                }
 
             Log.d("Storage", "Stored $key: $text")
         }
