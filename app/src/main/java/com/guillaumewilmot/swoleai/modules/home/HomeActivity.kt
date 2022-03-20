@@ -27,7 +27,10 @@ class HomeActivity :
         configureSplashscreen()
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
+        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java].apply {
+            titleText.compose(lifecycleProvider.bindToLifecycle())
+                .subscribe { binding.title.text = it }
+        }
     }
 
     override fun onResume() {
@@ -49,16 +52,7 @@ class HomeActivity :
     }
 
     private fun redirectToOnboarding() {
-        Log.d(componentName.className, "redirectToOnboarding")
-        binding.hello.setOnClickListener {
-            startActivity(
-                Intent(
-                    this,
-                    OnboardingActivity::class.java
-                )
-            )
-        }
-//        startActivity(Intent(this, OnboardingActivity::class.java))
+        startActivity(Intent(this, OnboardingActivity::class.java))
     }
 
     private fun configureSplashscreen() {

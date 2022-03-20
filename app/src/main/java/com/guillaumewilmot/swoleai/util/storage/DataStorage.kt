@@ -14,7 +14,9 @@ import com.guillaumewilmot.swoleai.util.storage.rxlive.Optional
 import com.guillaumewilmot.swoleai.util.storage.rxlive.asOptional
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.reflect.Type
 
@@ -22,7 +24,10 @@ import java.lang.reflect.Type
 class DataStorage constructor(
     private val applicationContext: Context
 ) {
-    private val Context.rxDataStore: RxDataStore<Preferences> by rxPreferencesDataStore(name = "AppStorage")
+    private val Context.rxDataStore: RxDataStore<Preferences> by rxPreferencesDataStore(
+        name = "AppStorage",
+        scheduler = Schedulers.single()
+    )
     private val gson by lazy { Gson() }
 
     private inline fun <reified T> gsonDeserializeType(): Type = object : TypeToken<T>() {}.type
@@ -53,14 +58,22 @@ class DataStorage constructor(
             }
     }
 
+    private fun <T : Any> fromStorageWithType(
+        key: String,
+        type: Type
+    ): Flowable<Optional<T>> {
+        return getStringRx(key).map {
+            it.value?.let { stringValue ->
+                Log.e("DataStorage", "value: $stringValue")
+                fromJson<T>(stringValue, type)
+            }.asOptional()
+        }
+    }
+
     private inline fun <reified T : Any> fromStorage(
         dataDefinition: DataDefinition
     ): Flowable<Optional<T>> {
-        return getStringRx(dataDefinition.key).map {
-            it.value?.let { stringValue ->
-                fromJson<T>(stringValue, gsonDeserializeType<T>())
-            }.asOptional()
-        }
+        return fromStorageWithType(dataDefinition.key, gsonDeserializeType<T>())
     }
 
     private inline fun <reified T : Any> fromStorageOrDefault(
@@ -111,7 +124,7 @@ class DataStorage constructor(
 
     inner class DataHolder {
         val userField: Flowable<Optional<UserModel>> by lazy {
-            this@DataStorage.fromStorage(DataDefinition.USER)
+            this@DataStorage.fromStorage<UserModel>(DataDefinition.USER)
         }
         val exercisesField: Flowable<List<Int>> by lazy {
             this@DataStorage.fromStorageOrDefault(DataDefinition.EXERCISES, listOf())
