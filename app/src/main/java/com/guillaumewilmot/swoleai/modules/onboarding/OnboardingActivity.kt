@@ -1,23 +1,23 @@
-package com.guillaumewilmot.swoleai.features.onboarding
+package com.guillaumewilmot.swoleai.modules.onboarding
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.afollestad.viewpagerdots.DotsIndicator
-import com.guillaumewilmot.swoleai.R
-import com.guillaumewilmot.swoleai.features.home.HomeActivity
 import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.databinding.ActivityOnboardingBinding
-import com.guillaumewilmot.swoleai.features.onboarding.greeting.OnboardingGreetingFragment
+import com.guillaumewilmot.swoleai.modules.home.HomeActivity
+import com.guillaumewilmot.swoleai.modules.onboarding.greeting.OnboardingGreetingFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class OnboardingActivity : ParentActivity(), AttachViewPagerIndicator {
-
-    private lateinit var binding: ActivityOnboardingBinding
+class OnboardingActivity :
+    ParentActivity<ActivityOnboardingBinding>(ActivityOnboardingBinding::inflate),
+    AttachViewPagerIndicator {
 
     private val pagerAdapter by lazy {
         ViewPagerAdapter(supportFragmentManager)
@@ -35,10 +35,6 @@ class OnboardingActivity : ParentActivity(), AttachViewPagerIndicator {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityOnboardingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         setupViewpager()
     }
 
@@ -93,7 +89,8 @@ class OnboardingActivity : ParentActivity(), AttachViewPagerIndicator {
 //        else -> OnboardingGreetingFragment().also { navigateToHomeActivity() }
     }
 
-    internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    internal inner class ViewPagerAdapter(manager: FragmentManager) :
+        FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getItem(position: Int): Fragment = createFragment(position)
         override fun getCount() = remainingSteps.size
     }

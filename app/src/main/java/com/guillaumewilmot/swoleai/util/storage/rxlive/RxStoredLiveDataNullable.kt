@@ -1,6 +1,7 @@
 package com.guillaumewilmot.swoleai.util.storage.rxlive
 
 import android.content.Context
+import com.google.gson.annotations.SerializedName
 import kotlin.reflect.KFunction1
 
 open class RxStoredLiveDataNullable<T : Any>(
@@ -13,6 +14,9 @@ open class RxStoredLiveDataNullable<T : Any>(
     }
 )
 
-data class Optional<T>(val value: T?)
+data class Optional<T>(
+    @SerializedName("value")
+    val value: T?
+)
 
 fun <T> T?.asOptional() = Optional(this)

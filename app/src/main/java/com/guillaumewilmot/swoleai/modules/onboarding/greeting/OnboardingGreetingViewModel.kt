@@ -1,12 +1,9 @@
-package com.guillaumewilmot.swoleai.features.onboarding.greeting
+package com.guillaumewilmot.swoleai.modules.onboarding.greeting
 
 import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
 @HiltViewModel

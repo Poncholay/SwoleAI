@@ -74,3 +74,11 @@ inline fun <reified T> Context.fromStorage(key: String): T? = try {
     e.printStackTrace()
     null
 }
+
+//For debug
+inline fun <reified T> T?.toJson() = try {
+    Gson().toJson(this)
+} catch (e: Exception) {
+    e.printStackTrace()
+    "exception"
+}

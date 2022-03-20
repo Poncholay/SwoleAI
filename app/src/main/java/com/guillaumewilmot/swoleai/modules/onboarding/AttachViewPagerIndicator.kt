@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.features.onboarding
+package com.guillaumewilmot.swoleai.modules.onboarding
 
 import com.afollestad.viewpagerdots.DotsIndicator
 

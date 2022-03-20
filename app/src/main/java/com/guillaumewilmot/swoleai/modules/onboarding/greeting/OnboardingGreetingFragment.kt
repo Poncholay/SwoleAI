@@ -1,11 +1,11 @@
-package com.guillaumewilmot.swoleai.features.onboarding.greeting
+package com.guillaumewilmot.swoleai.modules.onboarding.greeting
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingGreetingBinding
-import com.guillaumewilmot.swoleai.features.onboarding.AttachViewPagerIndicator
+import com.guillaumewilmot.swoleai.modules.onboarding.AttachViewPagerIndicator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

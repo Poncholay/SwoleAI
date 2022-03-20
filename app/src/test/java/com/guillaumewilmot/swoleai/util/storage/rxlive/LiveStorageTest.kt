@@ -1,12 +1,9 @@
-package com.guillaumewilmot.swoleai.rxlive
+package com.guillaumewilmot.swoleai.util.storage.rxlive
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.guillaumewilmot.swoleai.BaseUnitTest
 import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.util.storage.UserStorage
-import com.guillaumewilmot.swoleai.util.storage.rxlive.Optional
-import com.guillaumewilmot.swoleai.util.storage.rxlive.RxLiveStorage
-import com.guillaumewilmot.swoleai.util.storage.rxlive.asOptional
 import com.guillaumewilmot.swoleai.util.storage.toStorage
 import io.mockk.spyk
 import io.mockk.verifySequence
