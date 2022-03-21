@@ -23,8 +23,8 @@ class DataStorage constructor(
     private val applicationContext: Context
 ) {
     private val Context.rxDataStore: RxDataStore<Preferences> by rxPreferencesDataStore(
-        name = "AppStorage",
-        scheduler = Schedulers.single()
+        name = "AppStorage", //Down the road it might be worth it to open more than one file
+        scheduler = Schedulers.single() //Allows save operation to be done in order
     )
     private val gson by lazy { Gson() }
 
@@ -32,7 +32,7 @@ class DataStorage constructor(
     private fun <T> fromJson(json: String, t: Type): T? = try {
         gson.fromJson<T>(json, t)
     } catch (e: Exception) {
-//        e.printStackTrace()
+        e.printStackTrace()
         null
     }
 
@@ -44,6 +44,7 @@ class DataStorage constructor(
         return applicationContext.rxDataStore
             .data()
             .onErrorReturn {
+                //FIXME: Will have to handle this case at some point
                 it.printStackTrace()
                 emptyPreferences()
             }
@@ -62,7 +63,6 @@ class DataStorage constructor(
     ): Flowable<Optional<T>> {
         return getStringRx(key).map {
             it.value?.let { stringValue ->
-                Log.e("DataStorage", "value: $stringValue")
                 fromJson<T>(stringValue, type)
             }.asOptional()
         }
@@ -99,8 +99,8 @@ class DataStorage constructor(
                     Log.d("DataStorage", "Stored \"$key\": \"$value\"")
                 },
                 {
-                    it.printStackTrace()
                     Log.d("DataStorage", "Error while Storing \"$key\": \"$value\"")
+                    it.printStackTrace()
                 }
             )
         }

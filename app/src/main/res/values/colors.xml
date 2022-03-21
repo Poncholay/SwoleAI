@@ -55,4 +55,5 @@
     <color name="backgroundDefault">@color/grey3</color>
     <color name="backgroundButtonPrimary">@color/colorPrimary</color>
     <color name="backgroundButtonSecondary">@color/white</color>
+    <color name="backgroundEditText">@color/grey5</color>
 </resources>

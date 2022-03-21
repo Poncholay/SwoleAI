@@ -10,6 +10,7 @@ import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.databinding.ActivityOnboardingBinding
 import com.guillaumewilmot.swoleai.modules.home.HomeActivity
 import com.guillaumewilmot.swoleai.modules.onboarding.greeting.OnboardingGreetingFragment
+import com.guillaumewilmot.swoleai.modules.onboarding.username.OnboardingUsernameFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -17,7 +18,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class OnboardingActivity :
     ParentActivity<ActivityOnboardingBinding>(ActivityOnboardingBinding::inflate),
-    AttachViewPagerIndicator {
+    OnboardingGreetingFragment.OnboardingGreetingFragmentListener,
+    OnboardingUsernameFragment.OnboardingUsernameFragmentListener {
 
     private val pagerAdapter by lazy {
         ViewPagerAdapter(supportFragmentManager)
@@ -81,8 +83,8 @@ class OnboardingActivity :
 
     fun createFragment(i: Int): Fragment = when (remainingSteps.getOrNull(i)) {
         Step.GREETING -> OnboardingGreetingFragment()
+        Step.ENTER_NAME -> OnboardingUsernameFragment()
         else -> OnboardingGreetingFragment()
-//        Step.ENTER_NAME -> UserOnboardingNameFragment()
 //        Step.ENTER_PHONE -> UserOnboardingPhoneFragment()
 //        Step.ENTER_BIRTHDATE -> UserOnboardingDateOfBirthFragment()
 //        Step.ENTER_EMERGENCY -> UserOnboardingEmergencyFragment()
@@ -94,6 +96,14 @@ class OnboardingActivity :
         override fun getItem(position: Int): Fragment = createFragment(position)
         override fun getCount() = remainingSteps.size
     }
+
+    /**
+     * Children interface
+     */
+
+    //TODO
+    override fun userOnboardingGreetingNext() = navigateToNextFragment()
+    override fun userOnboardingUsernameNext() {}
 
     /**
      * Subclasses

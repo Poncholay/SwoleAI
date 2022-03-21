@@ -22,4 +22,5 @@
     <color name="backgroundDefault">@color/black</color>
     <color name="backgroundButtonPrimary">@color/colorPrimary</color>
     <color name="backgroundButtonSecondary">@color/dark_grey5</color>
+    <color name="backgroundEditText">@color/dark_grey6</color>
 </resources>

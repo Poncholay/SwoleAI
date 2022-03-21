@@ -21,8 +21,8 @@ class OnboardingGreetingFragment :
         ui()
 
         viewModel.apply {
-            titleText.compose(lifecycleProvider.bindToLifecycle())
-                .subscribe { binding?.greetingText?.text = it }
+            this.titleTextTest.compose(lifecycleProvider.bindToLifecycle())
+                .subscribe { binding?.titleText?.text = it }
         }
     }
 
@@ -42,7 +42,7 @@ class OnboardingGreetingFragment :
             parent?.attachIndicator(it)
         }
 
-        binding?.greetingText?.text = viewModel.greetingText
+        binding?.titleText?.text = viewModel.titleText
         binding?.descriptionText?.text = viewModel.descriptionText
         binding?.continueButton?.text = viewModel.nextButtonText
 

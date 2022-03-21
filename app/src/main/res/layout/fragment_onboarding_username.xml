@@ -32,7 +32,8 @@
                     android:id="@+id/topImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/icon_hand"
+                    android:src="@drawable/icon_person"
+                    android:padding="5dp"
                     app:tint="@color/iconTint" />
             </LinearLayout>
 
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="36dp"
-                android:text="@string/app_onboarding_greeting_title_text"
+                android:text="@string/app_onboarding_username_title_text"
                 android:textAlignment="center"
                 android:textFontWeight="600"
                 android:textSize="@dimen/textParagraphTitle"
@@ -50,16 +51,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/topImageContainer" />
 
-            <TextView
-                android:id="@+id/descriptionText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameLayout"
+                style="@style/TextInputLayoutAppearanceRound"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginRegular"
-                android:gravity="center"
-                android:text="@string/app_onboarding_greeting_description_text"
+                android:hint="@string/app_onboarding_username_field_hint"
+                app:errorEnabled="true"
+                app:errorIconDrawable="@null"
+                app:hintEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/titleText" />
+                app:layout_constraintTop_toBottomOf="@id/titleText">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/usernameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSend"
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.afollestad.viewpagerdots.DotsIndicator
                 android:id="@+id/viewPagerDots"
@@ -72,7 +84,7 @@
                 app:layout_constraintBottom_toTopOf="@id/continueButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/descriptionText"
+                app:layout_constraintTop_toBottomOf="@id/usernameLayout"
                 app:layout_constraintVertical_bias="1" />
 
             <com.guillaumewilmot.swoleai.view.AnimatedButton
@@ -82,7 +94,7 @@
                 android:layout_margin="@dimen/marginRegular"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@string/app_onboarding_greeting_continue_button_text"
+                android:text="@string/app_onboarding_username_continue_button_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

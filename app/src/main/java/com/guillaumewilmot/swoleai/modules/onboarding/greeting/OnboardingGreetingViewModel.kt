@@ -26,8 +26,8 @@ class OnboardingGreetingViewModel @Inject constructor(
      * UI
      */
 
-    val greetingText = application.getString(R.string.app_onboarding_greeting_text)
-    val descriptionText = application.getString(R.string.app_onboarding_description_text)
+    val titleText = application.getString(R.string.app_onboarding_greeting_title_text)
+    val descriptionText = application.getString(R.string.app_onboarding_greeting_description_text)
     val nextButtonText =
         application.getString(R.string.app_onboarding_greeting_continue_button_text)
 
@@ -37,11 +37,11 @@ class OnboardingGreetingViewModel @Inject constructor(
 
     private val _user = dataStorage.dataHolder.userField
 
-    val titleText: Flowable<String> = _user
+    val titleTextTest: Flowable<String> = _user
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .map {
-            "${application.getString(R.string.app_onboarding_greeting_text)} ${it.value?.name ?: ""}"
+            "${application.getString(R.string.app_onboarding_greeting_title_text)} ${it.value?.name ?: ""}"
         }
 
     private var userIndex = 1
