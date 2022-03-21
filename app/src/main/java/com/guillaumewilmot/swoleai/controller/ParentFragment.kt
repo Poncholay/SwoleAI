@@ -5,11 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.viewbinding.ViewBinding
+import com.trello.lifecycle4.android.lifecycle.AndroidLifecycle
+import com.trello.rxlifecycle4.LifecycleProvider
 
 abstract class ParentFragment<T : ViewBinding>(
     private val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> T
 ) : Fragment() {
+
+    protected val lifecycleProvider: LifecycleProvider<Lifecycle.Event> =
+        AndroidLifecycle.createLifecycleProvider(this)
 
     protected var binding: T? = null
 

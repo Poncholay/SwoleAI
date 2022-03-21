@@ -26,10 +26,7 @@ class HomeActivity :
         configureSplashscreen()
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java].apply {
-            titleText.compose(lifecycleProvider.bindToLifecycle())
-                .subscribe { binding.title.text = it }
-        }
+        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
     }
 
     override fun onResume() {
@@ -41,11 +38,6 @@ class HomeActivity :
                     { redirectToOnboarding() },
                     { error -> error.printStackTrace() }
                 )
-
-            userTimer.compose(lifecycleProvider.bindToLifecycle())
-                .subscribe {
-                    updateUser(it)
-                }
         }
     }
 

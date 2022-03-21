@@ -7,7 +7,9 @@ import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingGreetingBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.AttachViewPagerIndicator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class OnboardingGreetingFragment :
     ParentFragment<FragmentOnboardingGreetingBinding>(FragmentOnboardingGreetingBinding::inflate) {
@@ -17,6 +19,22 @@ class OnboardingGreetingFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
+
+        viewModel.apply {
+            titleText.compose(lifecycleProvider.bindToLifecycle())
+                .subscribe { binding?.greetingText?.text = it }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.apply {
+            userTimer.compose(lifecycleProvider.bindToLifecycle())
+                .subscribe {
+                    updateUser(it)
+                }
+        }
     }
 
     private fun ui() {
