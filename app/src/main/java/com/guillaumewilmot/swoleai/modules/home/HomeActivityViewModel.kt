@@ -5,7 +5,6 @@ import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
-import com.guillaumewilmot.swoleai.util.storage.UserStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
@@ -50,7 +49,7 @@ class HomeActivityViewModel @Inject constructor(
         var userIndex = 1
         Observable.interval(1000, 1000, TimeUnit.MILLISECONDS)
             .subscribe {
-                dataStorage.toStorage(UserStorage.USER, UserModel(name = "Message ${userIndex++}"))
+                dataStorage.toStorage(DataStorage.DataDefinition.USER, UserModel(name = "Message ${userIndex++}"))
             }
     }
 }

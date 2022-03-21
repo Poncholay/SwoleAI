@@ -10,11 +10,7 @@ import androidx.datastore.rxjava3.RxDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.guillaumewilmot.swoleai.model.UserModel
-import com.guillaumewilmot.swoleai.util.storage.rxlive.Optional
-import com.guillaumewilmot.swoleai.util.storage.rxlive.asOptional
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -108,9 +104,9 @@ class DataStorage constructor(
         }
     }
 
-    fun <T> toStorage(key: String, obj: T): Single<Preferences>? = try {
+    fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences>? = try {
         val value = gson.toJson(obj)
-        putStringRx(key, value)
+        putStringRx(dataDefinition.key, value)
     } catch (e: Exception) {
         e.printStackTrace()
         null
@@ -124,7 +120,7 @@ class DataStorage constructor(
 
     inner class DataHolder {
         val userField: Flowable<Optional<UserModel>> by lazy {
-            this@DataStorage.fromStorage<UserModel>(DataDefinition.USER)
+            this@DataStorage.fromStorage(DataDefinition.USER)
         }
         val exercisesField: Flowable<List<Int>> by lazy {
             this@DataStorage.fromStorageOrDefault(DataDefinition.EXERCISES, listOf())
