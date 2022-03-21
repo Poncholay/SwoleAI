@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.util.storage
+package com.guillaumewilmot.swoleai.model
 
 import com.google.gson.annotations.SerializedName
 

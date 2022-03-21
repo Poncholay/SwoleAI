@@ -9,7 +9,9 @@ import androidx.datastore.preferences.rxjava3.rxPreferencesDataStore
 import androidx.datastore.rxjava3.RxDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.guillaumewilmot.swoleai.model.Optional
 import com.guillaumewilmot.swoleai.model.UserModel
+import com.guillaumewilmot.swoleai.model.asOptional
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
