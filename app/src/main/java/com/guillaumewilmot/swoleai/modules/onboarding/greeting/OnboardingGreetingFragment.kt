@@ -3,6 +3,8 @@ package com.guillaumewilmot.swoleai.modules.onboarding.greeting
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import autodispose2.androidx.lifecycle.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingGreetingBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.AttachViewPagerIndicator
@@ -20,21 +22,11 @@ class OnboardingGreetingFragment :
         super.onViewCreated(view, savedInstanceState)
         ui()
 
-        viewModel.apply {
-            this.titleTextTest.compose(lifecycleProvider.bindToLifecycle())
-                .subscribe { binding?.titleText?.text = it }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.apply {
-            userTimer.compose(lifecycleProvider.bindToLifecycle())
-                .subscribe {
-                    updateUser(it)
-                }
-        }
+        viewModel.titleTextTest
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                binding?.titleText?.text = it
+            }
     }
 
     private fun ui() {

@@ -58,16 +58,12 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
     //Rx lifecycle
-    implementation 'com.trello.rxlifecycle4:rxlifecycle:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-android:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-kotlin:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle-kotlin:4.0.2'
+    implementation 'com.uber.autodispose2:autodispose:2.1.1'
+    implementation 'com.uber.autodispose2:autodispose-android:2.1.1'
+    implementation 'com.uber.autodispose2:autodispose-androidx-lifecycle:2.1.1'
+    implementation 'com.uber.autodispose2:autodispose-androidx-lifecycle-test:2.1.1'
 
-    //Datastore typed ??
-    implementation "androidx.datastore:datastore:1.0.0"
-    implementation "androidx.datastore:datastore-rxjava3:1.0.0"
-    //Datastore preferences ??
+    //Datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation "androidx.datastore:datastore-preferences-rxjava3:1.0.0"
 

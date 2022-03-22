@@ -127,7 +127,6 @@ class DataStorage constructor(
         val exercisesField: Flowable<List<Int>> by lazy {
             this@DataStorage.fromStorageOrDefault(DataDefinition.EXERCISES, listOf())
         }
-
     }
 
     enum class DataDefinition(
@@ -135,5 +134,9 @@ class DataStorage constructor(
     ) {
         USER("storage_user"),
         EXERCISES("storage_exercises");
+    }
+
+    fun test() {
+
     }
 }

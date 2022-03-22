@@ -32,8 +32,8 @@
                     android:id="@+id/topImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/icon_person"
                     android:padding="5dp"
+                    android:src="@drawable/icon_person"
                     app:tint="@color/iconTint" />
             </LinearLayout>
 
@@ -60,7 +60,6 @@
                 android:hint="@string/app_onboarding_username_field_hint"
                 app:errorEnabled="true"
                 app:errorIconDrawable="@null"
-                app:hintEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleText">

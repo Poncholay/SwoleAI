@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import autodispose2.androidx.lifecycle.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.databinding.ActivityHomeBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.OnboardingActivity
@@ -29,35 +31,33 @@ class HomeActivity :
         viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.apply {
-            redirectToOnboarding.compose(lifecycleProvider.bindToLifecycle())
-                .subscribe(
-                    { redirectToOnboarding() },
-                    { error -> error.printStackTrace() }
-                )
-        }
-    }
-
-    /** Called once after onResume */
+    /** Called once after onResume and the 1 second splash screen exit animation */
     private fun splashFinished(splashScreenProvider: SplashScreenViewProvider) {
         splashScreenProvider.remove()
 
+        /**
+         * We subscribe here to avoid redirecting before splash screen is done
+         */
+        viewModel.redirectToOnboarding
+            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+            .subscribe(
+                { redirectToOnboarding() },
+                { error -> error.printStackTrace() }
+            )
     }
 
     private fun redirectToOnboarding() {
         startActivity(Intent(this, OnboardingActivity::class.java))
     }
 
+    /** Configure splash screen animation */
     private fun configureSplashscreen() {
         installSplashScreen().apply {
             setOnExitAnimationListener { splashScreenProvider ->
                 val iconView = (splashScreenProvider.view as? ViewGroup)?.getChildAt(0)
                 if (iconView != null) {
                     val duration = 1000L
-                    //Animate icon
+                    /** Animate icon */
                     ObjectAnimator.ofFloat(
                         iconView,
                         View.TRANSLATION_Y,
@@ -67,7 +67,7 @@ class HomeActivity :
                         this.duration = duration
                     }.start()
 
-                    //Fade background
+                    /** Fade background */
                     ObjectAnimator.ofFloat(
                         splashScreenProvider.view,
                         View.ALPHA,
@@ -76,12 +76,12 @@ class HomeActivity :
                     ).apply {
                         this.duration = duration
                         doOnEnd {
-                            // Call SplashScreenView.remove at the end of your custom animation.
+                            /** Call SplashScreenView.remove at the end of your custom animation. */
                             splashFinished(splashScreenProvider)
                         }
                     }.start()
                 } else {
-                    // Can't access the icon so we skip the animation
+                    /** Can't access the icon so we skip the animation */
                     splashFinished(splashScreenProvider)
                 }
             }

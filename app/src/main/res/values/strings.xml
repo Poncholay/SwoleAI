@@ -6,4 +6,6 @@
     <string name="app_onboarding_username_title_text">What\'s your name big man?</string>
     <string name="app_onboarding_username_continue_button_text">Next</string>
     <string name="app_onboarding_username_field_hint">Username</string>
+
+    <string name="app_field_validator_not_empty_error">Must not be empty</string>
 </resources>
