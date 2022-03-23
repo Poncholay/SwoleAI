@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 class FieldValidator(
     validators: List<Validator>,
     private val startValidateWhenEmpty: Boolean = true,
-    private val startValidateWhenInFocus: Boolean = false
+    private val startValidateWhenInFocus: Boolean = true
 ) {
 
     constructor(

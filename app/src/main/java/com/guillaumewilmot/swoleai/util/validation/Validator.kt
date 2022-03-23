@@ -15,3 +15,8 @@ class ValidatorNotBlank(context: Context) : Validator(
     validator = { s: String -> s.isNotBlank() },
     error = context.getString(R.string.app_field_validator_not_blank_error)
 )
+
+class ValidatorIsDigits(context: Context) : Validator(
+    validator = { s: String -> s.toIntOrNull() != null },
+    error = context.getString(R.string.app_field_validator_not_number_error)
+)
