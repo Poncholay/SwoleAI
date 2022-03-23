@@ -7,7 +7,6 @@ import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -32,10 +31,9 @@ class OnboardingGreetingViewModel @Inject constructor(
      * Playground //TODO remove
      */
 
-    private val _user = dataStorage.dataHolder.userField
+    private val _user by lazy { dataStorage.dataHolder.userField }
 
     val titleTextTest: Flowable<String> = _user
-        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .map {
             "${application.getString(R.string.app_onboarding_greeting_title_text)} ${it.value?.name ?: ""}"

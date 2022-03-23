@@ -25,13 +25,15 @@ class OnboardingUsernameFragment :
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        listeners()
+        binding?.usernameInput?.doAfterTextChanged(viewModel.usernameFieldChangeListener)
+        binding?.usernameInput?.onFocusChangeListener = viewModel.usernameFieldFocusChangeListener
     }
 
     override fun onResume() {
         super.onResume()
 
-        viewModel.nextButtonEnabled.autoDispose(this)
+        viewModel.nextButtonEnabled
+            .autoDispose(this)
             .subscribe {
                 binding?.continueButton?.isEnabled = it
             }
@@ -41,6 +43,12 @@ class OnboardingUsernameFragment :
             .subscribe {
                 binding?.usernameLayout?.error = it.value
                 binding?.usernameLayout?.errorContentDescription = it.value
+            }
+
+        viewModel.loaderVisibility
+            .autoDispose(this)
+            .subscribe {
+                binding?.loader?.visibility = it
             }
     }
 
@@ -58,18 +66,6 @@ class OnboardingUsernameFragment :
 
         binding?.continueButton?.setOnClickListener {
             viewModel.onNext()
-        }
-    }
-
-    private fun listeners() {
-        binding?.usernameInput?.let { usernameInput ->
-            usernameInput.doAfterTextChanged(viewModel.usernameFieldChangeListener)
-            usernameInput.text.takeIf { text -> text.isNullOrEmpty().not() }?.let { text ->
-                //Trigger verification if returning to the screen with prefilled data
-                viewModel.usernameFieldChangeListener(text)
-                viewModel.usernameFieldFocusChangeListener.onFocusChange(usernameInput, false)
-            }
-            usernameInput.onFocusChangeListener = viewModel.usernameFieldFocusChangeListener
         }
     }
 

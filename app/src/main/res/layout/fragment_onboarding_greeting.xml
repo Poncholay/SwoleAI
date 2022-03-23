@@ -18,10 +18,10 @@
 
             <LinearLayout
                 android:id="@+id/topImageContainer"
-                android:layout_width="@dimen/onboardingIconSize"
-                android:layout_height="@dimen/onboardingIconSize"
+                android:layout_width="@dimen/sizeOnboardingIcon"
+                android:layout_height="@dimen/sizeOnboardingIcon"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/onboardingIconMarginTop"
+                android:layout_marginTop="@dimen/marginTopOnboardingIcon"
                 android:background="@drawable/background_icon_round"
                 android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"

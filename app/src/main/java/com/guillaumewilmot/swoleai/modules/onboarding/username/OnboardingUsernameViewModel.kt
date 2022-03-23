@@ -7,12 +7,16 @@ import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import com.guillaumewilmot.swoleai.model.Optional
 import com.guillaumewilmot.swoleai.model.UserModel
+import com.guillaumewilmot.swoleai.util.loading.HasLoader
+import com.guillaumewilmot.swoleai.util.loading.HasLoaderImpl
+import com.guillaumewilmot.swoleai.util.loading.linkToLoader
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import com.guillaumewilmot.swoleai.util.validation.FieldValidator
 import com.guillaumewilmot.swoleai.util.validation.ValidatorNotEmpty
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -21,7 +25,9 @@ import javax.inject.Inject
 class OnboardingUsernameViewModel @Inject constructor(
     application: Application,
     private val dataStorage: DataStorage
-) : ParentViewModel(application) {
+) : ParentViewModel(application), HasLoader by HasLoaderImpl() {
+
+    private val _user by lazy { dataStorage.dataHolder.userField }
 
     private val _usernameValidator = FieldValidator(
         validator = ValidatorNotEmpty(application),
@@ -39,11 +45,15 @@ class OnboardingUsernameViewModel @Inject constructor(
     )
 
     val nextButtonEnabled: Observable<Boolean> = _usernameValidator.fieldValidity
-        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     val usernameFieldError: Observable<Optional<String>> = _usernameValidator.fieldError
-        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
+    val loaderVisibility: Observable<Int> = _loaderVisibility
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     /**
@@ -63,7 +73,13 @@ class OnboardingUsernameViewModel @Inject constructor(
             it?.isNotBlank() == true
         } ?: return
 
-        val user = UserModel(name = username)
-        dataStorage.toStorage(DataStorage.DataDefinition.USER, user)
+        _user.take(1)
+            .linkToLoader(this)
+            .subscribe { user ->
+                val newUser = user.value ?: UserModel()
+                dataStorage.toStorage(DataStorage.DataDefinition.USER, newUser.apply {
+                    name = username
+                })
+            }
     }
 }

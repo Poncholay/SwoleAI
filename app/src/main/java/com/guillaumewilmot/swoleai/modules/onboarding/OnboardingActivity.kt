@@ -29,9 +29,7 @@ class OnboardingActivity :
         listOf(
             Step.GREETING,
             Step.ENTER_NAME,
-            Step.ENTER_PHONE,
-            Step.ENTER_BIRTHDATE,
-            Step.ENTER_EMERGENCY
+
         )
     }
 
@@ -49,22 +47,16 @@ class OnboardingActivity :
         binding.viewPager.adapter = pagerAdapter
     }
 
-    private fun navigateToNextFragment() {
+    private fun navigateToNextFragment() = navigateToFragment(binding.viewPager.currentItem + 1)
+    private fun navigateToPreviousFragment() = navigateToFragment(binding.viewPager.currentItem - 1)
+    private fun navigateToFragment(position: Int) {
         binding.viewPager.let {
-            if (it.currentItem + 1 < it.childCount) {
+            if (position >= 0 && position < it.childCount) {
                 try {
-                    it.setCurrentItem(it.currentItem + 1, false)
+                    it.currentItem = position
                 } catch (e: IllegalStateException) {
                     e.printStackTrace()
                 }
-            }
-        }
-    }
-
-    private fun navigateToPreviousFragment() {
-        binding.viewPager.let {
-            if (it.currentItem - 1 >= 0) {
-                it.setCurrentItem(it.currentItem - 1, false)
             }
         }
     }
@@ -84,11 +76,8 @@ class OnboardingActivity :
     fun createFragment(i: Int): Fragment = when (remainingSteps.getOrNull(i)) {
         Step.GREETING -> OnboardingGreetingFragment()
         Step.ENTER_NAME -> OnboardingUsernameFragment()
+        //TODO :
         else -> OnboardingGreetingFragment()
-//        Step.ENTER_PHONE -> UserOnboardingPhoneFragment()
-//        Step.ENTER_BIRTHDATE -> UserOnboardingDateOfBirthFragment()
-//        Step.ENTER_EMERGENCY -> UserOnboardingEmergencyFragment()
-//        else -> OnboardingGreetingFragment().also { navigateToHomeActivity() }
     }
 
     internal inner class ViewPagerAdapter(manager: FragmentManager) :
@@ -112,8 +101,9 @@ class OnboardingActivity :
     enum class Step {
         GREETING,
         ENTER_NAME,
-        ENTER_PHONE,
-        ENTER_BIRTHDATE,
-        ENTER_EMERGENCY
+        ENTER_HEIGHT_BODYWEIGHT,
+
+        //        ENTER_BIRTHDATE,
+        ENTER_GENDER
     }
 }

@@ -4,6 +4,9 @@
     <dimen name="marginRegular">24dp</dimen>
     <dimen name="marginSmall">16dp</dimen>
 
+    <dimen name="marginTopOnboardingIcon">100dp</dimen>
+    <dimen name="marginLoader">8dp</dimen>
+
     <!-- region Text size -->
     <dimen name="textParagraphTitleBig">24sp</dimen>
     <dimen name="textParagraphTitle">20sp</dimen>
@@ -13,8 +16,9 @@
     <dimen name="textParagraphSecondary">12sp</dimen>
     <dimen name="textParagraphExtraSmall">10sp</dimen>
 
-    <!-- region Text size -->
-    <dimen name="onboardingIconSize">80dp</dimen>
-    <dimen name="onboardingIconMarginTop">100dp</dimen>
-    <dimen name="buttonHeight">48dp</dimen>
+    <!-- region Component size -->
+    <dimen name="sizeOnboardingIcon">80dp</dimen>
+    <dimen name="sizeLoader">32dp</dimen>
+    <dimen name="thicknessLoader">2dp</dimen>
+    <dimen name="heightButton">48dp</dimen>
 </resources>

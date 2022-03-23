@@ -3,6 +3,7 @@ package com.guillaumewilmot.swoleai.util.validation
 import com.guillaumewilmot.swoleai.model.Optional
 import com.guillaumewilmot.swoleai.model.asOptional
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 
@@ -58,8 +59,8 @@ class FieldValidator(
      */
 
     val fieldValue: BehaviorSubject<String> = _fieldValue
-    val fieldValidity: Observable<Boolean> = _fieldValidity
-    val fieldError: Observable<Optional<String>> = _fieldError
+    val fieldValidity: Observable<Boolean> = _fieldValidity.subscribeOn(Schedulers.io())
+    val fieldError: Observable<Optional<String>> = _fieldError.subscribeOn(Schedulers.io())
 
     fun onFieldChanged(value: String) {
         _fieldValue.onNext(value)

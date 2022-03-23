@@ -36,11 +36,18 @@ class DataStorage constructor(
         null
     }
 
+    private fun <T> T?.toJson(): String? = try {
+        gson.toJson(this)
+    } catch (e: java.lang.Exception) {
+        e.printStackTrace()
+        null
+    }
+
     /**
      * Get
      */
 
-    private fun getStringRx(key: String): Flowable<Optional<String>> {
+    private fun getString(key: String): Flowable<Optional<String>> {
         return applicationContext.rxDataStore
             .data()
             .onErrorReturn {
@@ -53,15 +60,16 @@ class DataStorage constructor(
             }
             .distinctUntilChanged()
             .doOnNext {
-                Log.d("DataStorage", "Sending new value downstream for $key")
+                Log.d("DataStorage", "Sending new value downstream for $key: ${it.value.toJson()}")
             }
+            .subscribeOn(Schedulers.io())
     }
 
     private fun <T : Any> fromStorageWithType(
         key: String,
         type: Type
     ): Flowable<Optional<T>> {
-        return getStringRx(key).map {
+        return getString(key).map {
             it.value?.let { stringValue ->
                 fromJson<T>(stringValue, type)
             }.asOptional()
@@ -107,8 +115,9 @@ class DataStorage constructor(
     }
 
     fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences>? = try {
-        val value = gson.toJson(obj)
-        putStringRx(dataDefinition.key, value)
+        obj.toJson()?.let { jsonValue ->
+            putStringRx(dataDefinition.key, jsonValue)
+        }
     } catch (e: Exception) {
         e.printStackTrace()
         null
@@ -121,12 +130,17 @@ class DataStorage constructor(
     val dataHolder by lazy { DataHolder() }
 
     inner class DataHolder {
-        val userField: Flowable<Optional<UserModel>> by lazy {
-            this@DataStorage.fromStorage(DataDefinition.USER)
-        }
-        val exercisesField: Flowable<List<Int>> by lazy {
-            this@DataStorage.fromStorageOrDefault(DataDefinition.EXERCISES, listOf())
-        }
+        val userField: Flowable<Optional<UserModel>>
+            get() = this@DataStorage.fromStorage(DataDefinition.USER)
+        val exercisesField: Flowable<List<Int>>
+            get() = this@DataStorage.fromStorageOrDefault(DataDefinition.EXERCISES, listOf())
+
+//        val userField: Flowable<Optional<UserModel>> by lazy {
+//            this@DataStorage.fromStorage(DataDefinition.USER)
+//        }
+//        val exercisesField: Flowable<List<Int>> by lazy {
+//            this@DataStorage.fromStorageOrDefault(DataDefinition.EXERCISES, listOf())
+//        }
     }
 
     enum class DataDefinition(
@@ -134,9 +148,5 @@ class DataStorage constructor(
     ) {
         USER("storage_user"),
         EXERCISES("storage_exercises");
-    }
-
-    fun test() {
-
     }
 }
