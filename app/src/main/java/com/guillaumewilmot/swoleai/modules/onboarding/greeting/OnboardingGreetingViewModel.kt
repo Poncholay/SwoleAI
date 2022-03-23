@@ -35,7 +35,8 @@ class OnboardingGreetingViewModel @Inject constructor(
 
     val titleTextTest: Flowable<String> = _user
         .observeOn(AndroidSchedulers.mainThread())
-        .map {
-            "${application.getString(R.string.app_onboarding_greeting_title_text)} ${it.value?.name ?: ""}"
+        .map { user ->
+            val greeting = application.getString(R.string.app_onboarding_greeting_title_text)
+            "$greeting${user.value?.name?.let { " $it" } ?: ""}"
         }
 }

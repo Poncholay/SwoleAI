@@ -1,12 +1,18 @@
 package com.guillaumewilmot.swoleai
 
 import android.content.res.Resources
+import android.text.Editable
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
-import com.guillaumewilmot.swoleai.util.storage.DataStorageImpl
+import com.guillaumewilmot.swoleai.util.storage.DataStorageMock
 import io.mockk.*
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.observers.TestObserver
+import io.reactivex.rxjava3.subscribers.TestSubscriber
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
@@ -22,46 +28,7 @@ open class BaseUnitTest {
     fun initFields() {
         application = mockk(relaxed = true, relaxUnitFun = true)
         resources = mockk(relaxed = true, relaxUnitFun = true)
-        dataStorage = spyk(DataStorageImpl(application))
-    }
-
-    @Before
-    fun mockLiveStorage() {
-
-    }
-
-    @Before
-    fun mockSharedPreferences() {
-//        mockkStatic(PreferenceManager::class)
-//
-//        val fakeStorage: MutableMap<String, String> = Collections.synchronizedMap(mutableMapOf())
-//
-//        val listenerCaptor = CapturingSlot<SharedPreferences.OnSharedPreferenceChangeListener>()
-//        val mockPreferenceManager = mockk<SharedPreferences> {
-//            val getCaptor = CapturingSlot<String>()
-//            every { getString(capture(getCaptor), any()) } answers {
-//                fakeStorage[getCaptor.captured]
-//            }
-//            every { registerOnSharedPreferenceChangeListener(capture(listenerCaptor)) } just Runs
-//        }
-//
-//        every { mockPreferenceManager.edit() } returns mockk {
-//            val putCaptorKey = CapturingSlot<String>()
-//            val putCaptorValue = CapturingSlot<String>()
-//            every { putString(capture(putCaptorKey), capture(putCaptorValue)) } answers {
-//                fakeStorage[putCaptorKey.captured] = putCaptorValue.captured
-//                listenerCaptor.captured.onSharedPreferenceChanged(
-//                    mockPreferenceManager,
-//                    putCaptorKey.captured
-//                )
-//                this@mockk
-//            }
-//            every { commit() } returns true
-//        }
-//
-//        every { PreferenceManager.getDefaultSharedPreferences(any()) } returns mockPreferenceManager
-//
-//        RxLiveStorage.registerUpdateListener(application)
+        dataStorage = spyk(DataStorageMock())
     }
 
     @Before
@@ -85,13 +52,49 @@ open class BaseUnitTest {
         unmockkAll()
     }
 
+    /**
+     * Helpers
+     */
+
     inline fun <reified T> fromJson(fileName: String): T = Gson().fromJson(
         readAsset(fileName), object : TypeToken<T>() {}.type
     )
+
+    protected fun editableMockk(s: String): Editable = mockk(relaxed = true) {
+        every { this@mockk.toString() } returns s
+    }
 
     fun readAsset(fileName: String): String = this.javaClass.classLoader!!.getResourceAsStream(
         fileName
     ).bufferedReader().use {
         it.readText()
+    }
+
+    /**
+     * Rx helpers
+     */
+
+    fun <T : Any> testObserver(flowable: Flowable<T>) = TestSubscriber<T>().apply {
+        flowable.subscribe(this)
+    }
+
+    fun <T : Any> testObserver(observable: Observable<T>) = TestObserver<T>().apply {
+        observable.subscribe(this)
+    }
+
+    fun <T : Any> spyConsumer(flowable: Flowable<T>) = spyk(object : Consumer<T> {
+        override fun accept(t: T) {
+
+        }
+    }).apply {
+        flowable.subscribe(this)
+    }
+
+    fun <T : Any> spyConsumer(observable: Observable<T>) = spyk(object : Consumer<T> {
+        override fun accept(t: T) {
+
+        }
+    }).apply {
+        observable.subscribe(this)
     }
 }

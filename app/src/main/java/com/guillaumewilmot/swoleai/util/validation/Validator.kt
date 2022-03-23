@@ -11,7 +11,7 @@ open class Validator(
     override fun error(): String = error
 }
 
-class ValidatorNotEmpty(context: Context) : Validator(
+class ValidatorNotBlank(context: Context) : Validator(
     validator = { s: String -> s.isNotBlank() },
-    error = context.getString(R.string.app_field_validator_not_empty_error)
+    error = context.getString(R.string.app_field_validator_not_blank_error)
 )

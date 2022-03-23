@@ -13,7 +13,7 @@ import com.guillaumewilmot.swoleai.util.loading.linkToLoader
 import com.guillaumewilmot.swoleai.util.storage.DataDefinition
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import com.guillaumewilmot.swoleai.util.validation.FieldValidator
-import com.guillaumewilmot.swoleai.util.validation.ValidatorNotEmpty
+import com.guillaumewilmot.swoleai.util.validation.ValidatorNotBlank
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -31,7 +31,7 @@ class OnboardingUsernameViewModel @Inject constructor(
     private val _user by lazy { dataStorage.dataHolder.userField }
 
     private val _usernameValidator = FieldValidator(
-        validator = ValidatorNotEmpty(application),
+        validator = ValidatorNotBlank(application),
         startValidateWhenEmpty = false,
         startValidateWhenInFocus = true
     )

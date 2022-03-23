@@ -7,5 +7,5 @@
     <string name="app_onboarding_username_continue_button_text">Next</string>
     <string name="app_onboarding_username_field_hint">Username</string>
 
-    <string name="app_field_validator_not_empty_error">Must not be empty</string>
+    <string name="app_field_validator_not_blank_error">Must not be blank</string>
 </resources>

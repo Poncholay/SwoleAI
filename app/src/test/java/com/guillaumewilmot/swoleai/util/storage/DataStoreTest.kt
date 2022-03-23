@@ -1,5 +1,11 @@
 package com.guillaumewilmot.swoleai.util.storage
 
-class DataStoreTest {
+import com.guillaumewilmot.swoleai.BaseUnitTest
+import org.junit.Test
 
+class DataStoreTest : BaseUnitTest() {
+    @Test
+    fun testFakeDataStorage() {
+        dataStorage.dataHolder.userField.subscribe()
+    }
 }
