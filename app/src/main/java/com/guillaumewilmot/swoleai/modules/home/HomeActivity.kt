@@ -14,21 +14,31 @@ import autodispose2.androidx.lifecycle.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.databinding.ActivityHomeBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.OnboardingActivity
+import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeActivity :
-    ParentActivity<ActivityHomeBinding>(ActivityHomeBinding::inflate) {
+class HomeActivity : ParentActivity() {
 
+    @Inject
+    lateinit var fragmentBackstack: FragmentBackstack
+
+    private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         configureSplashscreen()
         super.onCreate(savedInstanceState)
 
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
+
+        initTab(FragmentBackstack.Tab.DASHBOARD)
     }
 
     /** Called once after onResume and the 1 second splash screen exit animation */
@@ -82,6 +92,60 @@ class HomeActivity :
                     splashFinished(splashScreenProvider)
                 }
             }
+        }
+    }
+
+    /**
+     * Navigation
+     */
+
+    private fun initTab(initialTab: FragmentBackstack.FragmentTab) {
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            handleSelectTab(FragmentBackstack.Tab.valueOf(item.itemId))
+            true
+        }
+        binding.bottomNavigationView.setOnItemReselectedListener {
+            fragmentBackstack.popOrHandle(supportFragmentManager, null)
+        }
+
+        selectTab(initialTab, firstSelect = true)
+    }
+
+    private fun handleSelectTab(tab: FragmentBackstack.FragmentTab) {
+        fragmentBackstack.selectTab(supportFragmentManager, tab)
+    }
+
+    fun selectTab(tab: FragmentBackstack.FragmentTab, firstSelect: Boolean = false) {
+        val currentTab = binding.bottomNavigationView.selectedItemId
+        binding.bottomNavigationView.selectedItemId = tab.navId()
+        if (firstSelect && tab.navId() == currentTab) {
+            handleSelectTab(tab)
+        }
+    }
+
+    /**
+     * Go back one fragment in the backstack of the selected navigation tab.
+     * If already at the root of the selected navigation tab, switch to the Dashboard tab.
+     * If already at the root of the Dashboard tab, minimize the app.
+     */
+    override fun onBackPressed() {
+        val finishResult = fragmentBackstack.popOrHandle(
+            supportFragmentManager,
+            onNoPreviousFragment = object : FragmentBackstack.OnNoPreviousFragment {
+                override fun finishFragment(): FragmentBackstack.Finishresult {
+                    return if (fragmentBackstack.currentTab != FragmentBackstack.Tab.DASHBOARD) {
+                        selectTab(FragmentBackstack.Tab.DASHBOARD)
+                        FragmentBackstack.Finishresult.WENT_BACK
+                    } else {
+                        FragmentBackstack.Finishresult.DID_NO_GO_BACK
+                    }
+                }
+            }
+        )
+
+        if (finishResult == FragmentBackstack.Finishresult.DID_NO_GO_BACK) {
+            //No more more fragments, already in dashboard, quit the app
+            finish()
         }
     }
 }

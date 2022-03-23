@@ -1,6 +1,7 @@
 package com.guillaumewilmot.swoleai.hilt
 
 import android.content.Context
+import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import com.guillaumewilmot.swoleai.util.storage.DataStorageImpl
 import dagger.Binds
@@ -36,5 +37,14 @@ class AppModule {
         fun provideDataStorageImpl(
             @ApplicationContext applicationContext: Context
         ): DataStorageImpl = DataStorageImpl(applicationContext)
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object FragmentBackstackModule {
+
+        @Provides
+        @Singleton
+        fun provideFragmentBackstack() = FragmentBackstack()
     }
 }

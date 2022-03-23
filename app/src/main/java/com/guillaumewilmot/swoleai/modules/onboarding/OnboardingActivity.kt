@@ -20,20 +20,21 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class OnboardingActivity :
-    ParentActivity<ActivityOnboardingBinding>(ActivityOnboardingBinding::inflate),
+class OnboardingActivity : ParentActivity(),
     OnboardingGreetingFragment.OnboardingGreetingFragmentListener,
     OnboardingUsernameFragment.OnboardingUsernameFragmentListener {
 
+    private lateinit var binding: ActivityOnboardingBinding
     private lateinit var viewModel: OnboardingActivityViewModel
     private var pagerAdapter: ViewPagerAdapter? = null
 
-//    val remainingSteps: List<Step> by lazy {
-//        OnboardingActivity.onboardingSteps(user.value)
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityOnboardingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         viewModel = ViewModelProvider(this)[OnboardingActivityViewModel::class.java]
 
         viewModel.onboardingSteps
@@ -90,9 +91,10 @@ class OnboardingActivity :
     enum class Step {
         GREETING,
         ENTER_NAME,
-        ENTER_HEIGHT_BODYWEIGHT,
 
-        //        ENTER_BIRTHDATE,
+        //TODO
+        ENTER_HEIGHT_BODYWEIGHT,
+        ENTER_BIRTHDATE,
         ENTER_GENDER
     }
 
