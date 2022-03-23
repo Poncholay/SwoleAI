@@ -1,29 +1,12 @@
 package com.guillaumewilmot.swoleai.controller
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.viewbinding.ViewBinding
 
-abstract class ParentFragment<T : ViewBinding>(
-    private val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> T
-) : Fragment() {
-
-    protected var binding: T? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = bindingInflater(inflater, container, false)
-        return binding?.root
-    }
-
+abstract class ParentFragment : Fragment() {
 
     //TODO : screen tracking
+
+    fun name(): String = this.javaClass.simpleName
 
     /**
      * @return false if the back press has been taken care of

@@ -79,7 +79,7 @@ class OnboardingUsernameViewModel @Inject constructor(
             .subscribe { user ->
                 val newUser = user.value ?: UserModel()
                 dataStorage.toStorage(DataDefinition.USER, newUser.apply {
-                    name = username.trim()
+                    this.username = username.trim()
                 })
             }
     }

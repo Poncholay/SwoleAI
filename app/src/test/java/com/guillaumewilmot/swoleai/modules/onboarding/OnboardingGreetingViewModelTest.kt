@@ -38,7 +38,7 @@ class OnboardingGreetingViewModelTest : BaseUnitTest() {
     @Test
     fun givenUserExists_verifyGreetingTextContainsUsername() {
         val userName = "User"
-        dataStorage.toStorage(DataDefinition.USER, UserModel(name = userName))
+        dataStorage.toStorage(DataDefinition.USER, UserModel(username = userName))
 
         testObserver(viewModel.titleTextTest).assertValue("$GREETING $userName")
     }

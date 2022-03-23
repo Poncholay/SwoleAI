@@ -9,4 +9,6 @@
 
     <string name="app_field_validator_not_blank_error">Must not be blank</string>
     <string name="app_field_validator_not_number_error">Must be a number</string>
+    <string name="app_home_navigation_item_dashboard">Dashboard</string>
+    <string name="app_home_navigation_item_workout">Workout</string>
 </resources>

@@ -1,8 +1,7 @@
-package com.guillaumewilmot.swoleai.modules.home
+package com.guillaumewilmot.swoleai.modules.onboarding
 
 import android.app.Application
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
-import com.guillaumewilmot.swoleai.modules.onboarding.OnboardingActivity
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -13,7 +12,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
-class HomeActivityViewModel @Inject constructor(
+class OnboardingActivityViewModel @Inject constructor(
     application: Application,
     private val dataStorage: DataStorage
 ) : ParentViewModel(application) {
@@ -24,10 +23,14 @@ class HomeActivityViewModel @Inject constructor(
      * UI
      */
 
-    val redirectToOnboarding: Flowable<Boolean> = _user
+    val onboardingSteps: Flowable<List<OnboardingActivity.Step>> = _user
         .map { user ->
-            user.value == null || OnboardingActivity.onboardingSteps(user.value).isNotEmpty()
+            if (user.value == null) {
+                listOf(OnboardingActivity.Step.GREETING, OnboardingActivity.Step.ENTER_NAME)
+            } else {
+                OnboardingActivity.onboardingSteps(user.value)
+            }
         }
-        .filter { it == true }
+        .take(1)
         .observeOn(AndroidSchedulers.mainThread())
 }

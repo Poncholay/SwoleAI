@@ -1,7 +1,9 @@
 package com.guillaumewilmot.swoleai.modules.onboarding.greeting
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import autodispose2.androidx.lifecycle.autoDispose
@@ -13,10 +15,22 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class OnboardingGreetingFragment :
-    ParentFragment<FragmentOnboardingGreetingBinding>(FragmentOnboardingGreetingBinding::inflate) {
+class OnboardingGreetingFragment : ParentFragment() {
 
+    private var binding: FragmentOnboardingGreetingBinding? = null
     private val viewModel: OnboardingGreetingViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = FragmentOnboardingGreetingBinding.inflate(
+        inflater,
+        container,
+        false
+    ).also {
+        binding = it
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/icon_dashboard"
+        android:title="@string/app_home_navigation_item_dashboard" />
+    <item
+        android:id="@+id/navigation_workout"
+        android:icon="@drawable/icon_dumbbell"
+        android:title="@string/app_home_navigation_item_workout" />
+</menu>

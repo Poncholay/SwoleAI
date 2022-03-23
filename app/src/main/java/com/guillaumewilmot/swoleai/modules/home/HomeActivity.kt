@@ -40,10 +40,7 @@ class HomeActivity :
          */
         viewModel.redirectToOnboarding
             .autoDispose(this, Lifecycle.Event.ON_PAUSE)
-            .subscribe(
-                { redirectToOnboarding() },
-                { error -> error.printStackTrace() }
-            )
+            .subscribe { redirectToOnboarding() }
     }
 
     private fun redirectToOnboarding() {

@@ -37,6 +37,6 @@ class OnboardingGreetingViewModel @Inject constructor(
         .observeOn(AndroidSchedulers.mainThread())
         .map { user ->
             val greeting = application.getString(R.string.app_onboarding_greeting_title_text)
-            "$greeting${user.value?.name?.let { " $it" } ?: ""}"
+            "$greeting${user.value?.username?.let { " $it" } ?: ""}"
         }
 }
