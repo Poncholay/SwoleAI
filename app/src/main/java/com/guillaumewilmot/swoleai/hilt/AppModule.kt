@@ -2,6 +2,8 @@ package com.guillaumewilmot.swoleai.hilt
 
 import android.content.Context
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
+import com.guillaumewilmot.swoleai.util.storage.DataStorageImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,11 +19,22 @@ class AppModule {
 
     @Module
     @InstallIn(SingletonComponent::class)
-    object DataStorageModule {
+    abstract class DataStorageModule {
+
+        @Binds
+        abstract fun bindDataStorage(
+            dataStorageImpl: DataStorageImpl
+        ): DataStorage
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object DataStorageImplModule {
+
         @Provides
         @Singleton
-        fun provideDataStorage(
+        fun provideDataStorageImpl(
             @ApplicationContext applicationContext: Context
-        ): DataStorage = DataStorage(applicationContext)
+        ): DataStorageImpl = DataStorageImpl(applicationContext)
     }
 }

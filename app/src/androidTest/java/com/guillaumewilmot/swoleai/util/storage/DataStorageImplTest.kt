@@ -2,7 +2,7 @@ package com.guillaumewilmot.swoleai.util.storage
 
 import org.junit.Test
 
-class DataStorageTest {
+class DataStorageImplTest {
     @Test
     fun testConcurrentStorageOrder() {
     }

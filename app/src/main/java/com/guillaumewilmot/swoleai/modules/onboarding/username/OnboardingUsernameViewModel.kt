@@ -10,6 +10,7 @@ import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.util.loading.HasLoader
 import com.guillaumewilmot.swoleai.util.loading.HasLoaderImpl
 import com.guillaumewilmot.swoleai.util.loading.linkToLoader
+import com.guillaumewilmot.swoleai.util.storage.DataDefinition
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import com.guillaumewilmot.swoleai.util.validation.FieldValidator
 import com.guillaumewilmot.swoleai.util.validation.ValidatorNotEmpty
@@ -77,8 +78,8 @@ class OnboardingUsernameViewModel @Inject constructor(
             .linkToLoader(this)
             .subscribe { user ->
                 val newUser = user.value ?: UserModel()
-                dataStorage.toStorage(DataStorage.DataDefinition.USER, newUser.apply {
-                    name = username
+                dataStorage.toStorage(DataDefinition.USER, newUser.apply {
+                    name = username.trim()
                 })
             }
     }
