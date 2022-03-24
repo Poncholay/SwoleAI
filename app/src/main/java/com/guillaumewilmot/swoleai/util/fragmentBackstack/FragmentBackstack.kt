@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
-import com.guillaumewilmot.swoleai.modules.onboarding.greeting.OnboardingGreetingFragment
-import com.guillaumewilmot.swoleai.modules.onboarding.username.OnboardingUsernameFragment
+import com.guillaumewilmot.swoleai.modules.home.dashboard.HomeDashboardFragment
+import com.guillaumewilmot.swoleai.modules.home.session.HomeSessionFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.Serializable
 import java.util.*
@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 class FragmentBackstack {
 
     interface OnNoPreviousFragment {
-        fun finishFragment(): Finishresult
+        fun finishFragment(currentTab: FragmentTab): Finishresult
     }
 
     interface FragmentTab : Serializable {
@@ -28,10 +28,8 @@ class FragmentBackstack {
         val navId: Int
     ) : FragmentTab {
 
-        //TODO : Create the real fragments
-
-        DASHBOARD(OnboardingGreetingFragment::class, R.id.navigation_dashboard),
-        WORKOUT(OnboardingUsernameFragment::class, R.id.navigation_workout);
+        DASHBOARD(HomeDashboardFragment::class, R.id.navigation_dashboard),
+        SESSION(HomeSessionFragment::class, R.id.navigation_session);
 
         override fun root(): KClass<out ParentFragment> = root
         override fun navId(): Int = navId
@@ -63,14 +61,8 @@ class FragmentBackstack {
     private val _pool: Bundle = Bundle()
     private val _tagStacks = mapOf<FragmentTab, Stack<String>>(
         Tab.DASHBOARD to Stack(),
-        Tab.WORKOUT to Stack()
+        Tab.SESSION to Stack()
     )
-
-    val currentTab: FragmentTab
-        get() = _currentTab
-
-    val currentFragment: ParentFragment?
-        get() = _currentFragment
 
     /**
      * Starts a new fragment in the current tab
@@ -160,7 +152,7 @@ class FragmentBackstack {
                 e.printStackTrace()
             }
         } else {
-            return onNoPreviousFragment?.finishFragment() ?: Finishresult.DID_NO_GO_BACK
+            return onNoPreviousFragment?.finishFragment(currentTab) ?: Finishresult.DID_NO_GO_BACK
         }
         return Finishresult.DID_NO_GO_BACK
     }

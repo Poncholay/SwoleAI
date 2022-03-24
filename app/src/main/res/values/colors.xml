@@ -10,6 +10,7 @@
     <color name="secondaryDark">#AB003C</color>
 
     <color name="transparent">#00000000</color>
+    <color name="semiTransparent">#77000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
@@ -59,4 +60,5 @@
     <color name="backgroundBottomNavigationBar">@color/white</color>
     <color name="bottomNavigationBarActive">@color/main</color>
     <color name="bottomNavigationBarInactive">@color/grey30</color>
+    <color name="backgroundToolbar">@color/main</color>
 </resources>

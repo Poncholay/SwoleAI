@@ -132,8 +132,8 @@ class HomeActivity : ParentActivity() {
         val finishResult = fragmentBackstack.popOrHandle(
             supportFragmentManager,
             onNoPreviousFragment = object : FragmentBackstack.OnNoPreviousFragment {
-                override fun finishFragment(): FragmentBackstack.Finishresult {
-                    return if (fragmentBackstack.currentTab != FragmentBackstack.Tab.DASHBOARD) {
+                override fun finishFragment(currentTab: FragmentBackstack.FragmentTab): FragmentBackstack.Finishresult {
+                    return if (currentTab != FragmentBackstack.Tab.DASHBOARD) {
                         selectTab(FragmentBackstack.Tab.DASHBOARD)
                         FragmentBackstack.Finishresult.WENT_BACK
                     } else {

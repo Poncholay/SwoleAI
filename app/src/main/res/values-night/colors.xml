@@ -26,4 +26,5 @@
     <color name="backgroundBottomNavigationBar">@color/dark_grey5</color>
     <color name="bottomNavigationBarActive">@color/white</color>
     <color name="bottomNavigationBarInactive">@color/dark_grey2</color>
+    <color name="backgroundToolbar">@color/dark_grey6</color>
 </resources>

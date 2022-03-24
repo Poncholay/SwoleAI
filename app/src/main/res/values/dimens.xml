@@ -22,4 +22,5 @@
     <dimen name="thicknessLoader">2dp</dimen>
     <dimen name="heightButton">48dp</dimen>
     <dimen name="heightBottomNavigationBar">56dp</dimen>
+    <dimen name="heightToolbar">48dp</dimen>
 </resources>
