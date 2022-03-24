@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingEnd="8dp">
+        android:paddingStart="@dimen/marginSmall"
+        android:paddingEnd="@dimen/marginSmall">
 
         <ImageButton
             android:id="@+id/backButton"
@@ -21,7 +22,7 @@
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_toolbar_back_button_description"
-            android:padding="8dp"
+            android:paddingEnd="8dp"
             android:src="@drawable/icon_arrow"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -37,10 +38,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textFontWeight="800"
-            android:textStyle="bold"
+            android:textFontWeight="600"
             app:autoSizeMaxTextSize="@dimen/textParagraphTitle"
             app:autoSizeMinTextSize="@dimen/textParagraphSecondary"
             app:autoSizeTextType="uniform"
@@ -69,12 +68,12 @@
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
             android:paddingStart="8dp"
-            android:src="@drawable/icon_settings"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/white"
+            tools:src="@drawable/icon_settings"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

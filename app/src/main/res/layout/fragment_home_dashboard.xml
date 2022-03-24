@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/view_toolbar" />
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/view_toolbar" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -27,6 +30,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:gravity="center"
+                android:paddingStart="@dimen/marginRegular"
+                android:paddingEnd="@dimen/marginRegular"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -34,7 +39,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I will contain the sessions for the current selected week" />
+                    android:text="TMP: I will contain the sessions for the current selected week"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
             <LinearLayout
@@ -42,6 +48,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:gravity="center"
+                android:paddingStart="@dimen/marginRegular"
+                android:paddingEnd="@dimen/marginRegular"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/weekSessions">
@@ -49,23 +57,48 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I will contain the program summary" />
+                    android:text="TMP: I will contain the program summary"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/fatigueSummary"
+            <FrameLayout
+                android:id="@+id/fatigueSummaryContainer"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/programSumary">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="I will show the athlete's fatigue history" />
-            </LinearLayout>
+                    android:layout_marginStart="@dimen/marginSmall"
+                    android:layout_marginEnd="@dimen/marginSmall"
+                    android:orientation="vertical"
+                    android:paddingBottom="80dp">
+
+                    <TextView
+                        android:id="@+id/fatigueRatingTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_home_dashboard_fatigue_rating_title"
+                        android:textFontWeight="600" />
+
+                    <TextView
+                        android:id="@+id/fatigueRatingValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textFontWeight="800"
+                        android:textSize="@dimen/textFatigueRating"
+                        tools:text="20.00" />
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/fatigueChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

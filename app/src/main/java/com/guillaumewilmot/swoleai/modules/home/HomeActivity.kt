@@ -38,7 +38,8 @@ class HomeActivity : ParentActivity() {
 
         viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
 
-        initTab(FragmentBackstack.Tab.DASHBOARD)
+        initBottomNavigationBar()
+        handleSelectTab(FragmentBackstack.Tab.DASHBOARD)
     }
 
     /** Called once after onResume and the 1 second splash screen exit animation */
@@ -99,28 +100,25 @@ class HomeActivity : ParentActivity() {
      * Navigation
      */
 
-    private fun initTab(initialTab: FragmentBackstack.FragmentTab) {
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            handleSelectTab(FragmentBackstack.Tab.valueOf(item.itemId))
-            true
+    private fun initBottomNavigationBar() {
+        binding.bottomNavigationView.apply {
+            setOnItemSelectedListener { item ->
+                handleSelectTab(FragmentBackstack.Tab.valueOf(item.itemId))
+                true
+            }
+            setOnItemReselectedListener {
+                fragmentBackstack.popOrHandle(supportFragmentManager, null)
+            }
         }
-        binding.bottomNavigationView.setOnItemReselectedListener {
-            fragmentBackstack.popOrHandle(supportFragmentManager, null)
-        }
+    }
 
-        selectTab(initialTab, firstSelect = true)
+    /** Programmatically select a tab in the bottomNavigationBar */
+    fun selectTab(tab: FragmentBackstack.FragmentTab) {
+        binding.bottomNavigationView.selectedItemId = tab.navId()
     }
 
     private fun handleSelectTab(tab: FragmentBackstack.FragmentTab) {
         fragmentBackstack.selectTab(supportFragmentManager, tab)
-    }
-
-    fun selectTab(tab: FragmentBackstack.FragmentTab, firstSelect: Boolean = false) {
-        val currentTab = binding.bottomNavigationView.selectedItemId
-        binding.bottomNavigationView.selectedItemId = tab.navId()
-        if (firstSelect && tab.navId() == currentTab) {
-            handleSelectTab(tab)
-        }
     }
 
     /**

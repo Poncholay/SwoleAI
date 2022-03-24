@@ -8,10 +8,8 @@
     android:fitsSystemWindows="true">
 
     <include
-        layout="@layout/view_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/heightToolbar"
-        android:background="@color/transparent" />
+        android:id="@+id/toolbarLayout"
+        layout="@layout/view_toolbar" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -33,6 +31,8 @@
                 android:layout_height="200dp"
                 android:background="@color/backgroundCardView"
                 android:gravity="center"
+                android:paddingStart="@dimen/marginRegular"
+                android:paddingEnd="@dimen/marginRegular"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -40,17 +40,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I will contain the fatigue summary for today's session" />
+                    android:text="TMP: I will contain the fatigue summary for today's session"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/exercises"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1000dp"
                 android:layout_marginStart="@dimen/marginSmall"
                 android:layout_marginTop="@dimen/marginRegular"
                 android:layout_marginEnd="@dimen/marginSmall"
                 android:layout_marginBottom="@dimen/marginRegular"
+                android:background="@color/backgroundCardView"
                 app:layout_constraintBottom_toTopOf="@id/finishButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
