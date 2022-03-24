@@ -58,7 +58,7 @@
     <color name="backgroundButtonSecondary">@color/white</color>
     <color name="backgroundEditText">@color/grey5</color>
     <color name="backgroundBottomNavigationBar">@color/white</color>
-    <color name="bottomNavigationBarActive">@color/main</color>
+    <color name="bottomNavigationBarActive">@color/colorPrimary</color>
     <color name="bottomNavigationBarInactive">@color/grey30</color>
-    <color name="backgroundToolbar">@color/main</color>
+    <color name="backgroundToolbar">@color/colorPrimary</color>
 </resources>

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeSessionBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,16 +34,11 @@ class HomeSessionFragment : ParentFragment() {
         ui()
     }
 
+    //FIXME : TMP just some hardcoded UI blueprint
     private fun ui() {
         binding?.finishButton?.setOnClickListener { }
         binding?.cancelButton?.setOnClickListener { }
 
-        //FIXME : TMP
-        binding?.toolbarLayout?.apply {
-            context?.let { context ->
-                this.toolbarTitle.text = "Week 1 - day 1"
-                this.toolbarLayout.setBackgroundColor(context.getColor(R.color.semiTransparent))
-            }
-        }
+        binding?.toolbarLayout?.toolbarContent?.toolbarTitle?.text = "Week 1 - day 1"
     }
 }
