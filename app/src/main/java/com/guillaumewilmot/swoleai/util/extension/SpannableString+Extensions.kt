@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.util
+package com.guillaumewilmot.swoleai.util.extension
 
 import android.text.SpannableString
 import android.text.style.CharacterStyle

@@ -41,7 +41,7 @@
                     android:layout_marginStart="@dimen/marginSmall"
                     android:layout_marginEnd="@dimen/marginSmall"
                     android:orientation="vertical"
-                    android:paddingBottom="80dp">
+                    android:paddingBottom="40dp">
 
                     <TextView
                         android:id="@+id/fatigueRatingTitle"
@@ -62,7 +62,8 @@
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/fatigueChart"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="40dp" />
             </FrameLayout>
 
 

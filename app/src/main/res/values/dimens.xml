@@ -16,7 +16,7 @@
     <dimen name="textParagraphSecondary">12sp</dimen>
     <dimen name="textParagraphExtraSmall">10sp</dimen>
 
-    <dimen name="textFatigueRating">56sp</dimen>
+    <dimen name="textFatigueRating">80sp</dimen>
 
     <!-- region Component size -->
     <dimen name="sizeOnboardingIcon">80dp</dimen>
