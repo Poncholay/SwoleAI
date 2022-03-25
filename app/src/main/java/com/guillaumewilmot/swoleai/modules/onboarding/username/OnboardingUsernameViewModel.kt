@@ -46,11 +46,9 @@ class OnboardingUsernameViewModel @Inject constructor(
     )
 
     val nextButtonEnabled: Observable<Boolean> = _usernameValidator.fieldValidity
-        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     val usernameFieldError: Observable<Optional<String>> = _usernameValidator.fieldError
-        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     val loaderVisibility: Observable<Int> = _loaderVisibility

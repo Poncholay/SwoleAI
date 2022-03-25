@@ -30,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:paddingTop="@dimen/marginRegular"
-                android:paddingBottom="@dimen/marginRegular"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -63,47 +62,126 @@
                     android:id="@+id/fatigueChart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="40dp" />
+                    android:layout_marginTop="40dp"
+                    tools:visibility="invisible" />
             </FrameLayout>
 
 
-            <LinearLayout
-                android:id="@+id/weekSessions"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/weekSummary"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:gravity="center"
-                android:paddingStart="@dimen/marginRegular"
-                android:paddingEnd="@dimen/marginRegular"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginSmall"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fatigueSummaryContainer">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TMP: I will contain the sessions for the current selected week"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+                    android:clipToPadding="false"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/marginSmall">
 
-            <LinearLayout
-                android:id="@+id/programSumary"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/marginSmall"
+                        android:paddingEnd="@dimen/marginSmall">
+
+                        <TextView
+                            android:id="@+id/weekTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/textParagraphPrimary"
+                            tools:ignore="HardcodedText"
+                            tools:text="Hypertrophy\nMarch 21st\nWeek 3" />
+
+                        <androidx.constraintlayout.utils.widget.ImageFilterButton
+                            android:id="@+id/previousWeekButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/marginSmall"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:src="@drawable/icon_arrow"
+                            android:tint="@color/textSecondary" />
+
+                        <androidx.constraintlayout.utils.widget.ImageFilterButton
+                            android:id="@+id/nextWeekButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/marginRegular"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:rotation="180"
+                            android:src="@drawable/icon_arrow"
+                            android:tint="@color/textSecondary" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/weekSessions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        tools:itemCount="4"
+                        tools:listitem="@layout/adapter_view_session" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/programSummary"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:gravity="center"
-                android:paddingStart="@dimen/marginRegular"
-                android:paddingEnd="@dimen/marginRegular"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginSmall"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weekSessions"
+                app:layout_constraintTop_toBottomOf="@id/weekSummary"
                 app:layout_constraintVertical_bias="0">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TMP: I will contain the program summary"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="@dimen/marginSmall">
+
+                    <TextView
+                        android:id="@+id/programEndDaysRemaining"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textFontWeight="600"
+                        android:textSize="@dimen/textParagraphTitle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="172 Days Out" />
+
+                    <TextView
+                        android:id="@+id/programEndDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="@dimen/textParagraphPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/programEndDaysRemaining"
+                        tools:text="Tuesday, September 13th 2022" />
+
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/programChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="@dimen/marginSmall"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/programEndDate" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

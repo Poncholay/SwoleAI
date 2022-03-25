@@ -15,4 +15,6 @@
     <string name="app_home_session_cancel_button_text">Cancel session</string>
     <string name="app_home_session_finish_button_text">Finish session</string>
     <string name="app_home_dashboard_fatigue_rating_title">Fatigue rating</string>
+    <string name="app_adapter_view_session_is_complete_icon_content_description">Is complete</string>
+    <string name="app_adapter_view_session_access_icon_content_description">Access session</string>
 </resources>
