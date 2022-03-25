@@ -15,7 +15,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import autodispose2.androidx.lifecycle.autoDispose
+import com.github.mikephil.charting.charts.CombinedChart.DrawOrder
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
@@ -23,12 +25,16 @@ import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeDashboardBinding
 import com.guillaumewilmot.swoleai.modules.home.session.SessionAdapter
+import com.guillaumewilmot.swoleai.util.DateHelper
+import com.guillaumewilmot.swoleai.util.DateHelper.plusDays
 import com.guillaumewilmot.swoleai.util.extension.dpToPixel
+import com.guillaumewilmot.swoleai.util.extension.getUserLocale
 import com.guillaumewilmot.swoleai.util.extension.pixelToDp
 import com.guillaumewilmot.swoleai.util.extension.withSpans
 import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.util.*
 
 
 @ExperimentalCoroutinesApi
@@ -92,6 +98,27 @@ class HomeDashboardFragment : ParentFragment() {
             .subscribe {
                 sessionAdapter.data = it
             }
+
+        /**
+         * Program summmary
+         */
+
+        viewModel.programChartState
+            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+            .subscribe { state ->
+                binding?.programChart?.apply {
+                    data = CombinedData().apply {
+                        setData(state.volumeData)
+                        setData(state.intensityData)
+                    }
+
+                    //This allows first and last bar to not be half cutoff
+                    xAxis.axisMinimum = -barData.barWidth / 2f
+                    xAxis.axisMaximum = state.volumeData.xMax + barData.barWidth / 2f
+
+                    invalidate()
+                }
+            }
     }
 
     /**
@@ -130,6 +157,19 @@ class HomeDashboardFragment : ParentFragment() {
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
             adapter = sessionAdapter
         }
+
+        val daysOut = 172
+        val fakeProgramEnd = Date().plusDays(daysOut)
+        binding?.programEndDaysRemaining?.text = resources.getQuantityString(
+            R.plurals.app_home_dashboard_program_summary_days_remaining_text,
+            daysOut,
+            daysOut.toString()
+        )
+        binding?.programEndDate?.text = DateHelper.withFormat(
+            fakeProgramEnd,
+            DateHelper.DATE_FORMAT_FULL_DATE,
+            context.getUserLocale()
+        )
     }
 
     private fun setupFatigueChart() {
@@ -179,15 +219,16 @@ class HomeDashboardFragment : ParentFragment() {
             chart.axisLeft.axisMaximum = 8f
             chart.axisLeft.axisMinimum = 0f
             chart.axisLeft.setDrawGridLines(false)
-            chart.axisLeft.setDrawAxisLine(false)
+            chart.axisLeft.setDrawAxisLine(false) //true
             chart.axisLeft.setDrawLabels(false)
 
             chart.axisRight.isEnabled = false
 
             chart.xAxis.isEnabled = false
 
-//            chart.xAxis.setDrawGridLines(false)
-//            chart.xAxis.setDrawAxisLine(false)
+            chart.drawOrder = arrayOf(
+                DrawOrder.LINE, DrawOrder.BAR
+            )
         }
     }
 }

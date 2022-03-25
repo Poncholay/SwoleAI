@@ -4,8 +4,7 @@ import android.app.Application
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.components.LimitLine
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.controller.ParentFragment
@@ -13,7 +12,9 @@ import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import com.guillaumewilmot.swoleai.modules.home.session.SessionAdapter
 import com.guillaumewilmot.swoleai.util.DateHelper
 import com.guillaumewilmot.swoleai.util.DateHelper.DATE_FORMAT_DAY_OF_WEEK_SHORT
+import com.guillaumewilmot.swoleai.util.DateHelper.isSameWeek
 import com.guillaumewilmot.swoleai.util.DateHelper.minusDays
+import com.guillaumewilmot.swoleai.util.DateHelper.plusDays
 import com.guillaumewilmot.swoleai.util.extension.getUserLocale
 import com.guillaumewilmot.swoleai.util.extension.pixelToDp
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
@@ -43,7 +44,7 @@ class HomeDashboardViewModel @Inject constructor(
         val value: Float
     )
 
-    //FIXME : TMP hardcoded data for blueprints
+    //FIXME : TMP hardcoded data for fatigue chart
     private val _fatigueData: Flowable<List<FatigueValue>> = Flowable.create({
         val now = Date()
         it.onNext(
@@ -63,11 +64,11 @@ class HomeDashboardViewModel @Inject constructor(
             },
             ""
         ).apply {
-            this.lineWidth = 3f
+            lineWidth = 3f
             setDrawCircles(false)
             setDrawValues(false)
             setDrawFilled(true)
-            this.color = application.getColor(R.color.colorPrimary)
+            color = application.getColor(R.color.colorPrimary)
             fillDrawable =
                 ContextCompat.getDrawable(application, R.drawable.background_fatigue_chart)
         }
@@ -77,7 +78,7 @@ class HomeDashboardViewModel @Inject constructor(
         _fatigueData.map { fatigueData ->
             fatigueData.mapIndexed { i, _ ->
                 LimitLine(i.toFloat()).apply {
-                    lineWidth = application.pixelToDp(1f)
+                    lineWidth = application.pixelToDp(2f)
                     lineColor = application.getColor(R.color.textPrimary)
                 }
             }
@@ -160,6 +161,111 @@ class HomeDashboardViewModel @Inject constructor(
      * PROGRAM SUMMARY
      */
 
-    //FIXME : TMP hardcoded data for blueprints */
+    //FIXME : This will not be stored like this
+    data class ProgramWeekValue(
+        val date: Date,
+        val intensity: Float,
+        val volume: Float
+    )
 
+    //FIXME : TMP hardcoded data for fatigue chart
+    private val _programWeeksData: Flowable<List<ProgramWeekValue>> = Flowable.create({
+        it.onNext(
+            listOf(
+                ProgramWeekValue(Date().minusDays(2 * 7), 0.5f, 1.5f),
+                ProgramWeekValue(Date().minusDays(1 * 7), 2.5f, 2f),
+                ProgramWeekValue(Date(), 3f, 3f),
+                ProgramWeekValue(Date().plusDays(1 * 7), 2.5f, 4f),
+
+                ProgramWeekValue(Date().plusDays(2 * 7), 1.8f, 1f),
+                ProgramWeekValue(Date().plusDays(3 * 7), 2f, 2f),
+                ProgramWeekValue(Date().plusDays(4 * 7), 2.8f, 3f),
+                ProgramWeekValue(Date().plusDays(5 * 7), 2.5f, 4f),
+                ProgramWeekValue(Date().plusDays(6 * 7), 1.8f, 1f),
+
+                ProgramWeekValue(Date().plusDays(7 * 7), 4f, 3.5f),
+                ProgramWeekValue(Date().plusDays(8 * 7), 4.5f, 2.5f),
+                ProgramWeekValue(Date().plusDays(9 * 7), 5f, 1.5f),
+                ProgramWeekValue(Date().plusDays(10 * 7), 4f, 1f),
+            )
+        )
+    }, BackpressureStrategy.LATEST)
+
+
+    //FIXME : TMP hardcoded data for blueprints */
+    private val _programChartIntensityDataSet: Flowable<LineData> =
+        _programWeeksData.map { programWeeksData ->
+            LineData().apply {
+                addDataSet(LineDataSet(
+                    programWeeksData.mapIndexed { i, programWeek ->
+                        Entry(i.toFloat(), programWeek.intensity)
+                    },
+                    ""
+                ).apply {
+                    lineWidth = 1f
+                    setDrawCircles(false)
+                    setDrawValues(false)
+                    setDrawFilled(false)
+                    enableDashedLine(5f, 5f, 0f)
+                    color = application.getColor(R.color.textTertiary)
+                })
+            }
+        }
+
+    private val _programChartVolumeDataSet: Flowable<BarData> =
+        _programWeeksData.map { programWeeksData ->
+            BarData().apply {
+                val now = Date()
+                val pastWeeks = programWeeksData.filter {
+                    it.date.before(now) && it.date.isSameWeek(now).not()
+                }
+                val currentWeek = programWeeksData.filter {
+                    it.date.isSameWeek(now)
+                }
+                val futureWeeks = programWeeksData.filter {
+                    it.date.after(now) && it.date.isSameWeek(now).not()
+                }
+
+                var index = 0
+                fun createDataset(
+                    weeksData: List<ProgramWeekValue>,
+                    barColor: Int,
+                    barBorderColor: Int
+                ) = BarDataSet(
+                    weeksData.map { programWeek ->
+                        BarEntry((index++).toFloat(), programWeek.volume)
+                    },
+                    ""
+                ).apply {
+                    setDrawValues(false)
+                    color = barColor
+                    barBorderWidth = application.pixelToDp(3f)
+                    this.barBorderColor = barBorderColor
+                }
+
+                val pastColor = application.getColor(R.color.mainLight)
+                val currentColor = application.getColor(R.color.main)
+                val futureColor = application.getColor(R.color.transparent)
+                val borderColor = application.getColor(R.color.main)
+                addDataSet(createDataset(pastWeeks, pastColor, borderColor))
+                addDataSet(createDataset(currentWeek, currentColor, borderColor))
+                addDataSet(createDataset(futureWeeks, futureColor, borderColor))
+
+                barWidth = 0.8f
+            }
+        }
+
+    val programChartState: Flowable<ProgramChartState> = Flowable.zip(
+        _programChartVolumeDataSet,
+        _programChartIntensityDataSet,
+    ) { volumeDataset, intensityDataset ->
+        ProgramChartState(volumeDataset, intensityDataset)
+    }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
+    data class ProgramChartState(
+        val volumeData: BarData,
+        val intensityData: LineData,
+    )
 }

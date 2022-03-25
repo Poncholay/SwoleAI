@@ -45,6 +45,17 @@ object DateHelper {
         it
     }.time
 
+    fun Date.isSameWeek(date: Date): Boolean {
+        val calendar = Calendar.getInstance().apply {
+            time = this@isSameWeek
+        }
+        val otherCalendar = Calendar.getInstance().apply {
+            time = date
+        }
+        return calendar.get(Calendar.YEAR) == otherCalendar.get(Calendar.YEAR) &&
+                calendar.get(Calendar.WEEK_OF_YEAR) == otherCalendar.get(Calendar.WEEK_OF_YEAR)
+    }
+
     private fun getFormatter(
         strict: Boolean,
         givenFormat: String,
@@ -67,4 +78,5 @@ object DateHelper {
     }
 
     const val DATE_FORMAT_DAY_OF_WEEK_SHORT = "E"
+    const val DATE_FORMAT_FULL_DATE = "EEEE d MMMM yyyy"
 }
