@@ -34,6 +34,13 @@
     <color name="success">#4caf50</color>
     <color name="divider">#000000F0</color>
 
+    <color name="hypertrophy">#2196f3</color>
+    <color name="strength">#ff9800</color>
+    <color name="peaking">#f44336</color>
+    <color name="hypertrophyPast">#882196f3</color>
+    <color name="strengthPast">#88ff9800</color>
+    <color name="peakingPast">#88f44336</color>
+
     <!-- Light-Night dependant -->
     <color name="colorPrimary">@color/main</color>
     <color name="colorPrimaryVariant">@color/mainDark</color>

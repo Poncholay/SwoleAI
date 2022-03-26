@@ -17,6 +17,10 @@
     <string name="app_home_dashboard_fatigue_rating_title">Fatigue rating</string>
     <string name="app_adapter_view_session_is_complete_icon_content_description">Is complete</string>
     <string name="app_adapter_view_session_access_icon_content_description">Access session</string>
+    <string name="app_home_dashboard_program_summary_chart_legend_hypertrophy">Hypertrophy</string>
+    <string name="app_home_dashboard_program_summary_chart_legend_strength">Strength</string>
+    <string name="app_home_dashboard_program_summary_chart_legend_peaking">Peaking</string>
+    <string name="app_home_dashboard_program_summary_chart_legend_intensity">Intensity</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
         <item quantity="one">%1$s Days out</item>
