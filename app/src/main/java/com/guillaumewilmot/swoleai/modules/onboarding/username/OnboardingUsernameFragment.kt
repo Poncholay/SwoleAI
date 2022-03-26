@@ -64,6 +64,12 @@ class OnboardingUsernameFragment : ParentFragment() {
             .subscribe {
                 binding?.loader?.visibility = it
             }
+
+        viewModel.updateSuccess
+            .autoDispose(this)
+            .subscribe {
+                parent?.userOnboardingUsernameNext()
+            }
     }
 
     private fun ui() {
@@ -72,12 +78,8 @@ class OnboardingUsernameFragment : ParentFragment() {
         }
 
         binding?.titleText?.text = viewModel.titleText
+
         binding?.continueButton?.text = viewModel.nextButtonText
-
-        binding?.continueButton?.setOnClickListener {
-            parent?.userOnboardingUsernameNext()
-        }
-
         binding?.continueButton?.setOnClickListener {
             viewModel.onNext()
         }

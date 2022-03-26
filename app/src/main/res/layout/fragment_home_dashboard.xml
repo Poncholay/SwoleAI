@@ -22,12 +22,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/userDashboard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="gone">
 
                 <FrameLayout
                     android:id="@+id/fatigueSummaryContainer"
@@ -85,8 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingTop="@dimen/marginSmall"
-                        android:paddingBottom="@dimen/marginSmall">
+                        android:paddingTop="@dimen/marginSmall">
 
                         <TextView
                             android:id="@+id/programEndDaysRemaining"
@@ -94,6 +96,7 @@
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/marginSmall"
                             android:paddingEnd="@dimen/marginSmall"
+                            android:textAlignment="center"
                             android:textFontWeight="600"
                             android:textSize="@dimen/textParagraphTitle"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -108,6 +111,7 @@
                             android:layout_gravity="center_horizontal"
                             android:paddingStart="@dimen/marginSmall"
                             android:paddingEnd="@dimen/marginSmall"
+                            android:textAlignment="center"
                             android:textColor="@color/textSecondary"
                             android:textSize="@dimen/textParagraphPrimary"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -120,10 +124,44 @@
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
                             android:layout_marginTop="@dimen/marginSmall"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/programEndDate" />
+
+                        <LinearLayout
+                            android:id="@+id/programReviewButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp"
+                            android:paddingTop="8dp"
+                            android:paddingEnd="@dimen/marginSmall"
+                            android:paddingBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/programChart">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:background="@color/transparent"
+                                android:text="@string/app_home_dashboard_program_summary_review_program_button_text"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="@dimen/textParagraphSecondary" />
+
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:background="@color/transparent"
+                                android:contentDescription="@string/app_home_dashboard_week_summary_next_week_button_content_description"
+                                android:src="@drawable/icon_arrow_triangle"
+                                app:tint="@color/textSecondary" />
+                        </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -219,15 +257,38 @@
                             android:nestedScrollingEnabled="false"
                             tools:itemCount="4"
                             tools:listitem="@layout/adapter_view_session" />
+
+                        <com.guillaumewilmot.swoleai.view.AnimatedButton
+                            android:id="@+id/completeWeekButton"
+                            style="@style/ButtonMainStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/heightButton"
+                            android:layout_margin="@dimen/marginSmall"
+                            android:enabled="false"
+                            tools:text="@string/app_home_dashboard_week_summary_complete_week_button_text_incomplete" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/nouserDashboard"
+                android:id="@+id/noUserDashboard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/loader"
+                    style="@style/LoaderStyle"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/marginLoader"
+                    app:indicatorColor="@color/main"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

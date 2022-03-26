@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.modules.home.session
+package com.guillaumewilmot.swoleai.modules.home.dashboard
 
 import android.graphics.PorterDuff
 import android.view.LayoutInflater

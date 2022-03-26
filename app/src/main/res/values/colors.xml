@@ -32,7 +32,6 @@
     <color name="warning">#ff9800</color>
     <color name="info">#2196f3</color>
     <color name="success">#4caf50</color>
-    <color name="divider">#000000F0</color>
 
     <color name="hypertrophy">#2196f3</color>
     <color name="strength">#ff9800</color>
@@ -55,6 +54,7 @@
     <color name="textQuaternary">@color/grey30</color>
 
     <color name="colorDisabled">@color/dark_grey0</color>
+    <color name="divider">@color/grey15</color>
 
     <!-- Component colors -->
     <color name="iconTint">@color/white</color>

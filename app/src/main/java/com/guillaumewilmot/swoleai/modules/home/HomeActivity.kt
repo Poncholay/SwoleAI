@@ -51,7 +51,9 @@ class HomeActivity : ParentActivity() {
          */
         viewModel.redirectToOnboarding
             .autoDispose(this, Lifecycle.Event.ON_DESTROY)
-            .subscribe { redirectToOnboarding() }
+            .subscribe {
+                redirectToOnboarding()
+            }
     }
 
     private fun redirectToOnboarding() {

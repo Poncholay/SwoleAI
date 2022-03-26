@@ -37,9 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
-        android:background="?selectableItemBackgroundBorderless"
+        android:background="@color/transparent"
         android:contentDescription="@string/app_adapter_view_session_access_icon_content_description"
-        android:rotation="180"
-        android:src="@drawable/icon_arrow"
+        android:src="@drawable/icon_arrow_triangle"
         app:tint="@color/textPrimary" />
 </LinearLayout>

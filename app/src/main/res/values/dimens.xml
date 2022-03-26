@@ -25,6 +25,7 @@
     <dimen name="heightButton">48dp</dimen>
     <dimen name="heightBottomNavigationBar">56dp</dimen>
     <dimen name="heightToolbar">48dp</dimen>
+    <dimen name="heightSettingsOption">56dp</dimen>
     <dimen name="cornerRadiusCardView">8dp</dimen>
     <dimen name="elevationCardView">8dp</dimen>
 </resources>

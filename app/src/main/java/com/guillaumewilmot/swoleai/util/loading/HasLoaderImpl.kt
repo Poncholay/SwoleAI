@@ -4,6 +4,7 @@ import android.view.View
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
@@ -39,6 +40,14 @@ fun <T : Any> Flowable<T>.linkToLoader(source: HasLoader): Flowable<T> {
 }
 
 fun <T : Any> Observable<T>.linkToLoader(source: HasLoader): Observable<T> {
+    return this.doOnSubscribe {
+        source.pushLoading()
+    }.doFinally {
+        source.popLoading()
+    }
+}
+
+fun <T : Any> Single<T>.linkToLoader(source: HasLoader): Single<T> {
     return this.doOnSubscribe {
         source.pushLoading()
     }.doFinally {

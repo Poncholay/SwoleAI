@@ -1,0 +1,650 @@
+[
+  {
+    "id": 1,
+    "type": "HYPERTROPHY",
+    "weeks": [
+      {
+        "blockId": 1,
+        "date": "Mar 12, 2022 22:12:59",
+        "id": 1,
+        "intensity": 0.5,
+        "isComplete": true,
+        "name": "Week 1",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 0,
+            "isComplete": true,
+            "name": "Day 1 - Lower body",
+            "weekId": 1
+          },
+          {
+            "exercises": [],
+            "id": 0,
+            "isComplete": true,
+            "name": "Day 2 - Upper body",
+            "weekId": 1
+          },
+          {
+            "exercises": [],
+            "id": 0,
+            "isComplete": true,
+            "name": "Day 3 - Lower body",
+            "weekId": 1
+          },
+          {
+            "exercises": [],
+            "id": 0,
+            "isComplete": true,
+            "name": "Day 4 - Upper body",
+            "weekId": 1
+          }
+        ],
+        "volume": 1.5
+      },
+      {
+        "blockId": 1,
+        "date": "Mar 19, 2022 22:12:59",
+        "id": 2,
+        "intensity": 2.5,
+        "isComplete": true,
+        "name": "Week 2",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 1,
+            "isComplete": true,
+            "name": "Day 1 - Lower body",
+            "weekId": 2
+          },
+          {
+            "exercises": [],
+            "id": 1,
+            "isComplete": true,
+            "name": "Day 2 - Upper body",
+            "weekId": 2
+          },
+          {
+            "exercises": [],
+            "id": 1,
+            "isComplete": true,
+            "name": "Day 3 - Lower body",
+            "weekId": 2
+          },
+          {
+            "exercises": [],
+            "id": 1,
+            "isComplete": true,
+            "name": "Day 4 - Upper body",
+            "weekId": 2
+          }
+        ],
+        "volume": 2.0
+      },
+      {
+        "blockId": 1,
+        "date": "Mar 26, 2022 22:12:59",
+        "id": 3,
+        "intensity": 3.0,
+        "isComplete": false,
+        "name": "Week 3",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 2,
+            "isComplete": true,
+            "name": "Day 1 - Lower body",
+            "weekId": 3
+          },
+          {
+            "exercises": [],
+            "id": 2,
+            "isComplete": true,
+            "name": "Day 2 - Upper body",
+            "weekId": 3
+          },
+          {
+            "exercises": [],
+            "id": 2,
+            "isComplete": true,
+            "name": "Day 3 - Lower body",
+            "weekId": 3
+          },
+          {
+            "exercises": [],
+            "id": 2,
+            "isComplete": true,
+            "name": "Day 4 - Upper body",
+            "weekId": 3
+          }
+        ],
+        "volume": 3.0
+      },
+      {
+        "blockId": 1,
+        "date": "Apr 2, 2022 22:12:59",
+        "id": 4,
+        "intensity": 2.5,
+        "isComplete": false,
+        "name": "Week 4",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 3,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 4
+          },
+          {
+            "exercises": [],
+            "id": 3,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 4
+          },
+          {
+            "exercises": [],
+            "id": 3,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 4
+          },
+          {
+            "exercises": [],
+            "id": 3,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 4
+          }
+        ],
+        "volume": 4.0
+      },
+      {
+        "blockId": 1,
+        "date": "Apr 9, 2022 22:12:59",
+        "id": 5,
+        "intensity": 1.8,
+        "isComplete": false,
+        "name": "Week 5",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 4,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 5
+          },
+          {
+            "exercises": [],
+            "id": 4,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 5
+          },
+          {
+            "exercises": [],
+            "id": 4,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 5
+          },
+          {
+            "exercises": [],
+            "id": 4,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 5
+          }
+        ],
+        "volume": 1.0
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "type": "HYPERTROPHY",
+    "weeks": [
+      {
+        "blockId": 2,
+        "date": "Apr 16, 2022 22:12:59",
+        "id": 6,
+        "intensity": 2.0,
+        "isComplete": false,
+        "name": "Week 6",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 5,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 6
+          },
+          {
+            "exercises": [],
+            "id": 5,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 6
+          },
+          {
+            "exercises": [],
+            "id": 5,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 6
+          },
+          {
+            "exercises": [],
+            "id": 5,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 6
+          }
+        ],
+        "volume": 2.0
+      },
+      {
+        "blockId": 2,
+        "date": "Apr 23, 2022 22:12:59",
+        "id": 7,
+        "intensity": 2.8,
+        "isComplete": false,
+        "name": "Week 7",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 6,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 7
+          },
+          {
+            "exercises": [],
+            "id": 6,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 7
+          },
+          {
+            "exercises": [],
+            "id": 6,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 7
+          },
+          {
+            "exercises": [],
+            "id": 6,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 7
+          }
+        ],
+        "volume": 3.0
+      },
+      {
+        "blockId": 2,
+        "date": "Apr 30, 2022 22:12:59",
+        "id": 8,
+        "intensity": 2.5,
+        "isComplete": false,
+        "name": "Week 8",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 7,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 8
+          },
+          {
+            "exercises": [],
+            "id": 7,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 8
+          },
+          {
+            "exercises": [],
+            "id": 7,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 8
+          },
+          {
+            "exercises": [],
+            "id": 7,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 8
+          }
+        ],
+        "volume": 4.0
+      },
+      {
+        "blockId": 2,
+        "date": "May 7, 2022 22:12:59",
+        "id": 9,
+        "intensity": 1.8,
+        "isComplete": false,
+        "name": "Week 9",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 8,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 9
+          },
+          {
+            "exercises": [],
+            "id": 8,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 9
+          },
+          {
+            "exercises": [],
+            "id": 8,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 9
+          },
+          {
+            "exercises": [],
+            "id": 8,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 9
+          }
+        ],
+        "volume": 1.0
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "type": "STRENGTH",
+    "weeks": [
+      {
+        "blockId": 3,
+        "date": "May 14, 2022 22:12:59",
+        "id": 10,
+        "intensity": 4.0,
+        "isComplete": false,
+        "name": "Week 10",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 9,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 10
+          },
+          {
+            "exercises": [],
+            "id": 9,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 10
+          },
+          {
+            "exercises": [],
+            "id": 9,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 10
+          },
+          {
+            "exercises": [],
+            "id": 9,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 10
+          }
+        ],
+        "volume": 3.5
+      },
+      {
+        "blockId": 3,
+        "date": "May 21, 2022 22:12:59",
+        "id": 11,
+        "intensity": 4.5,
+        "isComplete": false,
+        "name": "Week 11",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 10,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 11
+          },
+          {
+            "exercises": [],
+            "id": 10,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 11
+          },
+          {
+            "exercises": [],
+            "id": 10,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 11
+          },
+          {
+            "exercises": [],
+            "id": 10,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 11
+          }
+        ],
+        "volume": 2.5
+      },
+      {
+        "blockId": 3,
+        "date": "May 28, 2022 22:12:59",
+        "id": 12,
+        "intensity": 5.0,
+        "isComplete": false,
+        "name": "Week 12",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 11,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 12
+          },
+          {
+            "exercises": [],
+            "id": 11,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 12
+          },
+          {
+            "exercises": [],
+            "id": 11,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 12
+          },
+          {
+            "exercises": [],
+            "id": 11,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 12
+          }
+        ],
+        "volume": 1.5
+      },
+      {
+        "blockId": 3,
+        "date": "Jun 4, 2022 22:12:59",
+        "id": 13,
+        "intensity": 4.0,
+        "isComplete": false,
+        "name": "Week 13",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 12,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 13
+          },
+          {
+            "exercises": [],
+            "id": 12,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 13
+          },
+          {
+            "exercises": [],
+            "id": 12,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 13
+          },
+          {
+            "exercises": [],
+            "id": 12,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 13
+          }
+        ],
+        "volume": 1.0
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "type": "PEAKING",
+    "weeks": [
+      {
+        "blockId": 4,
+        "date": "Jun 11, 2022 22:12:59",
+        "id": 14,
+        "intensity": 7.5,
+        "isComplete": false,
+        "name": "Week 14",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 13,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 14
+          },
+          {
+            "exercises": [],
+            "id": 13,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 14
+          },
+          {
+            "exercises": [],
+            "id": 13,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 14
+          },
+          {
+            "exercises": [],
+            "id": 13,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 14
+          }
+        ],
+        "volume": 2.5
+      },
+      {
+        "blockId": 4,
+        "date": "Jun 18, 2022 22:12:59",
+        "id": 15,
+        "intensity": 8.0,
+        "isComplete": false,
+        "name": "Week 15",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 14,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 15
+          },
+          {
+            "exercises": [],
+            "id": 14,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 15
+          },
+          {
+            "exercises": [],
+            "id": 14,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 15
+          },
+          {
+            "exercises": [],
+            "id": 14,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 15
+          }
+        ],
+        "volume": 2.0
+      },
+      {
+        "blockId": 4,
+        "date": "Jun 25, 2022 22:12:59",
+        "id": 16,
+        "intensity": 4.0,
+        "isComplete": false,
+        "name": "Week 16",
+        "sessions": [
+          {
+            "exercises": [],
+            "id": 15,
+            "isComplete": false,
+            "name": "Day 1 - Lower body",
+            "weekId": 16
+          },
+          {
+            "exercises": [],
+            "id": 15,
+            "isComplete": false,
+            "name": "Day 2 - Upper body",
+            "weekId": 16
+          },
+          {
+            "exercises": [],
+            "id": 15,
+            "isComplete": false,
+            "name": "Day 3 - Lower body",
+            "weekId": 16
+          },
+          {
+            "exercises": [],
+            "id": 15,
+            "isComplete": false,
+            "name": "Day 4 - Upper body",
+            "weekId": 16
+          }
+        ],
+        "volume": 1.5
+      }
+    ]
+  }
+]

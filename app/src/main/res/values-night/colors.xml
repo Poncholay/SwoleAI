@@ -14,6 +14,7 @@
     <color name="textQuaternary">#6C6C6C</color>
 
     <color name="colorDisabled">@color/dark_grey0</color>
+    <color name="divider">@color/dark_grey5</color>
 
     <!-- Component colors -->
     <color name="iconTint">@color/colorPrimary</color>

@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -23,23 +24,24 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeDashboardBinding
-import com.guillaumewilmot.swoleai.modules.home.session.SessionAdapter
-import com.guillaumewilmot.swoleai.util.DateHelper
-import com.guillaumewilmot.swoleai.util.DateHelper.plusDays
+import com.guillaumewilmot.swoleai.modules.home.setting.HomeSettingsFragment
 import com.guillaumewilmot.swoleai.util.extension.dpToPixel
-import com.guillaumewilmot.swoleai.util.extension.getUserLocale
 import com.guillaumewilmot.swoleai.util.extension.pixelToDp
 import com.guillaumewilmot.swoleai.util.extension.withSpans
+import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.Float.max
-import java.util.*
+import javax.inject.Inject
 
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HomeDashboardFragment : ParentFragment() {
+
+    @Inject
+    lateinit var fragmentBackstack: FragmentBackstack
 
     private var binding: FragmentHomeDashboardBinding? = null
     private val viewModel: HomeDashboardViewModel by viewModels()
@@ -62,7 +64,7 @@ class HomeDashboardFragment : ParentFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        ui()
+        setupUi()
         setupFatigueChart()
         setupProgramChart()
 
@@ -70,6 +72,20 @@ class HomeDashboardFragment : ParentFragment() {
             .autoDispose(this)
             .subscribe {
                 binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
+            }
+
+        /**
+         * Handle no user
+         */
+
+        viewModel.userDashboardVisibility.autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                binding?.userDashboard?.visibility = it
+            }
+
+        viewModel.noUserDashboardVisibility.autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                binding?.noUserDashboard?.visibility = it
             }
 
         /**
@@ -115,6 +131,13 @@ class HomeDashboardFragment : ParentFragment() {
          * Program summary
          */
 
+        viewModel.programSummaryState
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe { state ->
+                binding?.programEndDaysRemaining?.text = state.daysRemainingText
+                binding?.programEndDate?.text = state.endDateText
+            }
+
         viewModel.programChartState
             .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe { state ->
@@ -143,16 +166,35 @@ class HomeDashboardFragment : ParentFragment() {
          * Week summary
          */
 
-        viewModel.weekSummaryState
+        viewModel.weekSummaryTitle
             .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe {
-                binding?.weekTitle?.text = it.title
-                binding?.weekCompletedIcon?.visibility = it.isCompleteIconVisibility
-                binding?.weekCompletedIcon?.setColorFilter(
-                    it.isCompleteIconColor,
-                    PorterDuff.Mode.SRC_IN
-                )
-                sessionAdapter.data = it.sessions
+                binding?.weekTitle?.text = it
+            }
+
+        viewModel.weekSummaryIsCompleteIconState
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                binding?.weekCompletedIcon?.apply {
+                    visibility = it.visibility
+                    setColorFilter(it.iconColor, PorterDuff.Mode.SRC_IN)
+                }
+            }
+
+        viewModel.weekSessions
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                sessionAdapter.data = it
+            }
+
+        viewModel.weekSummaryCompleteButtonState
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                binding?.completeWeekButton?.apply {
+                    text = it.text
+                    background = AppCompatResources.getDrawable(context, it.backgroundId)
+                    isEnabled = it.isEnabled
+                }
             }
     }
 
@@ -164,47 +206,49 @@ class HomeDashboardFragment : ParentFragment() {
 
     private fun setupToolbar() {
         binding?.toolbarLayout?.toolbarContent?.apply {
-            this.iconAction.visibility = View.VISIBLE
-            this.iconAction.setImageDrawable(
+            iconAction.visibility = View.VISIBLE
+            iconAction.setImageDrawable(
                 ContextCompat.getDrawable(
                     this.iconAction.context,
                     R.drawable.icon_settings
                 )
             )
+            iconAction.setOnClickListener {
+                fragmentManager?.let {
+                    fragmentBackstack.push(
+                        it,
+                        HomeSettingsFragment(),
+                        FragmentBackstack.Animate.FORWARD
+                    )
+                }
+            }
 
-            this.toolbarTitle.text = SpannableString("Swole AI").withSpans(
+            toolbarTitle.text = SpannableString("Swole AI").withSpans(
                 "AI",
                 ForegroundColorSpan(this.iconAction.context.getColor(R.color.secondary))
             )
         }
     }
 
-    private fun ui() {
+    private fun setupUi() {
         binding?.weekSessions?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
             adapter = sessionAdapter
         }
 
+        binding?.programReviewButton?.setOnClickListener {
+
+        }
         binding?.nextWeekButton?.setOnClickListener {
             viewModel.goToNextWeek()
         }
         binding?.previousWeekButton?.setOnClickListener {
             viewModel.goToPreviousWeek()
         }
-
-        val daysOut = 172
-        val fakeProgramEnd = Date().plusDays(daysOut)
-        binding?.programEndDaysRemaining?.text = resources.getQuantityString(
-            R.plurals.app_home_dashboard_program_summary_days_remaining_text,
-            daysOut,
-            daysOut.toString()
-        )
-        binding?.programEndDate?.text = DateHelper.withFormat(
-            fakeProgramEnd,
-            DateHelper.DATE_FORMAT_WEEKDAY_DAY_MONTH_YEAR,
-            context.getUserLocale()
-        )
+        binding?.completeWeekButton?.setOnClickListener {
+            viewModel.completeWeek()
+        }
     }
 
     private fun setupFatigueChart() {

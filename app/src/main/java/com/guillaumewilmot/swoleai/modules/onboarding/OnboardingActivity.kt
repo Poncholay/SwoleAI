@@ -82,7 +82,7 @@ class OnboardingActivity : ParentActivity(),
 
     //TODO
     override fun userOnboardingGreetingNext() = navigateToNextFragment()
-    override fun userOnboardingUsernameNext() {}
+    override fun userOnboardingUsernameNext() = navigateToHomeActivity()
 
     /**
      * Subclasses
