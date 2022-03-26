@@ -1,11 +1,9 @@
 package com.guillaumewilmot.swoleai.modules.home.dashboard
 
-import android.graphics.Typeface
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,18 +66,24 @@ class HomeDashboardFragment : ParentFragment() {
         setupFatigueChart()
         setupProgramChart()
 
+        viewModel.loaderVisibility
+            .autoDispose(this)
+            .subscribe {
+                binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
+            }
+
         /**
          * Fatigue chart
          */
 
         viewModel.currentFatigueValue
-            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe { fatigue ->
                 binding?.fatigueRatingValue?.text = fatigue.toString()
             }
 
         viewModel.fatigueChartState
-            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe { state ->
                 binding?.fatigueChart?.apply {
                     val padding = (state.dataset.yMax - state.dataset.yMin) * 0.5f
@@ -108,21 +112,11 @@ class HomeDashboardFragment : ParentFragment() {
             }
 
         /**
-         * Week summary
-         */
-
-        viewModel.weekSessions
-            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
-            .subscribe {
-                sessionAdapter.data = it
-            }
-
-        /**
-         * Program summmary
+         * Program summary
          */
 
         viewModel.programChartState
-            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe { state ->
                 binding?.programChart?.apply {
                     legend.setCustom(state.legend)
@@ -143,6 +137,22 @@ class HomeDashboardFragment : ParentFragment() {
                     invalidate()
                     visibility = View.VISIBLE
                 }
+            }
+
+        /**
+         * Week summary
+         */
+
+        viewModel.weekSummaryState
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                binding?.weekTitle?.text = it.title
+                binding?.weekCompletedIcon?.visibility = it.isCompleteIconVisibility
+                binding?.weekCompletedIcon?.setColorFilter(
+                    it.isCompleteIconColor,
+                    PorterDuff.Mode.SRC_IN
+                )
+                sessionAdapter.data = it.sessions
             }
     }
 
@@ -170,18 +180,17 @@ class HomeDashboardFragment : ParentFragment() {
     }
 
     private fun ui() {
-        binding?.fatigueRatingValue?.text = 20.00.toString()
-
-        binding?.weekTitle?.text = SpannableString("Hypertrophy\nMarch 21st\nWeek 3").withSpans(
-            "Week 3",
-            StyleSpan(Typeface.BOLD),
-            RelativeSizeSpan(1.4f)
-        )
-
         binding?.weekSessions?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
             adapter = sessionAdapter
+        }
+
+        binding?.nextWeekButton?.setOnClickListener {
+            viewModel.goToNextWeek()
+        }
+        binding?.previousWeekButton?.setOnClickListener {
+            viewModel.goToPreviousWeek()
         }
 
         val daysOut = 172
@@ -193,7 +202,7 @@ class HomeDashboardFragment : ParentFragment() {
         )
         binding?.programEndDate?.text = DateHelper.withFormat(
             fakeProgramEnd,
-            DateHelper.DATE_FORMAT_FULL_DATE,
+            DateHelper.DATE_FORMAT_WEEKDAY_DAY_MONTH_YEAR,
             context.getUserLocale()
         )
     }
@@ -254,9 +263,7 @@ class HomeDashboardFragment : ParentFragment() {
             chart.axisRight.isEnabled = false
             chart.xAxis.isEnabled = false
 
-            chart.drawOrder = arrayOf(
-                DrawOrder.LINE, DrawOrder.BAR
-            )
+            chart.drawOrder = arrayOf(DrawOrder.LINE, DrawOrder.BAR)
         }
     }
 }

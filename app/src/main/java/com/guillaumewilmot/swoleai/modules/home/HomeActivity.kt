@@ -50,7 +50,7 @@ class HomeActivity : ParentActivity() {
          * We subscribe here to avoid redirecting before splash screen is done
          */
         viewModel.redirectToOnboarding
-            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe { redirectToOnboarding() }
     }
 

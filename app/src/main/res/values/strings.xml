@@ -9,21 +9,33 @@
 
     <string name="app_field_validator_not_blank_error">Must not be blank</string>
     <string name="app_field_validator_not_number_error">Must be a number</string>
+
     <string name="app_home_navigation_item_dashboard">Dashboard</string>
     <string name="app_home_navigation_item_session">Session</string>
+
     <string name="app_toolbar_back_button_description">Back button</string>
+
     <string name="app_home_session_cancel_button_text">Cancel session</string>
     <string name="app_home_session_finish_button_text">Finish session</string>
-    <string name="app_home_dashboard_fatigue_rating_title">Fatigue rating</string>
+
     <string name="app_adapter_view_session_is_complete_icon_content_description">Is complete</string>
     <string name="app_adapter_view_session_access_icon_content_description">Access session</string>
-    <string name="app_home_dashboard_program_summary_chart_legend_hypertrophy">Hypertrophy</string>
-    <string name="app_home_dashboard_program_summary_chart_legend_strength">Strength</string>
-    <string name="app_home_dashboard_program_summary_chart_legend_peaking">Peaking</string>
+
+    <string name="app_block_type_hypertrophy">Hypertrophy</string>
+    <string name="app_block_type_strength">Strength</string>
+    <string name="app_block_type_peaking">Peaking</string>
+
+    <string name="app_home_dashboard_fatigue_rating_title">Fatigue rating</string>
+    <string name="app_home_dashboard_program_summary_chart_legend_hypertrophy">@string/app_block_type_hypertrophy</string>
+    <string name="app_home_dashboard_program_summary_chart_legend_strength">@string/app_block_type_strength</string>
+    <string name="app_home_dashboard_program_summary_chart_legend_peaking">@string/app_block_type_peaking</string>
     <string name="app_home_dashboard_program_summary_chart_legend_intensity">Intensity</string>
+    <string name="app_home_dashboard_week_summary_previous_week_button_content_description">Previous week</string>
+    <string name="app_home_dashboard_week_summary_next_week_button_content_description">Next week</string>
+    <string name="app_home_dashboard_week_summary_week_completed_icon_content_description">Week completed</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
-        <item quantity="one">%1$s Days out</item>
-        <item quantity="other">%1$s Day out</item>
+        <item quantity="one">%1$s Day out</item>
+        <item quantity="other">%1$s Days out</item>
     </plurals>
 </resources>

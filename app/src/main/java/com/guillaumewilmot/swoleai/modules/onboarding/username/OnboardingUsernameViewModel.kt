@@ -17,7 +17,6 @@ import com.guillaumewilmot.swoleai.util.validation.ValidatorNotBlank
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -49,10 +48,6 @@ class OnboardingUsernameViewModel @Inject constructor(
         .observeOn(AndroidSchedulers.mainThread())
 
     val usernameFieldError: Observable<Optional<String>> = _usernameValidator.fieldError
-        .observeOn(AndroidSchedulers.mainThread())
-
-    val loaderVisibility: Observable<Int> = _loaderVisibility
-        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     /**

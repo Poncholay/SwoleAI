@@ -7,6 +7,6 @@ import io.reactivex.rxjava3.core.Observable
 interface HasLoader {
     fun pushLoading()
     fun popLoading()
-    val _loaderIsLoading: Observable<Boolean>
-    val _loaderVisibility: Observable<Int>
+    val loaderIsLoading: Observable<Boolean>
+    val loaderVisibility: Observable<Int>
 }

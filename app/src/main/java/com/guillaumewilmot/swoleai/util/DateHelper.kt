@@ -78,5 +78,6 @@ object DateHelper {
     }
 
     const val DATE_FORMAT_DAY_OF_WEEK_SHORT = "E"
-    const val DATE_FORMAT_FULL_DATE = "EEEE d MMMM yyyy"
+    const val DATE_FORMAT_MONTH_DAY = "MMMM dd"
+    const val DATE_FORMAT_WEEKDAY_DAY_MONTH_YEAR = "EEEE d MMMM yyyy"
 }
