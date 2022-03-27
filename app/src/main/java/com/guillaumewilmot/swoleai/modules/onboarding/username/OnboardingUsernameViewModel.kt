@@ -5,7 +5,7 @@ import android.text.Editable
 import android.view.View
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
-import com.guillaumewilmot.swoleai.model.Optional
+import com.guillaumewilmot.swoleai.model.Nullable
 import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.util.loading.HasLoader
 import com.guillaumewilmot.swoleai.util.loading.HasLoaderImpl
@@ -51,7 +51,7 @@ class OnboardingUsernameViewModel @Inject constructor(
     val nextButtonEnabled: Observable<Boolean> = _usernameValidator.fieldValidity
         .observeOn(AndroidSchedulers.mainThread())
 
-    val usernameFieldError: Observable<Optional<String>> = _usernameValidator.fieldError
+    val usernameFieldError: Observable<Nullable<String>> = _usernameValidator.fieldError
         .observeOn(AndroidSchedulers.mainThread())
 
     val updateSuccess: Observable<Boolean> = _updateSuccess

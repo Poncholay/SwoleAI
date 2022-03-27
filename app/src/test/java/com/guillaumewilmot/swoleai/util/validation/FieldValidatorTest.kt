@@ -3,7 +3,7 @@ package com.guillaumewilmot.swoleai.util.validation
 import com.guillaumewilmot.swoleai.BaseUnitTest
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.RxImmediateSchedulerRule
-import com.guillaumewilmot.swoleai.model.Optional
+import com.guillaumewilmot.swoleai.model.Nullable
 import io.mockk.every
 import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,37 +37,37 @@ class FieldValidatorTest : BaseUnitTest() {
         val consumerFieldValidity = spyConsumer(validator.fieldValidity)
 
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed until first event
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed until first event
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldFocusChanged(true)
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(BLANK_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldChanged("a")
         testObserver(validator.fieldValue).assertValue("a")
-        testObserver(validator.fieldError).assertValue(Optional(null))
+        testObserver(validator.fieldError).assertValue(Nullable(null))
         testObserver(validator.fieldValidity).assertValue(true)
 
         validator.onFieldChanged(" ")
         testObserver(validator.fieldValue).assertValue(" ")
-        testObserver(validator.fieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(BLANK_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         verifySequence {
             consumerFieldValue.accept("") // Default
-            consumerFieldError.accept(Optional(null)) // Default
+            consumerFieldError.accept(Nullable(null)) // Default
             consumerFieldValidity.accept(false) // Default
 
-            consumerFieldError.accept(Optional(BLANK_ERROR)) // After gain focus
+            consumerFieldError.accept(Nullable(BLANK_ERROR)) // After gain focus
 
             consumerFieldValue.accept("a")
-            consumerFieldError.accept(Optional(null))
+            consumerFieldError.accept(Nullable(null))
             consumerFieldValidity.accept(true)
 
             consumerFieldValue.accept(" ")
-            consumerFieldError.accept(Optional(BLANK_ERROR))
+            consumerFieldError.accept(Nullable(BLANK_ERROR))
             consumerFieldValidity.accept(false)
         }
     }
@@ -85,37 +85,37 @@ class FieldValidatorTest : BaseUnitTest() {
         val consumerFieldValidity = spyConsumer(validator.fieldValidity)
 
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed until first event
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed until first event
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldFocusChanged(true)
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed because empty
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed because empty
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldChanged("a")
         testObserver(validator.fieldValue).assertValue("a")
-        testObserver(validator.fieldError).assertValue(Optional(null))
+        testObserver(validator.fieldError).assertValue(Nullable(null))
         testObserver(validator.fieldValidity).assertValue(true)
 
         validator.onFieldChanged(" ")
         testObserver(validator.fieldValue).assertValue(" ")
-        testObserver(validator.fieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(BLANK_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         verifySequence {
             consumerFieldValue.accept("") // Default
-            consumerFieldError.accept(Optional(null)) // Default
+            consumerFieldError.accept(Nullable(null)) // Default
             consumerFieldValidity.accept(false) // Default
 
             consumerFieldValue.accept("a")
-            consumerFieldError.accept(Optional(null))
+            consumerFieldError.accept(Nullable(null))
             consumerFieldValidity.accept(true)
 
-            consumerFieldError.accept(Optional(null)) //_canShowErrorField becomes true
+            consumerFieldError.accept(Nullable(null)) //_canShowErrorField becomes true
 
             consumerFieldValue.accept(" ")
-            consumerFieldError.accept(Optional(BLANK_ERROR))
+            consumerFieldError.accept(Nullable(BLANK_ERROR))
             consumerFieldValidity.accept(false)
         }
     }
@@ -133,45 +133,45 @@ class FieldValidatorTest : BaseUnitTest() {
         val consumerFieldValidity = spyConsumer(validator.fieldValidity)
 
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed until first event
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed until first event
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldFocusChanged(true)
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed because in focus
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed because in focus
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldFocusChanged(false)
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(BLANK_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldChanged("a")
         testObserver(validator.fieldValue).assertValue("a")
-        testObserver(validator.fieldError).assertValue(Optional(null))
+        testObserver(validator.fieldError).assertValue(Nullable(null))
         testObserver(validator.fieldValidity).assertValue(true)
 
         validator.onFieldChanged(" ")
         testObserver(validator.fieldValue).assertValue(" ")
-        testObserver(validator.fieldError).assertValue(Optional(BLANK_ERROR)) //No error displayed because in focus
+        testObserver(validator.fieldError).assertValue(Nullable(BLANK_ERROR)) //No error displayed because in focus
         testObserver(validator.fieldValidity).assertValue(false)
 
         verifySequence {
             consumerFieldValue.accept("") // Default
-            consumerFieldError.accept(Optional(null)) // Default
+            consumerFieldError.accept(Nullable(null)) // Default
             consumerFieldValidity.accept(false) // Default
 
             //Add focus
             //Remove focus
 
-            consumerFieldError.accept(Optional(BLANK_ERROR)) //_canShowErrorField becomes true
+            consumerFieldError.accept(Nullable(BLANK_ERROR)) //_canShowErrorField becomes true
 
             consumerFieldValue.accept("a")
-            consumerFieldError.accept(Optional(null))
+            consumerFieldError.accept(Nullable(null))
             consumerFieldValidity.accept(true)
 
             consumerFieldValue.accept(" ")
-            consumerFieldError.accept(Optional(BLANK_ERROR))
+            consumerFieldError.accept(Nullable(BLANK_ERROR))
             consumerFieldValidity.accept(false)
         }
     }
@@ -189,45 +189,45 @@ class FieldValidatorTest : BaseUnitTest() {
         val consumerFieldValidity = spyConsumer(validator.fieldValidity)
 
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed until first event
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed until first event
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldFocusChanged(true)
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed because empty
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed because empty
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldChanged("a")
         testObserver(validator.fieldValue).assertValue("a")
-        testObserver(validator.fieldError).assertValue(Optional(null))
+        testObserver(validator.fieldError).assertValue(Nullable(null))
         testObserver(validator.fieldValidity).assertValue(true)
 
         validator.onFieldChanged(" ")
         testObserver(validator.fieldValue).assertValue(" ")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed because in focus
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed because in focus
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldFocusChanged(false)
         testObserver(validator.fieldValue).assertValue(" ")
-        testObserver(validator.fieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(BLANK_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         verifySequence {
             consumerFieldValue.accept("") // Default
-            consumerFieldError.accept(Optional(null)) // Default
+            consumerFieldError.accept(Nullable(null)) // Default
             consumerFieldValidity.accept(false) // Default
 
             consumerFieldValue.accept("a")
-            consumerFieldError.accept(Optional(null))
+            consumerFieldError.accept(Nullable(null))
             consumerFieldValidity.accept(true)
 
             consumerFieldValue.accept(" ")
-            consumerFieldError.accept(Optional(null))
+            consumerFieldError.accept(Nullable(null))
             consumerFieldValidity.accept(false)
 
             //Remove focus
 
-            consumerFieldError.accept(Optional(BLANK_ERROR)) //_canShowErrorField becomes true
+            consumerFieldError.accept(Nullable(BLANK_ERROR)) //_canShowErrorField becomes true
         }
     }
 
@@ -244,54 +244,54 @@ class FieldValidatorTest : BaseUnitTest() {
         val consumerFieldValidity = spyConsumer(validator.fieldValidity)
 
         testObserver(validator.fieldValue).assertValue("")
-        testObserver(validator.fieldError).assertValue(Optional(null)) //No error displayed until first event
+        testObserver(validator.fieldError).assertValue(Nullable(null)) //No error displayed until first event
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldFocusChanged(true) //Trigger first event
 
         validator.onFieldChanged("a")
         testObserver(validator.fieldValue).assertValue("a")
-        testObserver(validator.fieldError).assertValue(Optional(NOT_NUMBER_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(NOT_NUMBER_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldChanged("1234")
         testObserver(validator.fieldValue).assertValue("1234")
-        testObserver(validator.fieldError).assertValue(Optional(null))
+        testObserver(validator.fieldError).assertValue(Nullable(null))
         testObserver(validator.fieldValidity).assertValue(true)
 
         validator.onFieldChanged("123 345")
         testObserver(validator.fieldValue).assertValue("123 345")
-        testObserver(validator.fieldError).assertValue(Optional(NOT_NUMBER_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(NOT_NUMBER_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         validator.onFieldChanged(" ")
         testObserver(validator.fieldValue).assertValue(" ")
-        testObserver(validator.fieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(validator.fieldError).assertValue(Nullable(BLANK_ERROR))
         testObserver(validator.fieldValidity).assertValue(false)
 
         verifySequence {
             consumerFieldValue.accept("") // Default
-            consumerFieldError.accept(Optional(null)) // Default
+            consumerFieldError.accept(Nullable(null)) // Default
             consumerFieldValidity.accept(false) // Default
 
             //Add focus
 
-            consumerFieldError.accept(Optional(BLANK_ERROR))
+            consumerFieldError.accept(Nullable(BLANK_ERROR))
 
             consumerFieldValue.accept("a")
-            consumerFieldError.accept(Optional(NOT_NUMBER_ERROR))
+            consumerFieldError.accept(Nullable(NOT_NUMBER_ERROR))
             consumerFieldValidity.accept(false)
 
             consumerFieldValue.accept("1234")
-            consumerFieldError.accept(Optional(null))
+            consumerFieldError.accept(Nullable(null))
             consumerFieldValidity.accept(true)
 
             consumerFieldValue.accept("123 345")
-            consumerFieldError.accept(Optional(NOT_NUMBER_ERROR))
+            consumerFieldError.accept(Nullable(NOT_NUMBER_ERROR))
             consumerFieldValidity.accept(false)
 
             consumerFieldValue.accept(" ")
-            consumerFieldError.accept(Optional(BLANK_ERROR))
+            consumerFieldError.accept(Nullable(BLANK_ERROR))
             consumerFieldValidity.accept(false)
         }
     }

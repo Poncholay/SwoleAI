@@ -18,8 +18,9 @@ import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import com.guillaumewilmot.swoleai.model.*
-import com.guillaumewilmot.swoleai.model.Optional
 import com.guillaumewilmot.swoleai.modules.home.HomeActivity
+import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgram
+import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgramImpl
 import com.guillaumewilmot.swoleai.util.DateHelper
 import com.guillaumewilmot.swoleai.util.DateHelper.DATE_FORMAT_DAY_OF_WEEK_SHORT
 import com.guillaumewilmot.swoleai.util.DateHelper.isSameWeek
@@ -32,6 +33,7 @@ import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.util.loading.HasLoader
 import com.guillaumewilmot.swoleai.util.loading.HasLoaderImpl
 import com.guillaumewilmot.swoleai.util.loading.linkToLoader
+import com.guillaumewilmot.swoleai.util.storage.DataDefinition
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -49,7 +51,9 @@ import javax.inject.Inject
 class HomeDashboardViewModel @Inject constructor(
     application: Application,
     dataStorage: DataStorage
-) : ParentViewModel(application), HasLoader by HasLoaderImpl() {
+) : ParentViewModel(application),
+    HasLoader by HasLoaderImpl(),
+    CanLookupProgram by CanLookupProgramImpl() {
 
     private val _user = dataStorage.dataHolder.userField
 
@@ -89,37 +93,19 @@ class HomeDashboardViewModel @Inject constructor(
         )
     }, BackpressureStrategy.LATEST)
 
-    //FIXME : TMP hardcoded data for fatigue chart
-    private val _programBlocksData: Flowable<List<ProgramBlockModel>> = Flowable.create({
-        it.onNext(FakeProgram.fakeProgram)
-    }, BackpressureStrategy.LATEST)
-
-    private val _programWeeks: Flowable<List<ProgramWeekModel>> = _programBlocksData.map {
-        it.flatMap { block ->
-            block.weeks
-        }
-    }
-
     //FIXME : TMP hardcoded data, should be stored
     private val _currentWeekIndex = BehaviorSubject.createDefault(2)
     private val _currentWeekIndexFlowable =
         _currentWeekIndex.toFlowable(BackpressureStrategy.LATEST)
 
-    private val _currentWeek: Flowable<Optional<ProgramWeekModel>> = Flowable.combineLatest(
-        _programWeeks,
+    private val _currentWeek: Flowable<Nullable<ProgramWeekModel>> = Flowable.combineLatest(
+        programWeeks,
         _currentWeekIndexFlowable
     ) { programWeeks, currentWeekIndex ->
-        programWeeks.getOrNull(currentWeekIndex).asOptional()
+        programWeeks.getOrNull(currentWeekIndex).asNullable()
     }.distinctUntilChanged()
 
-    private val _currentBlock: Flowable<Optional<ProgramBlockModel>> = Flowable.combineLatest(
-        _programBlocksData,
-        _currentWeek
-    ) { programBlocks, currentWeek ->
-        programBlocks.find {
-            it.id == currentWeek.value?.blockId
-        }.asOptional()
-    }.distinctUntilChanged()
+    private val _currentBlock = getProgramBlockFromProgramWeek(_currentWeek)
 
     /**
      * FATIGUE CHART
@@ -189,7 +175,7 @@ class HomeDashboardViewModel @Inject constructor(
      */
 
     val programSummaryState: Flowable<ProgramSummaryState> =
-        Flowable.combineLatest(_user, _programWeeks) { user, programWeeks ->
+        Flowable.combineLatest(_user, programWeeks) { user, programWeeks ->
             val endDate = programWeeks.lastOrNull()?.date?.plusDays(7) ?: Date()
             val daysRemaining = TimeUnit.DAYS.convert(
                 endDate.time - Date().time,
@@ -217,7 +203,7 @@ class HomeDashboardViewModel @Inject constructor(
     )
 
     private val _programChartIntensityDataSet: Flowable<LineData> =
-        _programBlocksData.map { programBlocks ->
+        programBlocksData.map { programBlocks ->
             LineData().apply {
                 addDataSet(LineDataSet(
                     programBlocks.flatMap {
@@ -238,7 +224,7 @@ class HomeDashboardViewModel @Inject constructor(
         }
 
     private val _programChartVolumeDataSet: Flowable<BarData> = Flowable.combineLatest(
-        _programBlocksData,
+        programBlocksData,
         _currentWeek
     ) { programBlocks, currentWeek ->
         BarData().apply {
@@ -311,7 +297,7 @@ class HomeDashboardViewModel @Inject constructor(
     }
 
     private val _programChartLegend: Flowable<List<LegendEntry>> =
-        _programBlocksData.map { programBlocks ->
+        programBlocksData.map { programBlocks ->
             programBlocks.distinctBy { it.type }
                 .map { block ->
                     LegendEntry(
@@ -418,11 +404,12 @@ class HomeDashboardViewModel @Inject constructor(
         _currentWeek.map { currentWeek ->
             val textColor = application.getColor(R.color.textPrimary)
             val textColorCompleted = application.getColor(R.color.textTertiary)
-            fun sessionCallback(sessionModel: ProgramSessionModel) =
+            fun sessionCallback(sessionModel: SessionModel) =
                 object : ParentActivity.AdapterCallback {
                     override fun onClick(activity: ParentActivity, fragment: ParentFragment<*>) {
-                        //TODO : Show summary in a dialog if complete?
+                        dataStorage.toStorage(DataDefinition.CURRENT_SESSION, sessionModel)
                         (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
+                        //TODO : Show summary in a dialog if complete?
                     }
                 }
 
@@ -497,7 +484,7 @@ class HomeDashboardViewModel @Inject constructor(
     fun goToNextWeek() {
         Flowable.combineLatest(
             _currentWeekIndexFlowable,
-            _programWeeks
+            programWeeks
         ) { currentWeekIndex, programWeeks ->
             Pair(currentWeekIndex, programWeeks)
         }.take(1)

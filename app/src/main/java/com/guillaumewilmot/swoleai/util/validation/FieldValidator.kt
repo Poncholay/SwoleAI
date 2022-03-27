@@ -1,7 +1,7 @@
 package com.guillaumewilmot.swoleai.util.validation
 
-import com.guillaumewilmot.swoleai.model.Optional
-import com.guillaumewilmot.swoleai.model.asOptional
+import com.guillaumewilmot.swoleai.model.Nullable
+import com.guillaumewilmot.swoleai.model.asNullable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -36,14 +36,14 @@ class FieldValidator(
         errors.isEmpty()
     }
 
-    private val _fieldError: Observable<Optional<String>> = Observable.combineLatest(
+    private val _fieldError: Observable<Nullable<String>> = Observable.combineLatest(
         _fieldErrors,
         _canShowErrorField.distinctUntilChanged()
     ) { fieldError, canShowErrorField ->
         if (canShowErrorField != true) {
-            null.asOptional()
+            null.asNullable()
         } else {
-            fieldError.firstOrNull().asOptional() //Could join errors
+            fieldError.firstOrNull().asNullable() //Could join errors
         }
     }
 
@@ -60,7 +60,7 @@ class FieldValidator(
 
     val fieldValue: BehaviorSubject<String> = _fieldValue
     val fieldValidity: Observable<Boolean> = _fieldValidity.subscribeOn(Schedulers.io())
-    val fieldError: Observable<Optional<String>> = _fieldError.subscribeOn(Schedulers.io())
+    val fieldError: Observable<Nullable<String>> = _fieldError.subscribeOn(Schedulers.io())
 
     fun onFieldChanged(value: String) {
         _fieldValue.onNext(value)

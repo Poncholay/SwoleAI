@@ -37,7 +37,7 @@
                 android:padding="@dimen/marginSmall"
                 android:textAlignment="textStart"
                 android:textColor="@color/textPrimary"
-                android:textSize="@dimen/textParagraphTitle"
+                android:textSize="@dimen/textParagraphPrimary"
                 app:layout_constraintEnd_toStartOf="@id/previousSessionButton"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"

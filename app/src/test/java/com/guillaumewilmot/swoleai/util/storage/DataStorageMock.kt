@@ -1,9 +1,10 @@
 package com.guillaumewilmot.swoleai.util.storage
 
 import androidx.datastore.preferences.core.Preferences
-import com.guillaumewilmot.swoleai.model.Optional
+import com.guillaumewilmot.swoleai.model.Nullable
+import com.guillaumewilmot.swoleai.model.SessionModel
 import com.guillaumewilmot.swoleai.model.UserModel
-import com.guillaumewilmot.swoleai.model.asOptional
+import com.guillaumewilmot.swoleai.model.asNullable
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -15,8 +16,8 @@ class DataStorageMock : DataStorage {
 
     override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences>? {
         when (dataDefinition) {
-            DataDefinition.USER -> dataHolder._userField.onNext((obj as UserModel).asOptional())
-            DataDefinition.EXERCISES -> dataHolder._exercisesField.onNext(obj as List<Int>)
+            DataDefinition.USER -> dataHolder._userField.onNext((obj as UserModel).asNullable())
+            DataDefinition.CURRENT_SESSION -> dataHolder._currentSessionField.onNext((obj as SessionModel).asNullable())
         }
         return null
     }
@@ -27,17 +28,18 @@ class DataStorageMock : DataStorage {
 
     override val dataHolder by lazy { DataHolderImpl() }
 
+    @Suppress("PropertyName")
     inner class DataHolderImpl : DataHolder {
-        val _userField: BehaviorSubject<Optional<UserModel>> by lazy {
-            BehaviorSubject.createDefault(Optional(null))
+        val _userField: BehaviorSubject<Nullable<UserModel>> by lazy {
+            BehaviorSubject.createDefault(Nullable(null))
         }
-        val _exercisesField: BehaviorSubject<List<Int>> by lazy {
-            BehaviorSubject.createDefault(listOf())
+        val _currentSessionField: BehaviorSubject<Nullable<SessionModel>> by lazy {
+            BehaviorSubject.createDefault(Nullable(null))
         }
 
-        override val userField: Flowable<Optional<UserModel>> =
+        override val userField: Flowable<Nullable<UserModel>> =
             _userField.toFlowable(BackpressureStrategy.BUFFER)
-        override val exercisesField: Flowable<List<Int>> =
-            _exercisesField.toFlowable(BackpressureStrategy.BUFFER)
+        override val currentSessionField: Flowable<Nullable<SessionModel>> =
+            _currentSessionField.toFlowable(BackpressureStrategy.BUFFER)
     }
 }

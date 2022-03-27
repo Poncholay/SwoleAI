@@ -1,8 +1,9 @@
 package com.guillaumewilmot.swoleai.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-data class ProgramSessionModel(
+data class SessionModel(
     @SerializedName("id")
     val id: Int,
     @SerializedName("weekId")
@@ -13,4 +14,8 @@ data class ProgramSessionModel(
     val isComplete: Boolean,
     @SerializedName("exercises")
     val exercises: List<SessionExerciseModel>
-)
+) : Serializable {
+    companion object {
+        private const val serialVersionUID = 6L
+    }
+}

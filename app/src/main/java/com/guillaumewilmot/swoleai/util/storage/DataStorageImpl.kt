@@ -9,9 +9,10 @@ import androidx.datastore.preferences.rxjava3.rxPreferencesDataStore
 import androidx.datastore.rxjava3.RxDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.guillaumewilmot.swoleai.model.Optional
+import com.guillaumewilmot.swoleai.model.Nullable
+import com.guillaumewilmot.swoleai.model.SessionModel
 import com.guillaumewilmot.swoleai.model.UserModel
-import com.guillaumewilmot.swoleai.model.asOptional
+import com.guillaumewilmot.swoleai.model.asNullable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -47,7 +48,7 @@ class DataStorageImpl constructor(
      * Get
      */
 
-    private fun getString(key: String): Flowable<Optional<String>> {
+    private fun getString(key: String): Flowable<Nullable<String>> {
         return applicationContext.rxDataStore
             .data()
             .onErrorReturn {
@@ -56,7 +57,7 @@ class DataStorageImpl constructor(
                 emptyPreferences()
             }
             .map { preferences ->
-                preferences[stringPreferencesKey(key)].asOptional()
+                preferences[stringPreferencesKey(key)].asNullable()
             }
             .distinctUntilChanged()
             .doOnNext {
@@ -68,17 +69,17 @@ class DataStorageImpl constructor(
     private fun <T : Any> fromStorageWithType(
         key: String,
         type: Type
-    ): Flowable<Optional<T>> {
+    ): Flowable<Nullable<T>> {
         return getString(key).map {
             it.value?.let { stringValue ->
                 fromJson<T>(stringValue, type)
-            }.asOptional()
+            }.asNullable()
         }
     }
 
     private inline fun <reified T : Any> fromStorage(
         dataDefinition: DataDefinition
-    ): Flowable<Optional<T>> {
+    ): Flowable<Nullable<T>> {
         return fromStorageWithType(dataDefinition.key, gsonDeserializeType<T>())
     }
 
@@ -131,11 +132,12 @@ class DataStorageImpl constructor(
     override val dataHolder by lazy { DataHolderImpl() }
 
     inner class DataHolderImpl : DataHolder {
-        override val userField: Flowable<Optional<UserModel>> by lazy {
+        override val userField: Flowable<Nullable<UserModel>> by lazy {
             this@DataStorageImpl.fromStorage(DataDefinition.USER)
         }
-        override val exercisesField: Flowable<List<Int>> by lazy {
-            this@DataStorageImpl.fromStorageOrDefault(DataDefinition.EXERCISES, listOf())
+
+        override val currentSessionField: Flowable<Nullable<SessionModel>> by lazy {
+            this@DataStorageImpl.fromStorage(DataDefinition.CURRENT_SESSION)
         }
     }
 }

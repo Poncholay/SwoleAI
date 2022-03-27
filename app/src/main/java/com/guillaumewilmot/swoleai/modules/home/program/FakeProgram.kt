@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.modules.home.dashboard
+package com.guillaumewilmot.swoleai.modules.home.program
 
 import android.util.Log
 import com.google.gson.Gson
@@ -9,15 +9,15 @@ import com.guillaumewilmot.swoleai.util.DateHelper.plusDays
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
 
-//TODO : Remove this ASAP
 @ExperimentalCoroutinesApi
+//TODO : Remove this ASAP, only used for blueprints and development help
 object FakeProgram {
 
-    var index = 0
     val startDate = Calendar.getInstance().apply {
         time = Date()
         set(Calendar.DAY_OF_WEEK, 2)
     }.time
+    var generateSessionindex = 1
     val fakeProgram = listOf(
         ProgramBlockModel(
             1,
@@ -74,7 +74,7 @@ object FakeProgram {
                     false
                 )
             ).onEach {
-                it.generateFakeSessions(index++)
+                it.generateFakeSessions()
             }
         ),
         ProgramBlockModel(
@@ -122,7 +122,7 @@ object FakeProgram {
                     false
                 )
             ).onEach {
-                it.generateFakeSessions(index++)
+                it.generateFakeSessions()
             }
         ),
         ProgramBlockModel(
@@ -170,7 +170,7 @@ object FakeProgram {
                     false
                 )
             ).onEach {
-                it.generateFakeSessions(index++)
+                it.generateFakeSessions()
             }
         ),
         ProgramBlockModel(
@@ -208,7 +208,7 @@ object FakeProgram {
                     false
                 ),
             ).onEach {
-                it.generateFakeSessions(index++)
+                it.generateFakeSessions()
             }
         )
     ).also {

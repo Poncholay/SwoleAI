@@ -4,7 +4,7 @@ import android.view.View
 import com.guillaumewilmot.swoleai.BaseUnitTest
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.RxImmediateSchedulerRule
-import com.guillaumewilmot.swoleai.model.Optional
+import com.guillaumewilmot.swoleai.model.Nullable
 import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.modules.onboarding.username.OnboardingUsernameViewModel
 import io.mockk.every
@@ -59,32 +59,32 @@ class OnboardingUsernameViewModelTest : BaseUnitTest() {
     fun testusernameFieldError() {
         val consumer = spyConsumer(viewModel.usernameFieldError)
 
-        testObserver(viewModel.usernameFieldError).assertValue(Optional(null))
+        testObserver(viewModel.usernameFieldError).assertValue(Nullable(null))
         viewModel.usernameFieldChangeListener(editableMockk(""))
-        testObserver(viewModel.usernameFieldError).assertValue(Optional(null))
+        testObserver(viewModel.usernameFieldError).assertValue(Nullable(null))
         viewModel.usernameFieldChangeListener(editableMockk("  "))
-        testObserver(viewModel.usernameFieldError).assertValue(Optional(null))
+        testObserver(viewModel.usernameFieldError).assertValue(Nullable(null))
         viewModel.usernameFieldChangeListener(editableMockk("Gui"))
-        testObserver(viewModel.usernameFieldError).assertValue(Optional(null))
+        testObserver(viewModel.usernameFieldError).assertValue(Nullable(null))
         viewModel.usernameFieldChangeListener(editableMockk("  "))
-        testObserver(viewModel.usernameFieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(viewModel.usernameFieldError).assertValue(Nullable(BLANK_ERROR))
         viewModel.usernameFieldChangeListener(editableMockk(""))
-        testObserver(viewModel.usernameFieldError).assertValue(Optional(BLANK_ERROR))
+        testObserver(viewModel.usernameFieldError).assertValue(Nullable(BLANK_ERROR))
         viewModel.usernameFieldChangeListener(editableMockk("Gui"))
-        testObserver(viewModel.usernameFieldError).assertValue(Optional(null))
+        testObserver(viewModel.usernameFieldError).assertValue(Nullable(null))
 
         viewModel.usernameFieldFocusChangeListener.onFocusChange(null, true) // Nothing happens
         viewModel.usernameFieldFocusChangeListener.onFocusChange(null, false) // Nothing happens
 
         verifySequence {
-            consumer.accept(Optional(null)) // Default
+            consumer.accept(Nullable(null)) // Default
             //Skipping "" due to distinctUntilChanged
-            consumer.accept(Optional(null)) // "  "
-            consumer.accept(Optional(null)) // "Gui"
-            consumer.accept(Optional(null)) // _canShowErrorField is now true
-            consumer.accept(Optional(BLANK_ERROR)) // "  "
-            consumer.accept(Optional(BLANK_ERROR)) // ""
-            consumer.accept(Optional(null)) // "Gui"
+            consumer.accept(Nullable(null)) // "  "
+            consumer.accept(Nullable(null)) // "Gui"
+            consumer.accept(Nullable(null)) // _canShowErrorField is now true
+            consumer.accept(Nullable(BLANK_ERROR)) // "  "
+            consumer.accept(Nullable(BLANK_ERROR)) // ""
+            consumer.accept(Nullable(null)) // "Gui"
         }
     }
 
@@ -99,20 +99,20 @@ class OnboardingUsernameViewModelTest : BaseUnitTest() {
         viewModel.usernameFieldChangeListener(editableMockk("Gui"))
         testObserver(viewModel.nextButtonEnabled).assertValue(true)
         testObserver(viewModel.loaderVisibility).assertValue(View.GONE)
-        testObserver(dataStorage.dataHolder.userField).assertValue(Optional(null))
+        testObserver(dataStorage.dataHolder.userField).assertValue(Nullable(null))
 
         viewModel.onNext()
 
         testObserver(viewModel.loaderVisibility).assertValue(View.GONE)
-        testObserver(dataStorage.dataHolder.userField).assertValue(Optional(UserModel("Gui")))
+        testObserver(dataStorage.dataHolder.userField).assertValue(Nullable(UserModel("Gui")))
 
         verifySequence {
             loaderConsumer.accept(View.GONE)
-            userConsumer.accept(Optional(null))
+            userConsumer.accept(Nullable(null))
 
             //onNext
             loaderConsumer.accept(View.VISIBLE)
-            userConsumer.accept(Optional(UserModel("Gui")))
+            userConsumer.accept(Nullable(UserModel("Gui")))
             loaderConsumer.accept(View.GONE)
         }
     }

@@ -2,9 +2,9 @@ package com.guillaumewilmot.swoleai.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Optional<T>(
+data class Nullable<T>(
     @SerializedName("value")
     val value: T?
 )
 
-fun <T> T?.asOptional() = Optional(this)
+fun <T> T?.asNullable() = Nullable(this)

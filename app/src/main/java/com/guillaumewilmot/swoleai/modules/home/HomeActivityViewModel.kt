@@ -18,7 +18,7 @@ class HomeActivityViewModel @Inject constructor(
     private val dataStorage: DataStorage
 ) : ParentViewModel(application) {
 
-    private val _user by lazy { dataStorage.dataHolder.userField }
+    private val _user = dataStorage.dataHolder.userField
 
     /**
      * UI

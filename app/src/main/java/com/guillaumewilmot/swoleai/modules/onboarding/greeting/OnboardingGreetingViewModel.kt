@@ -17,6 +17,8 @@ class OnboardingGreetingViewModel @Inject constructor(
     dataStorage: DataStorage
 ) : ParentViewModel(application) {
 
+    private val _user = dataStorage.dataHolder.userField
+
     /**
      * UI
      */
@@ -26,12 +28,6 @@ class OnboardingGreetingViewModel @Inject constructor(
     val nextButtonText = application.getString(
         R.string.app_onboarding_greeting_continue_button_text
     )
-
-    /**
-     * Playground //TODO remove
-     */
-
-    private val _user by lazy { dataStorage.dataHolder.userField }
 
     val titleTextTest: Flowable<String> = _user
         .observeOn(AndroidSchedulers.mainThread())
