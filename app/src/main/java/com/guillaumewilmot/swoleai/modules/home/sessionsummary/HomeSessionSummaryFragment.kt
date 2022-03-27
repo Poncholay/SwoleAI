@@ -85,11 +85,5 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
             adapter = exerciseSummaryAdapter
         }
-
-        //FIXME : TMP just some hardcoded UI blueprint
-        activity?.let { context ->
-
-
-        }
     }
 }

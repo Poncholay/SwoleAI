@@ -67,6 +67,9 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         setupFatigueChart()
         setupProgramChart()
 
+        //FIXME : TMP, should be done when we generate the real program
+        viewModel.preselectCurrentSession()
+
         viewModel.loaderVisibility
             .autoDispose(this)
             .subscribe {

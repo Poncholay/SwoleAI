@@ -50,7 +50,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeDashboardViewModel @Inject constructor(
     application: Application,
-    dataStorage: DataStorage
+    private val dataStorage: DataStorage
 ) : ParentViewModel(application),
     HasLoader by HasLoaderImpl(),
     CanLookupProgram by CanLookupProgramImpl() {
@@ -443,7 +443,7 @@ class HomeDashboardViewModel @Inject constructor(
 
     private val _weekSummaryCompleteButtonIsEnabled: Flowable<Boolean> = _currentWeek.map {
         //TODO: All sessions of the week need to be complete
-        //TODO: Might need to replace zip below if more dependencies needed to calculate
+        //TODO: Might need to replace zip on weekSummaryCompleteButtonState if more dependencies needed to calculate
         true
     }
 
@@ -498,5 +498,16 @@ class HomeDashboardViewModel @Inject constructor(
 
     fun completeWeek() {
 
+    }
+
+    fun preselectCurrentSession() {
+        _currentWeek.take(1)
+            .linkToLoader(this)
+            .subscribe {
+                dataStorage.toStorage(
+                    DataDefinition.CURRENT_SESSION,
+                    it.value?.sessions?.getOrNull(0)
+                )
+            }
     }
 }
