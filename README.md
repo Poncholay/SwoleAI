@@ -8,4 +8,4 @@ the go as your goals shift.
 
 Time to get Swole!
 
-![alt tag](https://raw.githubusercontent.com/Poncholay/SwoleAI/master/readme/dashboard.jpeg)
+![alt tag](https://raw.githubusercontent.com/Poncholay/SwoleAI/main/readme/dashboard.jpeg)
