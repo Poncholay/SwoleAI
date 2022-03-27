@@ -9,11 +9,11 @@ abstract class ParentActivity : AppCompatActivity() {
     //TODO : screen tracking
 
     interface AdapterCallbackWrapper {
-        fun wrap(onClickFunction: KFunction2<ParentActivity, ParentFragment, Unit>)
+        fun wrap(onClickFunction: KFunction2<ParentActivity, ParentFragment<*>, Unit>)
     }
 
     interface AdapterCallback {
-        fun onClick(activity: ParentActivity, fragment: ParentFragment) {
+        fun onClick(activity: ParentActivity, fragment: ParentFragment<*>) {
             //Implement or leave empty
         }
     }

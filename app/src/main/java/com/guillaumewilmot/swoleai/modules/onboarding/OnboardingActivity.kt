@@ -122,7 +122,7 @@ class OnboardingActivity : ParentActivity(),
         fun onboardingSteps(user: UserModel): List<Step> = REQUIRED_PROPERTIES
             .map { mapEntry ->
                 mapEntry.value.forEach { property ->
-                    if (property.get(user) == null) {
+                    if (property.get(user).isNullOrBlank()) {
                         return@map mapEntry.key
                     }
                 }

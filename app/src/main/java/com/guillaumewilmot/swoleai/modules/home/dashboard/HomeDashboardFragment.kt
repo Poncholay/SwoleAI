@@ -38,12 +38,11 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeDashboardFragment : ParentFragment() {
+class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
 
     @Inject
     lateinit var fragmentBackstack: FragmentBackstack
 
-    private var binding: FragmentHomeDashboardBinding? = null
     private val viewModel: HomeDashboardViewModel by viewModels()
     private val sessionAdapter: SessionAdapter by lazy {
         SessionAdapter(adapterCallbackWrapper)

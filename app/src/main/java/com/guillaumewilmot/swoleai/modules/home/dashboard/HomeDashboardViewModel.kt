@@ -17,10 +17,8 @@ import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
+import com.guillaumewilmot.swoleai.model.*
 import com.guillaumewilmot.swoleai.model.Optional
-import com.guillaumewilmot.swoleai.model.ProgramBlockModel
-import com.guillaumewilmot.swoleai.model.ProgramWeekModel
-import com.guillaumewilmot.swoleai.model.asOptional
 import com.guillaumewilmot.swoleai.modules.home.HomeActivity
 import com.guillaumewilmot.swoleai.util.DateHelper
 import com.guillaumewilmot.swoleai.util.DateHelper.DATE_FORMAT_DAY_OF_WEEK_SHORT
@@ -420,18 +418,20 @@ class HomeDashboardViewModel @Inject constructor(
         _currentWeek.map { currentWeek ->
             val textColor = application.getColor(R.color.textPrimary)
             val textColorCompleted = application.getColor(R.color.textTertiary)
-            fun callback() = object : ParentActivity.AdapterCallback {
-                override fun onClick(activity: ParentActivity, fragment: ParentFragment) {
-                    (activity as? HomeActivity)?.selectTab(FragmentBackstack.Tab.SESSION)
+            fun sessionCallback(sessionModel: ProgramSessionModel) =
+                object : ParentActivity.AdapterCallback {
+                    override fun onClick(activity: ParentActivity, fragment: ParentFragment<*>) {
+                        //TODO : Show summary in a dialog if complete?
+                        (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
+                    }
                 }
-            }
 
             currentWeek.value?.sessions?.map { session ->
                 SessionAdapter.SessionViewHolder.ViewModel(
                     nameText = session.name,
                     nameTextColor = if (session.isComplete) textColorCompleted else textColor,
                     isCompleteIconVisibility = if (session.isComplete) View.VISIBLE else View.GONE,
-                    callback = callback()
+                    callback = sessionCallback(session)
                 )
             } ?: listOf()
         }

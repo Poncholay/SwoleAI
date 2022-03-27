@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.modules.home.dashboard.HomeDashboardFragment
-import com.guillaumewilmot.swoleai.modules.home.session.HomeSessionFragment
+import com.guillaumewilmot.swoleai.modules.home.sessionsummary.HomeSessionSummaryFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.Serializable
 import java.util.*
@@ -19,19 +19,19 @@ class FragmentBackstack {
     }
 
     interface FragmentTab : Serializable {
-        fun root(): KClass<out ParentFragment>
+        fun root(): KClass<out ParentFragment<*>>
         fun navId(): Int
     }
 
     enum class Tab(
-        val root: KClass<out ParentFragment>,
+        val root: KClass<out ParentFragment<*>>,
         val navId: Int
     ) : FragmentTab {
 
         DASHBOARD(HomeDashboardFragment::class, R.id.navigation_dashboard),
-        SESSION(HomeSessionFragment::class, R.id.navigation_session);
+        SESSION(HomeSessionSummaryFragment::class, R.id.navigation_session);
 
-        override fun root(): KClass<out ParentFragment> = root
+        override fun root(): KClass<out ParentFragment<*>> = root
         override fun navId(): Int = navId
 
         companion object {
@@ -56,7 +56,7 @@ class FragmentBackstack {
         DID_NO_GO_BACK
     }
 
-    private var _currentFragment: ParentFragment? = null
+    private var _currentFragment: ParentFragment<*>? = null
     private var _currentTab: FragmentTab = Tab.DASHBOARD
     private val _pool: Bundle = Bundle()
     private val _tagStacks = mapOf<FragmentTab, Stack<String>>(
@@ -64,12 +64,15 @@ class FragmentBackstack {
         Tab.SESSION to Stack()
     )
 
+    val currentTab: FragmentTab
+        get() = _currentTab
+
     /**
      * Starts a new fragment in the current tab
      */
     fun push(
-        fm: FragmentManager,
-        newFragment: ParentFragment,
+        fragmentManager: FragmentManager,
+        newFragment: ParentFragment<*>,
         animate: Animate,
         destinationTab: FragmentTab? = null,
         addToBackStack: Boolean = true
@@ -78,7 +81,7 @@ class FragmentBackstack {
             _currentFragment?.let { oldFragment ->
                 try {
                     val tag = oldFragment.name() + _currentTab.toString()
-                    fm.putFragment(_pool, tag, oldFragment)
+                    fragmentManager.putFragment(_pool, tag, oldFragment)
                     _tagStacks[_currentTab]?.push(tag)
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
@@ -89,7 +92,7 @@ class FragmentBackstack {
         val newTab = destinationTab ?: _currentTab
         val animType = if (destinationTab == null) AnimType.SLIDE else AnimType.FADE
         transaction(
-            fm,
+            fragmentManager,
             newFragment,
             newFragment.name() + newTab.toString(),
             animate,
@@ -135,7 +138,10 @@ class FragmentBackstack {
 
         if (previousTag != null) {
             try {
-                (fm.getFragment(_pool, previousTag) as? ParentFragment)?.let { previousFragment ->
+                (fm.getFragment(
+                    _pool,
+                    previousTag
+                ) as? ParentFragment<*>)?.let { previousFragment ->
                     _currentFragment = previousFragment
                     fm.popBackStack()
                     transaction(
@@ -174,11 +180,20 @@ class FragmentBackstack {
     }
 
     /**
+     * Switch to another tab and go back to the root of that tab
+     */
+    fun goToTabRoot(fm: FragmentManager) {
+        while (_tagStacks[_currentTab]?.isNotEmpty() == true) {
+            forcePop(fm)
+        }
+    }
+
+    /**
      * @param newFragment: new fragment
      */
     private fun transaction(
         fm: FragmentManager,
-        newFragment: ParentFragment,
+        newFragment: ParentFragment<*>,
         newFragmentTag: String,
         animate: Animate,
         animType: AnimType = AnimType.SLIDE,
@@ -227,7 +242,7 @@ class FragmentBackstack {
             .commit()
     }
 
-    private fun getFragmentForTab(fm: FragmentManager, tab: FragmentTab): ParentFragment {
+    private fun getFragmentForTab(fm: FragmentManager, tab: FragmentTab): ParentFragment<*> {
         val tag = try {
             _tagStacks[tab]?.peek()
         } catch (e: EmptyStackException) {
@@ -237,7 +252,7 @@ class FragmentBackstack {
         if (tag != null) {
             try {
                 fm.getFragment(_pool, tag)?.let { fragment ->
-                    (fragment as? ParentFragment)?.let { backableFragment ->
+                    (fragment as? ParentFragment<*>)?.let { backableFragment ->
                         return backableFragment
                     }
                 }

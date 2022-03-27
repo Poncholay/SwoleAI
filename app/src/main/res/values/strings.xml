@@ -41,6 +41,13 @@
     <string name="app_home_settings_title_text">Settings</string>
     <string name="app_home_settings_app_version_text">App version: %1$s</string>
     <string name="app_home_settings_delete_account_success_text">Account deleted successfully</string>
+    <string name="app_home_session_summary_start_button_text">Start session</string>
+    <string name="app_home_session_summary_skip_button_text">Skip session</string>
+    <string name="app_home_session_summary_preview_button_text">Preview session</string>
+    <string name="app_home_session_summary_overview_text">Session details</string>
+    <string name="app_home_session_summary_toolbar_text">Session summary</string>
+    <string name="app_adapter_view_exercise_summary_swap_icon">Swap</string>
+    <string name="app_adapter_view_exercise_summary_info_icon">Info</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
         <item quantity="one">Hi %1$s,\nYou are %2$s Day out</item>

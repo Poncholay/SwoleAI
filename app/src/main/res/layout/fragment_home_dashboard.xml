@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                tools:visibility="gone">
+                tools:visibility="visible">
 
                 <FrameLayout
                     android:id="@+id/fatigueSummaryContainer"
@@ -224,6 +224,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/marginSmall"
+                                android:layout_marginEnd="@dimen/marginSmall"
                                 android:background="?selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/app_home_dashboard_week_summary_previous_week_button_content_description"
                                 android:padding="8dp"
@@ -275,7 +276,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
-                tools:visibility="visible">
+                tools:visibility="gone">
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/loader"

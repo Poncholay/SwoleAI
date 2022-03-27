@@ -15,9 +15,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class OnboardingUsernameFragment : ParentFragment() {
+class OnboardingUsernameFragment : ParentFragment<FragmentOnboardingUsernameBinding>() {
 
-    private var binding: FragmentOnboardingUsernameBinding? = null
     private val viewModel: OnboardingUsernameViewModel by viewModels()
 
     override fun onCreateView(

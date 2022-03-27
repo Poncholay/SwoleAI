@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.modules.home.session
+package com.guillaumewilmot.swoleai.modules.home.activesession
 
 import android.app.Application
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
-class HomeSessionViewModel @Inject constructor(
+class HomeActiveSessionViewModel @Inject constructor(
     application: Application,
     dataStorage: DataStorage
 ) : ParentViewModel(application) {

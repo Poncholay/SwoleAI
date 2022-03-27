@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/appBar"
+        layout="@layout/view_toolbar_session_summary" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.guillaumewilmot.swoleai.view.AnimatedButton
+                android:id="@+id/startButton"
+                style="@style/ButtonMainStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/heightButton"
+                android:layout_margin="@dimen/marginSmall"
+                android:text="@string/app_home_session_summary_start_button_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.guillaumewilmot.swoleai.view.AnimatedButton
+                android:id="@+id/skipButton"
+                style="@style/ButtonSecondaryStyle"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/heightButton"
+                android:layout_marginStart="@dimen/marginSmall"
+                android:layout_marginTop="@dimen/marginSmall"
+                android:layout_marginEnd="8dp"
+                android:text="@string/app_home_session_summary_skip_button_text"
+                app:layout_constraintEnd_toStartOf="@id/previewButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/startButton" />
+
+            <com.guillaumewilmot.swoleai.view.AnimatedButton
+                android:id="@+id/previewButton"
+                style="@style/ButtonSecondaryStyle"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/heightButton"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/marginSmall"
+                android:layout_marginEnd="@dimen/marginSmall"
+                android:layout_marginBottom="@dimen/marginSmall"
+                android:text="@string/app_home_session_summary_preview_button_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/skipButton"
+                app:layout_constraintTop_toBottomOf="@id/startButton" />
+
+            <TextView
+                android:id="@+id/overviewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginSmall"
+                android:text="@string/app_home_session_summary_overview_text"
+                android:textAlignment="textStart"
+                android:textFontWeight="600"
+                android:textSize="@dimen/textParagraphTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/previewButton" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exerciseSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingStart="@dimen/marginSmall"
+                android:paddingTop="@dimen/marginSmall"
+                android:paddingEnd="@dimen/marginSmall"
+                android:paddingBottom="@dimen/marginRegular"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/overviewText"
+                app:layout_constraintVertical_bias="0"
+                tools:itemCount="8"
+                tools:listitem="@layout/adapter_view_exercise_summary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

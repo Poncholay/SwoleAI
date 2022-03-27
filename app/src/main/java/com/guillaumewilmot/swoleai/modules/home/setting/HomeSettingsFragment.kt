@@ -18,9 +18,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeSettingsFragment : ParentFragment() {
+class HomeSettingsFragment : ParentFragment<FragmentHomeSettingsBinding>() {
 
-    private var binding: FragmentHomeSettingsBinding? = null
     private val viewModel: HomeSettingsViewModel by viewModels()
 
     override fun onCreateView(
@@ -65,17 +64,11 @@ class HomeSettingsFragment : ParentFragment() {
                             getString(R.string.app_home_settings_delete_account_success_text),
                             LENGTH_SHORT,
                         ).show()
-//                        Toasty.success(
-//                            it,
-//                            getString(R.string.app_home_settings_delete_account_success_text),
-//                            LENGTH_SHORT,
-//                            true
-//                        ).show()
                     }
                 }, {})
         }
         binding?.optionDarkMode?.setOnClickListener {
-
+            //TODO
         }
 
         binding?.appVersion?.text = getString(

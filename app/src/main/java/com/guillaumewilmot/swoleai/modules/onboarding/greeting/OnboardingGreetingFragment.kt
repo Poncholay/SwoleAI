@@ -15,9 +15,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class OnboardingGreetingFragment : ParentFragment() {
+class OnboardingGreetingFragment : ParentFragment<FragmentOnboardingGreetingBinding>() {
 
-    private var binding: FragmentOnboardingGreetingBinding? = null
     private val viewModel: OnboardingGreetingViewModel by viewModels()
 
     override fun onCreateView(
