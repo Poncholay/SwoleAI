@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingActivityViewModel @Inject constructor(
     application: Application,
-    private val dataStorage: DataStorage
+    dataStorage: DataStorage
 ) : ParentViewModel(application) {
 
     private val _user = dataStorage.dataHolder.userField

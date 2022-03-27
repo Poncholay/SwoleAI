@@ -65,6 +65,7 @@ class HomeSessionSummaryViewModel @Inject constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
+    //FIXME : TMP hardcoded data for now
     val sessionExercises: Flowable<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel>> =
         Flowable.create<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel>>({
             val emptyCallback = object : ParentActivity.AdapterCallback {
