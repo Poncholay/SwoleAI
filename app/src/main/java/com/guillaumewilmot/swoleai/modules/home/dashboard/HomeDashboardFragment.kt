@@ -48,6 +48,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         SessionAdapter(adapterCallbackWrapper)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //FIXME : TMP, should be done when we generate the real program
+        viewModel.preselectCurrentSession()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,9 +73,6 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         setupUi()
         setupFatigueChart()
         setupProgramChart()
-
-        //FIXME : TMP, should be done when we generate the real program
-        viewModel.preselectCurrentSession()
 
         viewModel.loaderVisibility
             .autoDispose(this)
