@@ -31,8 +31,14 @@ class HomeActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun givenUserExists_verifyDontRedirectToOnboarding() {
+    fun givenIncompleteUserExists_verifyRedirectToOnboarding() {
         dataStorage.toStorage(DataDefinition.USER, UserModel())
+        testObserver(viewModel.redirectToOnboarding).assertValue(false)
+    }
+
+    @Test
+    fun givenCompleteExists_verifyDontRedirectToOnboarding() {
+        dataStorage.toStorage(DataDefinition.USER, UserModel(username = "Guillaume"))
         testObserver(viewModel.redirectToOnboarding).assertValue(false)
     }
 }
