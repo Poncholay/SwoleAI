@@ -9,4 +9,4 @@ expand.<br/>
 <br/>
 Time to get Swole!<br/>
 <br/>
-<img src="readme/dashboard.jpeg" alt="Dashboard image" width="250" />
+<img src="readme/demo.png" alt="Dashboard image" width="500" />
