@@ -7,8 +7,6 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import com.guillaumewilmot.swoleai.R
-import com.guillaumewilmot.swoleai.controller.ParentActivity
-import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgram
 import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgramImpl
@@ -68,11 +66,6 @@ class HomeSessionSummaryViewModel @Inject constructor(
     //FIXME : TMP hardcoded data for now
     val sessionExercises: Flowable<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel>> =
         Flowable.create<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel>>({
-            val emptyCallback = object : ParentActivity.AdapterCallback {
-                override fun onClick(activity: ParentActivity, fragment: ParentFragment<*>) {
-                }
-            }
-
             it.onNext(
                 listOf(
                     ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
@@ -82,44 +75,26 @@ class HomeSessionSummaryViewModel @Inject constructor(
                             ForegroundColorSpan(application.getColor(R.color.hypertrophy))
                         ),
                         backgroundColor = application.getColor(R.color.hypertrophyPast),
-                        onClickCallback = emptyCallback,
-                        infoCallback = emptyCallback,
-                        swapCallback = emptyCallback
                     ),
                     ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
                         nameText = SpannableString("Pause front squat"),
-                        backgroundColor = application.getColor(R.color.transparent),
-                        onClickCallback = emptyCallback,
-                        infoCallback = emptyCallback,
-                        swapCallback = emptyCallback
+                        backgroundColor = application.getColor(R.color.transparent)
                     ),
                     ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
                         nameText = SpannableString("Pendulum squat"),
-                        backgroundColor = application.getColor(R.color.transparent),
-                        onClickCallback = emptyCallback,
-                        infoCallback = emptyCallback,
-                        swapCallback = emptyCallback
+                        backgroundColor = application.getColor(R.color.transparent)
                     ),
                     ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
                         nameText = SpannableString("Hamstring curl"),
-                        backgroundColor = application.getColor(R.color.transparent),
-                        onClickCallback = emptyCallback,
-                        infoCallback = emptyCallback,
-                        swapCallback = emptyCallback
+                        backgroundColor = application.getColor(R.color.transparent)
                     ),
                     ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
                         nameText = SpannableString("Lunge"),
-                        backgroundColor = application.getColor(R.color.transparent),
-                        onClickCallback = emptyCallback,
-                        infoCallback = emptyCallback,
-                        swapCallback = emptyCallback
+                        backgroundColor = application.getColor(R.color.transparent)
                     ),
                     ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
                         nameText = SpannableString("Calve raise"),
-                        backgroundColor = application.getColor(R.color.transparent),
-                        onClickCallback = emptyCallback,
-                        infoCallback = emptyCallback,
-                        swapCallback = emptyCallback
+                        backgroundColor = application.getColor(R.color.transparent)
                     )
                 )
             )

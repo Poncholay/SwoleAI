@@ -31,6 +31,5 @@ class OnboardingActivityViewModel @Inject constructor(
                 OnboardingActivity.onboardingSteps(user.value)
             }
         }
-        .take(1)
         .observeOn(AndroidSchedulers.mainThread())
 }

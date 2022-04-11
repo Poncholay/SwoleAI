@@ -56,8 +56,8 @@ class HomeSettingsFragment : ParentFragment<FragmentHomeSettingsBinding>() {
 
         binding?.optionDeleteAccount?.setOnClickListener {
             viewModel.deleteAccount()
-                ?.autoDispose(this, Lifecycle.Event.ON_PAUSE)
-                ?.subscribe({
+                .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+                .subscribe({
                     activity?.let {
                         Toast.makeText(
                             it,

@@ -14,11 +14,11 @@ import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.*
 import com.guillaumewilmot.swoleai.R
-import com.guillaumewilmot.swoleai.controller.ParentActivity
-import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
-import com.guillaumewilmot.swoleai.model.*
-import com.guillaumewilmot.swoleai.modules.home.HomeActivity
+import com.guillaumewilmot.swoleai.model.Nullable
+import com.guillaumewilmot.swoleai.model.ProgramBlockModel
+import com.guillaumewilmot.swoleai.model.ProgramWeekModel
+import com.guillaumewilmot.swoleai.model.asNullable
 import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgram
 import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgramImpl
 import com.guillaumewilmot.swoleai.util.DateHelper
@@ -29,7 +29,6 @@ import com.guillaumewilmot.swoleai.util.DateHelper.plusDays
 import com.guillaumewilmot.swoleai.util.extension.getUserLocale
 import com.guillaumewilmot.swoleai.util.extension.pixelToDp
 import com.guillaumewilmot.swoleai.util.extension.withSpans
-import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.util.loading.HasLoader
 import com.guillaumewilmot.swoleai.util.loading.HasLoaderImpl
 import com.guillaumewilmot.swoleai.util.loading.linkToLoader
@@ -38,6 +37,7 @@ import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -400,25 +400,16 @@ class HomeDashboardViewModel @Inject constructor(
         val iconColor: Int
     )
 
-    val weekSessions: Flowable<List<SessionAdapter.SessionViewHolder.ViewModel>> =
+    val weekSessions: Flowable<List<SessionAdapter.SessionViewHolder.ViewDataModel>> =
         _currentWeek.map { currentWeek ->
             val textColor = application.getColor(R.color.textPrimary)
             val textColorCompleted = application.getColor(R.color.textTertiary)
-            fun sessionCallback(sessionModel: SessionModel) =
-                object : ParentActivity.AdapterCallback {
-                    override fun onClick(activity: ParentActivity, fragment: ParentFragment<*>) {
-                        dataStorage.toStorage(DataDefinition.CURRENT_SESSION, sessionModel)
-                        (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
-                        //TODO : Show summary in a dialog if complete?
-                    }
-                }
 
             currentWeek.value?.sessions?.map { session ->
-                SessionAdapter.SessionViewHolder.ViewModel(
+                SessionAdapter.SessionViewHolder.ViewDataModel(
                     nameText = session.name,
                     nameTextColor = if (session.isComplete) textColorCompleted else textColor,
                     isCompleteIconVisibility = if (session.isComplete) View.VISIBLE else View.GONE,
-                    callback = sessionCallback(session)
                 )
             } ?: listOf()
         }
@@ -494,6 +485,17 @@ class HomeDashboardViewModel @Inject constructor(
                     _currentWeekIndex.onNext(currentWeekIndex + 1)
                 }
             }
+    }
+
+    fun onSessionSelected(index: Int): Completable {
+        return _currentWeek.take(1)
+            .linkToLoader(this)
+            .switchMapCompletable { currentWeek ->
+                val session = currentWeek.value?.sessions?.getOrNull(index)
+                dataStorage.toStorage(DataDefinition.CURRENT_SESSION, session)
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun completeWeek() {

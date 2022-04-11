@@ -16,9 +16,9 @@ import com.guillaumewilmot.swoleai.util.validation.FieldValidator
 import com.guillaumewilmot.swoleai.util.validation.ValidatorNotBlank
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -37,8 +37,6 @@ class OnboardingUsernameViewModel @Inject constructor(
         startValidateWhenInFocus = true
     )
 
-    private val _updateSuccess = PublishSubject.create<Boolean>()
-
     /**
      * UI
      */
@@ -54,10 +52,6 @@ class OnboardingUsernameViewModel @Inject constructor(
     val usernameFieldError: Observable<Nullable<String>> = _usernameValidator.fieldError
         .observeOn(AndroidSchedulers.mainThread())
 
-    val updateSuccess: Observable<Boolean> = _updateSuccess
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-
     /**
      * Logic
      */
@@ -70,20 +64,20 @@ class OnboardingUsernameViewModel @Inject constructor(
         _usernameValidator.onFieldFocusChanged(hasFocus)
     }
 
-    fun onNext() {
+    fun onNext(): Completable? {
         val username = _usernameValidator.fieldValue.value.takeIf {
             it?.isNotBlank() == true
-        } ?: return
+        } ?: return null
 
-        _user.take(1)
+        return _user.take(1)
             .linkToLoader(this)
-            .subscribe { user ->
+            .switchMapCompletable { user ->
                 val newUser = user.value ?: UserModel()
                 dataStorage.toStorage(DataDefinition.USER, newUser.apply {
                     this.username = username.trim()
-                })?.subscribe({
-                    _updateSuccess.onNext(true)
-                }, {})
+                })
             }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }

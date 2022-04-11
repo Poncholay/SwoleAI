@@ -24,6 +24,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeDashboardBinding
+import com.guillaumewilmot.swoleai.modules.home.HomeActivity
 import com.guillaumewilmot.swoleai.modules.home.setting.HomeSettingsFragment
 import com.guillaumewilmot.swoleai.util.extension.dpToPixel
 import com.guillaumewilmot.swoleai.util.extension.pixelToDp
@@ -31,6 +32,7 @@ import com.guillaumewilmot.swoleai.util.extension.withSpans
 import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.Float.max
 import javax.inject.Inject
@@ -45,7 +47,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
 
     private val viewModel: HomeDashboardViewModel by viewModels()
     private val sessionAdapter: SessionAdapter by lazy {
-        SessionAdapter(adapterCallbackWrapper)
+        SessionAdapter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +77,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         setupProgramChart()
 
         viewModel.loaderVisibility
-            .autoDispose(this)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
             }
@@ -84,12 +86,14 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          * Handle no user
          */
 
-        viewModel.userDashboardVisibility.autoDispose(this, Lifecycle.Event.ON_DESTROY)
+        viewModel.userDashboardVisibility
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.userDashboard?.visibility = it
             }
 
-        viewModel.noUserDashboardVisibility.autoDispose(this, Lifecycle.Event.ON_DESTROY)
+        viewModel.noUserDashboardVisibility
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.noUserDashboard?.visibility = it
             }
@@ -99,13 +103,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          */
 
         viewModel.currentFatigueValue
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe { fatigue ->
                 binding?.fatigueRatingValue?.text = fatigue.toString()
             }
 
         viewModel.fatigueChartState
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe { state ->
                 binding?.fatigueChart?.apply {
                     val padding = (state.dataset.yMax - state.dataset.yMin) * 0.5f
@@ -138,14 +142,14 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          */
 
         viewModel.programSummaryState
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe { state ->
                 binding?.programEndDaysRemaining?.text = state.daysRemainingText
                 binding?.programEndDate?.text = state.endDateText
             }
 
         viewModel.programChartState
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe { state ->
                 binding?.programChart?.apply {
                     legend.setCustom(state.legend)
@@ -173,13 +177,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          */
 
         viewModel.weekSummaryTitle
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.weekTitle?.text = it
             }
 
         viewModel.weekSummaryIsCompleteIconState
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.weekCompletedIcon?.apply {
                     visibility = it.visibility
@@ -188,13 +192,23 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
             }
 
         viewModel.weekSessions
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 sessionAdapter.data = it
             }
 
+        sessionAdapter.getIndexClickedObservable()
+            .flatMap { indexClicked ->
+                viewModel.onSessionSelected(indexClicked)
+                    .andThen(Observable.just(indexClicked))
+            }
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .subscribe {
+                (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
+            }
+
         viewModel.weekSummaryCompleteButtonState
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.completeWeekButton?.apply {
                     text = it.text

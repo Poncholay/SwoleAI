@@ -13,6 +13,7 @@ import com.guillaumewilmot.swoleai.model.Nullable
 import com.guillaumewilmot.swoleai.model.SessionModel
 import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.model.asNullable
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -96,33 +97,30 @@ class DataStorageImpl constructor(
      * Set
      */
 
-    private fun putStringRx(key: String, value: String): Single<Preferences> {
+//    private fun putStringRx(key: String, value: String): Single<Preferences> {
+    private fun putStringRx(key: String, value: String): Completable {
         return applicationContext.rxDataStore
             .updateDataAsync { preferences ->
                 val mutablePreferences = preferences.toMutablePreferences()
                 mutablePreferences[stringPreferencesKey(key)] = value
                 Single.just(mutablePreferences)
-            }.also { result ->
+            }
+            .also { result ->
                 Log.d("DataStorage", "Send for storage \"$key\": \"$value\"")
-                result.subscribe(
-                    {
-                        Log.d("DataStorage", "Stored \"$key\": \"$value\"")
-                    },
-                    {
-                        Log.d("DataStorage", "Error while Storing \"$key\": \"$value\"")
-                        it.printStackTrace()
-                    }
-                )
+            }
+            .flatMapCompletable {
+                Log.d("DataStorage", "Stored \"$key\": \"$value\"")
+                Completable.complete()
+//                Completable.create {
+//                    it.onComplete()
+//                }
             }
     }
 
-    override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences>? = try {
-        obj.toJson()?.let { jsonValue ->
-            putStringRx(dataDefinition.key, jsonValue)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
+    //    override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences> {
+    override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Completable {
+        val jsonValue = obj.toJson() ?: ""
+        return putStringRx(dataDefinition.key, jsonValue)
     }
 
     /**

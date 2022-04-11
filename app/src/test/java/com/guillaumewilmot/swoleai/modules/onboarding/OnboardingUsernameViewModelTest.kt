@@ -101,7 +101,7 @@ class OnboardingUsernameViewModelTest : BaseUnitTest() {
         testObserver(viewModel.loaderVisibility).assertValue(View.GONE)
         testObserver(dataStorage.dataHolder.userField).assertValue(Nullable(null))
 
-        viewModel.onNext()
+        viewModel.onNext()!!.subscribe()
 
         testObserver(viewModel.loaderVisibility).assertValue(View.GONE)
         testObserver(dataStorage.dataHolder.userField).assertValue(Nullable(UserModel("Gui")))

@@ -5,6 +5,7 @@ import com.guillaumewilmot.swoleai.model.Nullable
 import com.guillaumewilmot.swoleai.model.SessionModel
 import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.model.asNullable
+import io.mockk.mockk
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -14,12 +15,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @ExperimentalCoroutinesApi
 class DataStorageMock : DataStorage {
 
-    override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences>? {
+    override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences> {
         when (dataDefinition) {
             DataDefinition.USER -> dataHolder._userField.onNext((obj as UserModel).asNullable())
             DataDefinition.CURRENT_SESSION -> dataHolder._currentSessionField.onNext((obj as SessionModel).asNullable())
         }
-        return null
+        return mockk(relaxed = true, relaxUnitFun = true)
     }
 
     /**

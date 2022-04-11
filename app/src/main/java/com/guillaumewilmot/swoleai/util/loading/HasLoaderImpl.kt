@@ -2,6 +2,7 @@ package com.guillaumewilmot.swoleai.util.loading
 
 import android.view.View
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -48,6 +49,14 @@ fun <T : Any> Observable<T>.linkToLoader(source: HasLoader): Observable<T> {
 }
 
 fun <T : Any> Single<T>.linkToLoader(source: HasLoader): Single<T> {
+    return this.doOnSubscribe {
+        source.pushLoading()
+    }.doFinally {
+        source.popLoading()
+    }
+}
+
+fun Completable.linkToLoader(source: HasLoader): Completable {
     return this.doOnSubscribe {
         source.pushLoading()
     }.doFinally {

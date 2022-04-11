@@ -36,7 +36,7 @@ class OnboardingGreetingFragment : ParentFragment<FragmentOnboardingGreetingBind
         ui()
 
         viewModel.titleTextTest
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.titleText?.text = it
             }

@@ -29,7 +29,7 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
 
     private val viewModel: HomeSessionSummaryViewModel by viewModels()
     private val exerciseSummaryAdapter: ExerciseSummaryAdapter by lazy {
-        ExerciseSummaryAdapter(adapterCallbackWrapper)
+        ExerciseSummaryAdapter()
     }
 
     override fun onCreateView(
@@ -49,13 +49,13 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         ui()
 
         viewModel.toolbarCurrentSessionText
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 binding?.appBar?.currentSessionText?.text = it
             }
 
         viewModel.sessionExercises
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
                 exerciseSummaryAdapter.data = it
             }

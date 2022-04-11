@@ -4,39 +4,44 @@ import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.guillaumewilmot.swoleai.controller.ParentActivity
 import com.guillaumewilmot.swoleai.databinding.AdapterViewSessionBinding
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 
-class SessionAdapter(
-    private val callbackWrapper: ParentActivity.AdapterCallbackWrapper
-) : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() {
-    var data: List<SessionViewHolder.ViewModel> = listOf()
+class SessionAdapter : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() {
+    var data: List<SessionViewHolder.ViewDataModel> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
+    private val clickListenerSubject: PublishSubject<Int> = PublishSubject.create()
+
+    fun getIndexClickedObservable(): Observable<Int> = clickListenerSubject
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
     override fun onBindViewHolder(holder: SessionViewHolder, position: Int) = try {
-        holder.bind(data[position])
+        holder.apply {
+            itemView.setOnClickListener {
+                clickListenerSubject.onNext(position)
+            }
+        }.bind(data[position])
     } catch (ignored: IndexOutOfBoundsException) {
     }
 
     override fun getItemCount(): Int = data.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = SessionViewHolder(
-        AdapterViewSessionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-        callbackWrapper
+        AdapterViewSessionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
     class SessionViewHolder(
         private val binding: AdapterViewSessionBinding,
-        private val callbackWrapper: ParentActivity.AdapterCallbackWrapper
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(sessionViewModel: ViewModel) {
-            itemView.setOnClickListener {
-                callbackWrapper.wrap(sessionViewModel.callback::onClick)
-            }
-
+        fun bind(sessionViewModel: ViewDataModel) {
             binding.isCompleteIcon.setColorFilter(
                 sessionViewModel.nameTextColor,
                 PorterDuff.Mode.SRC_IN
@@ -46,11 +51,10 @@ class SessionAdapter(
             binding.nameText.setTextColor(sessionViewModel.nameTextColor)
         }
 
-        data class ViewModel(
+        data class ViewDataModel(
             val nameText: String,
             val nameTextColor: Int,
-            val isCompleteIconVisibility: Int,
-            val callback: ParentActivity.AdapterCallback
+            val isCompleteIconVisibility: Int
         )
     }
 }

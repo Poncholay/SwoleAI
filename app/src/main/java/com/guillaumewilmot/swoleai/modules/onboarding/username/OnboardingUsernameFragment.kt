@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import autodispose2.androidx.lifecycle.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingUsernameBinding
@@ -63,12 +64,6 @@ class OnboardingUsernameFragment : ParentFragment<FragmentOnboardingUsernameBind
             .subscribe {
                 binding?.loader?.visibility = it
             }
-
-        viewModel.updateSuccess
-            .autoDispose(this)
-            .subscribe {
-                parent?.userOnboardingUsernameNext()
-            }
     }
 
     private fun ui() {
@@ -81,6 +76,10 @@ class OnboardingUsernameFragment : ParentFragment<FragmentOnboardingUsernameBind
         binding?.continueButton?.text = viewModel.nextButtonText
         binding?.continueButton?.setOnClickListener {
             viewModel.onNext()
+                ?.autoDispose(this, Lifecycle.Event.ON_STOP)
+                ?.subscribe({
+                    parent?.userOnboardingUsernameNext()
+                }, {})
         }
     }
 
