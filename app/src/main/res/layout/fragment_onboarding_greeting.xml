@@ -61,14 +61,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleText" />
 
-            <com.afollestad.viewpagerdots.DotsIndicator
+            <me.relex.circleindicator.CircleIndicator3
                 android:id="@+id/viewPagerDots"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
                 android:layout_marginTop="@dimen/marginRegular"
                 android:layout_marginBottom="@dimen/marginRegular"
-                app:dot_drawable="@drawable/onboarding_viewpager_indicator_selected"
-                app:dot_drawable_unselected="@drawable/onboarding_viewpager_indicator_unselected"
+                app:ci_drawable="@drawable/onboarding_viewpager_indicator_selected"
+                app:ci_drawable_unselected="@drawable/onboarding_viewpager_indicator_unselected"
                 app:layout_constraintBottom_toTopOf="@id/continueButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

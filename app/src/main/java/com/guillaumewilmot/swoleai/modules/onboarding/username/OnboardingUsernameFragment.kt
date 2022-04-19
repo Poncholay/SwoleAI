@@ -77,9 +77,9 @@ class OnboardingUsernameFragment : ParentFragment<FragmentOnboardingUsernameBind
         binding?.continueButton?.setOnClickListener {
             viewModel.onNext()
                 ?.autoDispose(this, Lifecycle.Event.ON_STOP)
-                ?.subscribe({
+                ?.subscribe {
                     parent?.userOnboardingUsernameNext()
-                }, {})
+                }
         }
     }
 

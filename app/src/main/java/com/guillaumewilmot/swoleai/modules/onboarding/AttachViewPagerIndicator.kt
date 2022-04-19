@@ -1,7 +1,7 @@
 package com.guillaumewilmot.swoleai.modules.onboarding
 
-import com.afollestad.viewpagerdots.DotsIndicator
+import me.relex.circleindicator.CircleIndicator3
 
 interface AttachViewPagerIndicator {
-    fun attachIndicator(dotsIndicator: DotsIndicator)
+    fun attachIndicator(indicator: CircleIndicator3)
 }

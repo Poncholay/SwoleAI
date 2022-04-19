@@ -94,13 +94,13 @@ class HomeDashboardViewModel @Inject constructor(
     }, BackpressureStrategy.LATEST)
 
     //FIXME : TMP hardcoded data, should be stored
-    private val _currentWeekIndex = BehaviorSubject.createDefault(2)
-    private val _currentWeekIndexFlowable =
-        _currentWeekIndex.toFlowable(BackpressureStrategy.LATEST)
+    private val _currentWeekIndexSubject = BehaviorSubject.createDefault(2)
+    private val _currentWeekIndex = _currentWeekIndexSubject.toFlowable(BackpressureStrategy.LATEST)
+
 
     private val _currentWeek: Flowable<Nullable<ProgramWeekModel>> = Flowable.combineLatest(
         programWeeks,
-        _currentWeekIndexFlowable
+        _currentWeekIndex
     ) { programWeeks, currentWeekIndex ->
         programWeeks.getOrNull(currentWeekIndex).asNullable()
     }.distinctUntilChanged()
@@ -433,9 +433,9 @@ class HomeDashboardViewModel @Inject constructor(
     }
 
     private val _weekSummaryCompleteButtonIsEnabled: Flowable<Boolean> = _currentWeek.map {
-        //TODO: All sessions of the week need to be complete
-        //TODO: Might need to replace zip on weekSummaryCompleteButtonState if more dependencies needed to calculate
-        true
+        it.value?.sessions?.all { session ->
+            session.isComplete
+        } == true
     }
 
     val weekSummaryCompleteButtonState: Flowable<WeekSummaryCompleteButtonState> = Flowable.zip(
@@ -462,54 +462,56 @@ class HomeDashboardViewModel @Inject constructor(
      * LOGIC
      */
 
-    fun goToPreviousWeek() {
-        _currentWeekIndex.take(1)
-            .linkToLoader(this)
-            .subscribe { currentWeekIndex ->
-                if (currentWeekIndex > 0) {
-                    _currentWeekIndex.onNext(currentWeekIndex - 1)
-                }
+    fun goToPreviousWeek(): Completable = _currentWeekIndexSubject
+        .linkToLoader(this)
+        .take(1)
+        .switchMapCompletable { currentWeekIndex ->
+            if (currentWeekIndex > 0) {
+                _currentWeekIndexSubject.onNext(currentWeekIndex - 1)
             }
-    }
+            Completable.complete()
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(Schedulers.io())
 
-    fun goToNextWeek() {
-        Flowable.combineLatest(
-            _currentWeekIndexFlowable,
-            programWeeks
-        ) { currentWeekIndex, programWeeks ->
-            Pair(currentWeekIndex, programWeeks)
-        }.take(1)
-            .linkToLoader(this)
-            .subscribe { (currentWeekIndex, programWeeks) ->
-                if (currentWeekIndex + 1 < programWeeks.size) {
-                    _currentWeekIndex.onNext(currentWeekIndex + 1)
-                }
+    fun goToNextWeek(): Completable = Flowable.combineLatest(
+        _currentWeekIndex,
+        programWeeks
+    ) { currentWeekIndex, programWeeks ->
+        Pair(currentWeekIndex, programWeeks)
+    }
+        .linkToLoader(this)
+        .take(1)
+        .switchMapCompletable { (currentWeekIndex, programWeeks) ->
+            if (currentWeekIndex + 1 < programWeeks.size) {
+                _currentWeekIndexSubject.onNext(currentWeekIndex + 1)
             }
-    }
+            Completable.complete()
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(Schedulers.io())
 
-    fun onSessionSelected(index: Int): Completable {
-        return _currentWeek.take(1)
-            .linkToLoader(this)
-            .switchMapCompletable { currentWeek ->
-                val session = currentWeek.value?.sessions?.getOrNull(index)
-                dataStorage.toStorage(DataDefinition.CURRENT_SESSION, session)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-    }
+    fun onSessionSelected(index: Int): Completable = _currentWeek.take(1)
+        .linkToLoader(this)
+        .switchMapCompletable { currentWeek ->
+            val session = currentWeek.value?.sessions?.getOrNull(index)
+            dataStorage.toStorage(DataDefinition.CURRENT_SESSION, session)
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
 
-    fun completeWeek() {
+    fun completeWeek(): Completable = Completable.complete() //TODO
 
-    }
-
-    fun preselectCurrentSession() {
-        _currentWeek.take(1)
-            .linkToLoader(this)
-            .subscribe {
-                dataStorage.toStorage(
-                    DataDefinition.CURRENT_SESSION,
-                    it.value?.sessions?.getOrNull(0)
-                )
-            }
-    }
+    //FIXME : TMP, should be done when we generate the real program
+    fun preselectCurrentSession(): Completable = _currentWeek
+        .linkToLoader(this)
+        .take(1)
+        .switchMapCompletable { currentWeek ->
+            dataStorage.toStorage(
+                DataDefinition.CURRENT_SESSION,
+                currentWeek.value?.sessions?.getOrNull(0)
+            )
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
 }

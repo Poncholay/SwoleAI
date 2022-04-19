@@ -46,15 +46,16 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
     lateinit var fragmentBackstack: FragmentBackstack
 
     private val viewModel: HomeDashboardViewModel by viewModels()
-    private val sessionAdapter: SessionAdapter by lazy {
-        SessionAdapter()
-    }
+    private val sessionAdapter: SessionAdapter?
+        get() = binding?.weekSessions?.adapter as? SessionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //FIXME : TMP, should be done when we generate the real program
         viewModel.preselectCurrentSession()
+            .autoDispose(this)
+            .subscribe()
     }
 
     override fun onCreateView(
@@ -194,16 +195,16 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         viewModel.weekSessions
             .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
-                sessionAdapter.data = it
+                sessionAdapter?.data = it
             }
 
-        sessionAdapter.getIndexClickedObservable()
-            .flatMap { indexClicked ->
+        sessionAdapter?.getIndexClickedObservable()
+            ?.flatMap { indexClicked ->
                 viewModel.onSessionSelected(indexClicked)
                     .andThen(Observable.just(indexClicked))
             }
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
-            .subscribe {
+            ?.autoDispose(this, Lifecycle.Event.ON_STOP)
+            ?.subscribe {
                 (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
             }
 
@@ -234,9 +235,9 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
                 )
             )
             iconAction.setOnClickListener {
-                fragmentManager?.let {
+                if (isAdded) {
                     fragmentBackstack.push(
-                        it,
+                        parentFragmentManager,
                         HomeSettingsFragment(),
                         FragmentBackstack.Animate.FORWARD
                     )
@@ -254,7 +255,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         binding?.weekSessions?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
-            adapter = sessionAdapter
+            adapter = SessionAdapter()
         }
 
         binding?.programReviewButton?.setOnClickListener {
@@ -262,12 +263,18 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         }
         binding?.nextWeekButton?.setOnClickListener {
             viewModel.goToNextWeek()
+                .autoDispose(this)
+                .subscribe()
         }
         binding?.previousWeekButton?.setOnClickListener {
             viewModel.goToPreviousWeek()
+                .autoDispose(this)
+                .subscribe()
         }
         binding?.completeWeekButton?.setOnClickListener {
             viewModel.completeWeek()
+                .autoDispose(this)
+                .subscribe()
         }
     }
 

@@ -69,8 +69,8 @@ class OnboardingUsernameViewModel @Inject constructor(
             it?.isNotBlank() == true
         } ?: return null
 
-        return _user.take(1)
-            .linkToLoader(this)
+        return _user.linkToLoader(this)
+            .take(1)
             .switchMapCompletable { user ->
                 val newUser = user.value ?: UserModel()
                 dataStorage.toStorage(DataDefinition.USER, newUser.apply {

@@ -21,12 +21,11 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeActivity : ParentActivity() {
+class HomeActivity : ParentActivity<ActivityHomeBinding>() {
 
     @Inject
     lateinit var fragmentBackstack: FragmentBackstack
 
-    private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +33,7 @@ class HomeActivity : ParentActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding?.root)
 
         viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
 
@@ -118,7 +117,7 @@ class HomeActivity : ParentActivity() {
      */
 
     private fun initBottomNavigationBar() {
-        binding.bottomNavigationView.apply {
+        binding?.bottomNavigationView?.apply {
             setOnItemSelectedListener { item ->
                 handleSelectTab(FragmentBackstack.Tab.valueOf(item.itemId))
                 true
@@ -131,9 +130,9 @@ class HomeActivity : ParentActivity() {
 
     /** Programmatically select a tab in the bottomNavigationBar */
     fun selectTab(tab: FragmentBackstack.FragmentTab, firstSelect: Boolean) {
-        val currentTab = binding.bottomNavigationView.selectedItemId
+        val currentTab = binding?.bottomNavigationView?.selectedItemId
         if (currentTab != tab.navId()) {
-            binding.bottomNavigationView.selectedItemId = tab.navId()
+            binding?.bottomNavigationView?.selectedItemId = tab.navId()
         }
 
         //When we open the app the tab is selected by default and the fragment is not loaded
@@ -144,9 +143,9 @@ class HomeActivity : ParentActivity() {
 
     /** Programmatically select a tab in the bottomNavigationBar */
     fun selectTabAndGoToRoot(tab: FragmentBackstack.FragmentTab) {
-        val current = binding.bottomNavigationView.selectedItemId
+        val current = binding?.bottomNavigationView?.selectedItemId
         if (current != tab.navId()) {
-            binding.bottomNavigationView.selectedItemId = tab.navId()
+            binding?.bottomNavigationView?.selectedItemId = tab.navId()
         }
         fragmentBackstack.goToTabRoot(supportFragmentManager)
     }

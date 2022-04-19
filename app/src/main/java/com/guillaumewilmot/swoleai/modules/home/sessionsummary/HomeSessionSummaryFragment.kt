@@ -28,9 +28,8 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
     lateinit var fragmentBackstack: FragmentBackstack
 
     private val viewModel: HomeSessionSummaryViewModel by viewModels()
-    private val exerciseSummaryAdapter: ExerciseSummaryAdapter by lazy {
-        ExerciseSummaryAdapter()
-    }
+    private val exerciseSummaryAdapter: ExerciseSummaryAdapter?
+        get() = binding?.exerciseSummary?.adapter as? ExerciseSummaryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,7 +56,7 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         viewModel.sessionExercises
             .autoDispose(this, Lifecycle.Event.ON_STOP)
             .subscribe {
-                exerciseSummaryAdapter.data = it
+                exerciseSummaryAdapter?.data = it
             }
     }
 
@@ -67,11 +66,13 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         )
 
         binding?.startButton?.setOnClickListener {
-            fragmentBackstack.push(
-                parentFragmentManager,
-                HomeActiveSessionFragment(),
-                FragmentBackstack.Animate.FORWARD
-            )
+            if (isAdded) {
+                fragmentBackstack.push(
+                    parentFragmentManager,
+                    HomeActiveSessionFragment(),
+                    FragmentBackstack.Animate.FORWARD
+                )
+            }
         }
         binding?.skipButton?.setOnClickListener {
 
@@ -83,7 +84,7 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         binding?.exerciseSummary?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
-            adapter = exerciseSummaryAdapter
+            adapter = ExerciseSummaryAdapter()
         }
     }
 }

@@ -105,15 +105,12 @@ class DataStorageImpl constructor(
                 mutablePreferences[stringPreferencesKey(key)] = value
                 Single.just(mutablePreferences)
             }
-            .also { result ->
+            .also {
                 Log.d("DataStorage", "Send for storage \"$key\": \"$value\"")
             }
             .flatMapCompletable {
                 Log.d("DataStorage", "Stored \"$key\": \"$value\"")
                 Completable.complete()
-//                Completable.create {
-//                    it.onComplete()
-//                }
             }
     }
 
