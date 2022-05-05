@@ -9,13 +9,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class CanLookupProgramImpl : CanLookupProgram {
 
     //FIXME : TMP hardcoded data, shold be in DataStorage
-    override val programBlocksData: Flowable<List<ProgramBlockModel>> = Flowable.create({
+    override val programBlocks: Flowable<List<ProgramBlockModel>> = Flowable.create({
         it.onNext(FakeProgram.fakeProgram)
     }, BackpressureStrategy.LATEST)
 
-    override val programWeeks: Flowable<List<ProgramWeekModel>> = programBlocksData.map {
+    override val programWeeks: Flowable<List<ProgramWeekModel>> = programBlocks.map {
         it.flatMap { block ->
             block.weeks
+        }
+    }
+
+    override val programSessions: Flowable<List<SessionModel>> = programWeeks.map {
+        it.flatMap { week ->
+            week.sessions
         }
     }
 
@@ -23,7 +29,7 @@ class CanLookupProgramImpl : CanLookupProgram {
         currentWeekFlowable: Flowable<Nullable<ProgramWeekModel>>
     ): Flowable<Nullable<ProgramBlockModel>> = Flowable.combineLatest(
         currentWeekFlowable,
-        programBlocksData
+        programBlocks
     ) { currentWeek, programBlocks ->
         programBlocks.find {
             it.id == currentWeek.value?.blockId

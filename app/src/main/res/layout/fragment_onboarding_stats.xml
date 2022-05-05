@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loader"
+        style="@style/LoaderStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/marginLoader"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/marginRegular"
+                android:text="@string/app_onboarding_stats_title_text"
+                android:textAlignment="center"
+                android:textFontWeight="600"
+                android:textSize="@dimen/textParagraphTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/maleCard"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/marginRegular"
+                android:layout_marginTop="@dimen/marginRegular"
+                android:layout_marginEnd="12dp"
+                android:background="?selectableItemBackground"
+                app:cardCornerRadius="@dimen/cornerRadiusCardView"
+                app:cardElevation="@dimen/elevationCardView"
+                app:layout_constraintBottom_toTopOf="@id/heightCard"
+                app:layout_constraintEnd_toStartOf="@id/femaleCard"
+                app:layout_constraintHeight_min="wrap"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleText"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintVertical_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    tools:background="@color/main">
+
+                    <ImageView
+                        android:id="@+id/iconMale"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/app_onboarding_stats_gender_male_content_description"
+                        android:padding="@dimen/marginTiny"
+                        android:src="@drawable/icon_male"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/textPrimary"
+                        tools:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/marginTiny"
+                        android:text="@string/app_onboarding_stats_gender_male_text"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textFontWeight="600"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iconMale"
+                        tools:text="Male"
+                        tools:textColor="@color/white" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/femaleCard"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="@dimen/marginRegular"
+                android:background="?selectableItemBackground"
+                app:cardCornerRadius="@dimen/cornerRadiusCardView"
+                app:cardElevation="@dimen/elevationCardView"
+                app:layout_constraintBottom_toBottomOf="@id/maleCard"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/maleCard"
+                app:layout_constraintTop_toTopOf="@id/maleCard">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iconFemale"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/app_onboarding_stats_gender_female_content_description"
+                        android:padding="@dimen/marginTiny"
+                        android:src="@drawable/icon_female"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/textPrimary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/marginTiny"
+                        android:text="@string/app_onboarding_stats_gender_female_text"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textFontWeight="600"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iconFemale"
+                        tools:text="Female" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/heightCard"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/marginRegular"
+                android:layout_marginTop="@dimen/marginRegular"
+                android:layout_marginEnd="@dimen/marginRegular"
+                app:cardCornerRadius="@dimen/cornerRadiusCardView"
+                app:cardElevation="@dimen/elevationCardView"
+                app:layout_constraintBottom_toTopOf="@id/weightCard"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_min="wrap"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/maleCard"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintVertical_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/marginSmall">
+
+                    <TextView
+                        android:id="@+id/heightTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/app_onboarding_stats_height_text"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/textSecondary"
+                        android:textFontWeight="600"
+                        android:textSize="@dimen/textParagraphPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/heightValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/marginTiny"
+                        android:textAlignment="center"
+                        android:textFontWeight="600"
+                        android:textSize="@dimen/textParagraphTitle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/heightTitle"
+                        tools:text="183cm" />
+
+                    <androidx.appcompat.widget.AppCompatSeekBar
+                        android:id="@+id/heightSeekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="@dimen/marginSmall"
+                        android:max="230"
+                        android:min="100"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/heightValue" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/weightCard"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/marginRegular"
+                app:cardCornerRadius="@dimen/cornerRadiusCardView"
+                app:cardElevation="@dimen/elevationCardView"
+                app:layout_constraintBottom_toTopOf="@id/viewPagerDots"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_min="wrap"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/heightCard"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintVertical_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/marginSmall">
+
+                    <TextView
+                        android:id="@+id/weightTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/app_onboarding_stats_weight_text"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/textSecondary"
+                        android:textFontWeight="600"
+                        android:textSize="@dimen/textParagraphPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/weightValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/marginTiny"
+                        android:textAlignment="center"
+                        android:textFontWeight="600"
+                        android:textSize="@dimen/textParagraphTitle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/weightTitle"
+                        tools:text="83kg" />
+
+                    <androidx.appcompat.widget.AppCompatSeekBar
+                        android:id="@+id/weightSeekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="@dimen/marginSmall"
+                        android:max="200000"
+                        android:min="30000"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/weightValue" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <me.relex.circleindicator.CircleIndicator3
+                android:id="@+id/viewPagerDots"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginBottom="@dimen/marginRegular"
+                app:ci_drawable="@drawable/onboarding_viewpager_indicator_selected"
+                app:ci_drawable_unselected="@drawable/onboarding_viewpager_indicator_unselected"
+                app:layout_constraintBottom_toTopOf="@id/continueButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weightCard"
+                app:layout_constraintVertical_bias="1" />
+
+            <com.guillaumewilmot.swoleai.view.AnimatedButton
+                android:id="@+id/continueButton"
+                style="@style/ButtonMainStyle"
+                android:layout_width="match_parent"
+                android:layout_margin="@dimen/marginRegular"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/app_onboarding_username_continue_button_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

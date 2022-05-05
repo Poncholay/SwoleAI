@@ -1,5 +1,6 @@
 package com.guillaumewilmot.swoleai.modules.home.sessionsummary
 
+import android.annotation.SuppressLint
 import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import com.guillaumewilmot.swoleai.databinding.AdapterViewExerciseSummaryBinding
 class ExerciseSummaryAdapter :
     RecyclerView.Adapter<ExerciseSummaryAdapter.ExerciseSummaryViewHolder>() {
     var data: List<ExerciseSummaryViewHolder.ViewModel> = listOf()
+        @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
             notifyDataSetChanged()

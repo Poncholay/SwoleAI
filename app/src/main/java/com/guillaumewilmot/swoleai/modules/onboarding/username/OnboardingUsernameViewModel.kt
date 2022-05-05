@@ -29,7 +29,7 @@ class OnboardingUsernameViewModel @Inject constructor(
     private val dataStorage: DataStorage
 ) : ParentViewModel(application), HasLoader by HasLoaderImpl() {
 
-    private val _user by lazy { dataStorage.dataHolder.userField }
+    private val _user = dataStorage.dataHolder.userField
 
     private val _usernameValidator = FieldValidator(
         validator = ValidatorNotBlank(application),

@@ -2,11 +2,8 @@ package com.guillaumewilmot.swoleai.modules.onboarding
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 import autodispose2.androidx.lifecycle.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentActivity
@@ -14,6 +11,7 @@ import com.guillaumewilmot.swoleai.databinding.ActivityOnboardingBinding
 import com.guillaumewilmot.swoleai.model.UserModel
 import com.guillaumewilmot.swoleai.modules.home.HomeActivity
 import com.guillaumewilmot.swoleai.modules.onboarding.greeting.OnboardingGreetingFragment
+import com.guillaumewilmot.swoleai.modules.onboarding.stats.OnboardingStatsFragment
 import com.guillaumewilmot.swoleai.modules.onboarding.username.OnboardingUsernameFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,11 +21,12 @@ import me.relex.circleindicator.CircleIndicator3
 @AndroidEntryPoint
 class OnboardingActivity : ParentActivity<ActivityOnboardingBinding>(),
     OnboardingGreetingFragment.OnboardingGreetingFragmentListener,
-    OnboardingUsernameFragment.OnboardingUsernameFragmentListener {
+    OnboardingUsernameFragment.OnboardingUsernameFragmentListener,
+    OnboardingStatsFragment.OnboardingStatsFragmentListener {
 
     private lateinit var viewModel: OnboardingActivityViewModel
-    private val viewPagerAdapter: ViewPagerAdapter?
-        get() = binding?.viewPager?.adapter as? ViewPagerAdapter
+    private val viewPagerAdapter: OnboardingViewpagerAdapter?
+        get() = binding?.viewPager?.adapter as? OnboardingViewpagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +37,7 @@ class OnboardingActivity : ParentActivity<ActivityOnboardingBinding>(),
         viewModel = ViewModelProvider(this)[OnboardingActivityViewModel::class.java]
 
         binding?.viewPager?.isUserInputEnabled = false
-        binding?.viewPager?.adapter = ViewPagerAdapter(this)
+        binding?.viewPager?.adapter = OnboardingViewpagerAdapter(this)
 
         viewModel.onboardingSteps
             .autoDispose(this, Lifecycle.Event.ON_DESTROY)
@@ -85,9 +84,9 @@ class OnboardingActivity : ParentActivity<ActivityOnboardingBinding>(),
      * Children interface
      */
 
-    //TODO
     override fun userOnboardingGreetingNext() = navigateToNextFragment()
-    override fun userOnboardingUsernameNext() = navigateToHomeActivity()
+    override fun userOnboardingUsernameNext() = navigateToNextFragment()
+    override fun userOnboardingStatsNext() = navigateToHomeActivity()
 
     /**
      * Subclasses
@@ -96,41 +95,28 @@ class OnboardingActivity : ParentActivity<ActivityOnboardingBinding>(),
     enum class Step {
         GREETING,
         ENTER_NAME,
+        ENTER_STATS,
 
         //TODO
-        ENTER_HEIGHT_BODYWEIGHT,
         ENTER_BIRTHDATE,
-        ENTER_GENDER
-    }
-
-    internal inner class ViewPagerAdapter(
-        activity: FragmentActivity
-    ) : FragmentStateAdapter(activity) {
-        var remainingSteps: List<Step> = listOf()
-            set(value) {
-                field = value
-                notifyDataSetChanged()
-            }
-
-        override fun getItemCount(): Int = remainingSteps.size
-        override fun createFragment(i: Int): Fragment = when (remainingSteps.getOrNull(i)) {
-            Step.GREETING -> OnboardingGreetingFragment()
-            Step.ENTER_NAME -> OnboardingUsernameFragment()
-            //TODO :
-            else -> OnboardingGreetingFragment()
-        }
     }
 
     companion object {
         private val REQUIRED_PROPERTIES = mapOf(
             Step.ENTER_NAME to listOf(UserModel::username),
+            Step.ENTER_STATS to listOf(UserModel::isMale, UserModel::height, UserModel::weight)
         )
 
         fun onboardingSteps(user: UserModel): List<Step> = REQUIRED_PROPERTIES
             .map { mapEntry ->
                 mapEntry.value.forEach { property ->
-                    if (property.get(user).isNullOrBlank()) {
-                        return@map mapEntry.key
+                    when (val field = property.get(user)) {
+                        is String -> if (field.isBlank()) {
+                            return@map mapEntry.key
+                        }
+                        else -> if (field == null) {
+                            return@map mapEntry.key
+                        }
                     }
                 }
                 return@map null

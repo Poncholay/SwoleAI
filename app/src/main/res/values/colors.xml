@@ -60,6 +60,7 @@
     <color name="iconTint">@color/white</color>
     <color name="backgroundIcon">@color/colorPrimary</color>
     <color name="backgroundCardView">@color/white</color>
+    <color name="backgroundCardViewSelected">@color/grey15</color>
     <color name="backgroundDefault">@color/grey3</color>
     <color name="backgroundButtonPrimary">@color/colorPrimary</color>
     <color name="backgroundButtonSecondary">@color/white</color>

@@ -1,9 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SwoleAi</string>
-    <string name="app_onboarding_greeting_description_text">So you wanna get swole? I\'m here to help.\nI\'ll just need to ask you a few questions about yourself so I can get started.</string>
+    <string name="app_onboarding_greeting_description_text" tools:ignore="Typos">So you wanna get swole? I\'m here to help.\nI\'ll just need to ask you a few questions about yourself so I can get started.</string>
     <string name="app_onboarding_greeting_title_text">Hi there</string>
     <string name="app_onboarding_greeting_continue_button_text">Let\'s get Swole</string>
-    <string name="app_onboarding_username_title_text">What\'s your name big man?</string>
+    <string name="app_onboarding_username_title_text">What\'s your name brah?</string>
     <string name="app_onboarding_username_continue_button_text">Next</string>
     <string name="app_onboarding_username_field_hint">Username</string>
 
@@ -48,6 +48,15 @@
     <string name="app_home_session_summary_toolbar_text">Session summary</string>
     <string name="app_adapter_view_exercise_summary_swap_icon">Swap</string>
     <string name="app_adapter_view_exercise_summary_info_icon">Info</string>
+
+    <string name="app_onboarding_stats_height_text">Height</string>
+    <string name="app_onboarding_stats_gender_male_text">Male</string>
+    <string name="app_onboarding_stats_gender_female_text">Female</string>
+    <string name="app_onboarding_stats_gender_male_content_description">Male</string>
+    <string name="app_onboarding_stats_gender_female_content_description">Female</string>
+    <string name="app_onboarding_stats_title_text">How \'bout your stats?</string>
+    <string name="app_onboarding_stats_weight_text">Weight</string>
+    <string name="app_onboarding_stats_continue_button_text">Next</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
         <item quantity="one">Hi %1$s,\nYou are %2$s Day out</item>

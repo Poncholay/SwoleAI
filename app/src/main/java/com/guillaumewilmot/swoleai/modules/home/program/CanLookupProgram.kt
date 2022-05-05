@@ -7,8 +7,9 @@ import com.guillaumewilmot.swoleai.model.SessionModel
 import io.reactivex.rxjava3.core.Flowable
 
 interface CanLookupProgram {
-    val programBlocksData: Flowable<List<ProgramBlockModel>>
+    val programBlocks: Flowable<List<ProgramBlockModel>>
     val programWeeks: Flowable<List<ProgramWeekModel>>
+    val programSessions: Flowable<List<SessionModel>>
 
     fun getProgramWeekFromSession(
         currentSessionFlowable: Flowable<Nullable<SessionModel>>

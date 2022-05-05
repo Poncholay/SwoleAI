@@ -1,5 +1,6 @@
 package com.guillaumewilmot.swoleai.modules.home.dashboard
 
+import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 
 class SessionAdapter : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() {
     var data: List<SessionViewHolder.ViewDataModel> = listOf()
+        @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
             notifyDataSetChanged()

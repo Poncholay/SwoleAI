@@ -5,7 +5,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 interface DataStorage {
-    //    fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences>
     fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Completable
     val dataHolder: DataHolder
 }

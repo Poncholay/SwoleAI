@@ -11,10 +11,15 @@ import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgram
 import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgramImpl
 import com.guillaumewilmot.swoleai.util.extension.withSpans
+import com.guillaumewilmot.swoleai.util.loading.HasLoader
+import com.guillaumewilmot.swoleai.util.loading.HasLoaderImpl
+import com.guillaumewilmot.swoleai.util.loading.linkToLoader
+import com.guillaumewilmot.swoleai.util.storage.DataDefinition
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,8 +29,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeSessionSummaryViewModel @Inject constructor(
     application: Application,
-    dataStorage: DataStorage
-) : ParentViewModel(application), CanLookupProgram by CanLookupProgramImpl() {
+    private val dataStorage: DataStorage
+) : ParentViewModel(application),
+    CanLookupProgram by CanLookupProgramImpl(),
+    HasLoader by HasLoaderImpl() {
     private val _currentSession = dataStorage.dataHolder.currentSessionField
     private val _currentWeek = getProgramWeekFromSession(_currentSession)
     private val _currentBlock = getProgramBlockFromProgramWeek(_currentWeek)
@@ -101,4 +108,31 @@ class HomeSessionSummaryViewModel @Inject constructor(
         }, BackpressureStrategy.LATEST)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+
+    /**
+     * LOGIC
+     */
+
+    private fun storeSessionById(transformId: (Int) -> Int): Completable = Flowable.combineLatest(
+        programSessions,
+        _currentSession
+    ) { sessions, currentSession ->
+        Pair(sessions, currentSession)
+    }
+        .linkToLoader(this)
+        .take(1)
+        .switchMapCompletable { (sessions, currentSession) ->
+            currentSession.value?.id?.let { currentId ->
+                val newId = transformId(currentId)
+                sessions.find {
+                    it.id == newId
+                }?.let { nextSession ->
+                    dataStorage.toStorage(DataDefinition.CURRENT_SESSION, nextSession)
+                }
+            }
+            Completable.complete()
+        }
+
+    fun nextSession(): Completable = storeSessionById { currentId -> currentId + 1 }
+    fun previousSession(): Completable = storeSessionById { currentId -> currentId - 1 }
 }

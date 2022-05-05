@@ -97,7 +97,6 @@ class HomeDashboardViewModel @Inject constructor(
     private val _currentWeekIndexSubject = BehaviorSubject.createDefault(2)
     private val _currentWeekIndex = _currentWeekIndexSubject.toFlowable(BackpressureStrategy.LATEST)
 
-
     private val _currentWeek: Flowable<Nullable<ProgramWeekModel>> = Flowable.combineLatest(
         programWeeks,
         _currentWeekIndex
@@ -203,7 +202,7 @@ class HomeDashboardViewModel @Inject constructor(
     )
 
     private val _programChartIntensityDataSet: Flowable<LineData> =
-        programBlocksData.map { programBlocks ->
+        programBlocks.map { programBlocks ->
             LineData().apply {
                 addDataSet(LineDataSet(
                     programBlocks.flatMap {
@@ -224,7 +223,7 @@ class HomeDashboardViewModel @Inject constructor(
         }
 
     private val _programChartVolumeDataSet: Flowable<BarData> = Flowable.combineLatest(
-        programBlocksData,
+        programBlocks,
         _currentWeek
     ) { programBlocks, currentWeek ->
         BarData().apply {
@@ -297,7 +296,7 @@ class HomeDashboardViewModel @Inject constructor(
     }
 
     private val _programChartLegend: Flowable<List<LegendEntry>> =
-        programBlocksData.map { programBlocks ->
+        programBlocks.map { programBlocks ->
             programBlocks.distinctBy { it.type }
                 .map { block ->
                     LegendEntry(
@@ -453,10 +452,6 @@ class HomeDashboardViewModel @Inject constructor(
         val backgroundId: Int,
         val isEnabled: Boolean
     )
-
-    /**
-     * USER EXISTS LOGIC
-     */
 
     /**
      * LOGIC

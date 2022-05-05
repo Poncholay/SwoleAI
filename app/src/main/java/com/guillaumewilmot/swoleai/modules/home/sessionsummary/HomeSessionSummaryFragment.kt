@@ -65,6 +65,17 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
             R.string.app_home_session_summary_toolbar_text
         )
 
+        binding?.appBar?.nextSessionButton?.setOnClickListener {
+            viewModel.nextSession()
+                .autoDispose(this)
+                .subscribe()
+        }
+        binding?.appBar?.previousSessionButton?.setOnClickListener {
+            viewModel.previousSession()
+                .autoDispose(this)
+                .subscribe()
+        }
+
         binding?.startButton?.setOnClickListener {
             if (isAdded) {
                 fragmentBackstack.push(

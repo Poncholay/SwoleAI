@@ -3,8 +3,9 @@
     <!-- region Margin size -->
     <dimen name="marginRegular">24dp</dimen>
     <dimen name="marginSmall">16dp</dimen>
+    <dimen name="marginTiny">8dp</dimen>
 
-    <dimen name="marginTopOnboardingIcon">100dp</dimen>
+    <dimen name="marginTopOnboardingIcon">50dp</dimen>
     <dimen name="marginLoader">8dp</dimen>
 
     <!-- region Text size -->
