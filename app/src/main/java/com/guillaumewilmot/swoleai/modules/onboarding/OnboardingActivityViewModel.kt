@@ -26,11 +26,7 @@ class OnboardingActivityViewModel @Inject constructor(
     val onboardingSteps: Flowable<List<OnboardingActivity.Step>> = _user
         .take(1)
         .map { user ->
-            if (user.value == null) {
-                listOf(OnboardingActivity.Step.GREETING, OnboardingActivity.Step.ENTER_NAME)
-            } else {
-                OnboardingActivity.onboardingSteps(user.value)
-            }
+            OnboardingActivity.onboardingSteps(user.value)
         }
         .distinctUntilChanged()
         .observeOn(AndroidSchedulers.mainThread())

@@ -53,7 +53,7 @@ class HomeDashboardViewModel @Inject constructor(
     private val dataStorage: DataStorage
 ) : ParentViewModel(application),
     HasLoader by HasLoaderImpl(),
-    CanLookupProgram by CanLookupProgramImpl() {
+    CanLookupProgram by CanLookupProgramImpl(dataStorage) {
 
     private val _user = dataStorage.dataHolder.userField
 

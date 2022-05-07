@@ -9,10 +9,9 @@ import androidx.datastore.preferences.rxjava3.rxPreferencesDataStore
 import androidx.datastore.rxjava3.RxDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.guillaumewilmot.swoleai.model.Nullable
-import com.guillaumewilmot.swoleai.model.SessionModel
-import com.guillaumewilmot.swoleai.model.UserModel
-import com.guillaumewilmot.swoleai.model.asNullable
+import com.guillaumewilmot.swoleai.model.*
+import com.guillaumewilmot.swoleai.modules.home.program.FakeProgram
+import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -97,7 +96,6 @@ class DataStorageImpl constructor(
      * Set
      */
 
-//    private fun putStringRx(key: String, value: String): Single<Preferences> {
     private fun putStringRx(key: String, value: String): Completable {
         return applicationContext.rxDataStore
             .updateDataAsync { preferences ->
@@ -114,7 +112,6 @@ class DataStorageImpl constructor(
             }
     }
 
-    //    override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Single<Preferences> {
     override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Completable {
         val jsonValue = obj.toJson() ?: ""
         return putStringRx(dataDefinition.key, jsonValue)
@@ -129,6 +126,14 @@ class DataStorageImpl constructor(
     inner class DataHolderImpl : DataHolder {
         override val userField: Flowable<Nullable<UserModel>> by lazy {
             this@DataStorageImpl.fromStorage(DataDefinition.USER)
+        }
+
+        //FIXME : TMP hardcoded data for now
+        override val programField: Flowable<Nullable<ProgramModel>> by lazy {
+            Flowable.create(
+                { it.onNext(FakeProgram.fakeProgram.asNullable()) },
+                BackpressureStrategy.LATEST
+            )
         }
 
         override val currentSessionField: Flowable<Nullable<SessionModel>> by lazy {

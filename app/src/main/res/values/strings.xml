@@ -57,6 +57,12 @@
     <string name="app_onboarding_stats_title_text">How \'bout your stats?</string>
     <string name="app_onboarding_stats_weight_text">Weight</string>
     <string name="app_onboarding_stats_continue_button_text">Next</string>
+    <string name="app_onboarding_stats_weight_value">%1$skg</string>
+    <string name="app_onboarding_stats_height_value">%1$scm</string>
+    <string name="app_onboarding_stats_previous_height_content_description">Previous height</string>
+    <string name="app_onboarding_stats_next_height_content_description">Next height</string>
+    <string name="app_onboarding_stats_previous_weight_content_description">Previous weight</string>
+    <string name="app_onboarding_stats_next_weight_content_description">Next weight</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
         <item quantity="one">Hi %1$s,\nYou are %2$s Day out</item>

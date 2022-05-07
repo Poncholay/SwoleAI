@@ -1,17 +1,18 @@
 package com.guillaumewilmot.swoleai.modules.home.program
 
 import com.guillaumewilmot.swoleai.model.*
-import io.reactivex.rxjava3.core.BackpressureStrategy
+import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import io.reactivex.rxjava3.core.Flowable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class CanLookupProgramImpl : CanLookupProgram {
+class CanLookupProgramImpl(dataStorage: DataStorage) : CanLookupProgram {
 
-    //FIXME : TMP hardcoded data, shold be in DataStorage
-    override val programBlocks: Flowable<List<ProgramBlockModel>> = Flowable.create({
-        it.onNext(FakeProgram.fakeProgram)
-    }, BackpressureStrategy.LATEST)
+    private val _program = dataStorage.dataHolder.programField
+
+    override val programBlocks: Flowable<List<ProgramBlockModel>> = _program.map {
+        it.value?.blocks ?: listOf()
+    }
 
     override val programWeeks: Flowable<List<ProgramWeekModel>> = programBlocks.map {
         it.flatMap { block ->

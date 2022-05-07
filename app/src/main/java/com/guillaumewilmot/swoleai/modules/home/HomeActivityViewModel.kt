@@ -26,7 +26,7 @@ class HomeActivityViewModel @Inject constructor(
 
     val redirectToOnboarding: Flowable<Boolean> = _user
         .map { user ->
-            user.value == null || OnboardingActivity.onboardingSteps(user.value).isNotEmpty()
+            OnboardingActivity.onboardingSteps(user.value).isNotEmpty()
         }
         .filter { it == true }
         .observeOn(AndroidSchedulers.mainThread())

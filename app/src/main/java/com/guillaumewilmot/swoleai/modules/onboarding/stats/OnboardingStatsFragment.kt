@@ -1,7 +1,6 @@
 package com.guillaumewilmot.swoleai.modules.onboarding.stats
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,7 +57,6 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
             .autoDispose(this)
             .subscribe {
                 activity?.let { context ->
-                    Log.e("ISMALE", it.toString())
                     when (it) {
                         true -> {
                             binding?.maleCard?.setCardBackgroundColor(
@@ -92,18 +90,28 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
                 }
             }
 
+        viewModel.heightText
+            .autoDispose(this)
+            .subscribe {
+                binding?.heightValue?.text = it
+            }
+
         viewModel.height
             .autoDispose(this)
             .subscribe {
-                Log.e("HEIGHT", it.toString())
                 binding?.heightSeekbar?.progress = it
+            }
+
+        viewModel.weightText
+            .autoDispose(this)
+            .subscribe {
+                binding?.weightValue?.text = it
             }
 
         viewModel.weight
             .autoDispose(this)
             .subscribe {
-                Log.e("WEIGHT", it.toString())
-                binding?.heightSeekbar?.progress = it
+                binding?.weightSeekbar?.progress = it
             }
     }
 
@@ -130,20 +138,36 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
             viewModel.setSex(isMale = false)
         }
 
+        binding?.previousHeight?.setOnClickListener {
+            viewModel.onPreviousHeight()
+        }
+        binding?.nextHeight?.setOnClickListener {
+            viewModel.onNextHeight()
+        }
         binding?.heightSeekbar?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                viewModel.onHeightChanged(progress)
+                if (fromUser) {
+                    viewModel.onHeightChanged(progress)
+                }
             }
         })
+        binding?.previousWeight?.setOnClickListener {
+            viewModel.onPreviousWeight()
+        }
+        binding?.nextWeight?.setOnClickListener {
+            viewModel.onNextWeight()
+        }
         binding?.weightSeekbar?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                viewModel.onWeightChanged(progress)
+                if (fromUser) {
+                    viewModel.onWeightChanged(progress)
+                }
             }
         })
     }

@@ -8,6 +8,7 @@ import com.guillaumewilmot.swoleai.modules.home.dashboard.HomeDashboardFragment
 import com.guillaumewilmot.swoleai.modules.home.sessionsummary.HomeSessionSummaryFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.Serializable
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -56,7 +57,8 @@ class FragmentBackstack {
         DID_NO_GO_BACK
     }
 
-    private var _currentFragment: ParentFragment<*>? = null
+
+    private var _currentFragment: WeakReference<ParentFragment<*>>? = null //TODO : WeakReference
     private var _currentTab: FragmentTab = Tab.DASHBOARD
     private val _pool: Bundle = Bundle()
     private val _tagStacks = mapOf<FragmentTab, Stack<String>>(
@@ -78,7 +80,7 @@ class FragmentBackstack {
         addToBackStack: Boolean = true
     ) {
         if (addToBackStack) {
-            _currentFragment?.let { oldFragment ->
+            _currentFragment?.get()?.let { oldFragment ->
                 try {
                     val tag = oldFragment.name() + _currentTab.toString()
                     fragmentManager.putFragment(_pool, tag, oldFragment)
@@ -99,7 +101,7 @@ class FragmentBackstack {
             animType,
             addToBackStack
         )
-        _currentFragment = newFragment
+        _currentFragment = WeakReference(newFragment)
     }
 
     /**
@@ -131,7 +133,7 @@ class FragmentBackstack {
         }
 
         if (!skipFragmentOnBackPressed) {
-            if (_currentFragment?.onBackPressed() == ParentFragment.BackResult.HANDLED) {
+            if (_currentFragment?.get()?.onBackPressed() == ParentFragment.BackResult.HANDLED) {
                 return Finishresult.WENT_BACK
             }
         }
@@ -142,7 +144,7 @@ class FragmentBackstack {
                     _pool,
                     previousTag
                 ) as? ParentFragment<*>)?.let { previousFragment ->
-                    _currentFragment = previousFragment
+                    _currentFragment = WeakReference(previousFragment)
                     fm.popBackStack()
                     transaction(
                         fm,

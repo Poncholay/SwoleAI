@@ -31,7 +31,7 @@ class HomeSessionSummaryViewModel @Inject constructor(
     application: Application,
     private val dataStorage: DataStorage
 ) : ParentViewModel(application),
-    CanLookupProgram by CanLookupProgramImpl(),
+    CanLookupProgram by CanLookupProgramImpl(dataStorage),
     HasLoader by HasLoaderImpl() {
     private val _currentSession = dataStorage.dataHolder.currentSessionField
     private val _currentWeek = getProgramWeekFromSession(_currentSession)

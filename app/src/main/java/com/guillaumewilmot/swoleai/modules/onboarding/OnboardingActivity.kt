@@ -13,6 +13,7 @@ import com.guillaumewilmot.swoleai.modules.home.HomeActivity
 import com.guillaumewilmot.swoleai.modules.onboarding.greeting.OnboardingGreetingFragment
 import com.guillaumewilmot.swoleai.modules.onboarding.stats.OnboardingStatsFragment
 import com.guillaumewilmot.swoleai.modules.onboarding.username.OnboardingUsernameFragment
+import com.guillaumewilmot.swoleai.util.extension.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.relex.circleindicator.CircleIndicator3
@@ -65,6 +66,7 @@ class OnboardingActivity : ParentActivity<ActivityOnboardingBinding>(),
         navigateToFragment(binding?.viewPager?.currentItem?.minus(1) ?: 0)
 
     private fun navigateToFragment(position: Int) {
+        hideKeyboard()
         binding?.viewPager?.setCurrentItem(position, true)
     }
 
@@ -107,8 +109,11 @@ class OnboardingActivity : ParentActivity<ActivityOnboardingBinding>(),
             Step.ENTER_STATS to listOf(UserModel::isMale, UserModel::height, UserModel::weight)
         )
 
-        fun onboardingSteps(user: UserModel): List<Step> = REQUIRED_PROPERTIES
+        fun onboardingSteps(user: UserModel?): List<Step> = REQUIRED_PROPERTIES
             .map { mapEntry ->
+                if (user == null) {
+                    return@map mapEntry.key
+                }
                 mapEntry.value.forEach { property ->
                     when (val field = property.get(user)) {
                         is String -> if (field.isBlank()) {

@@ -71,7 +71,9 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
     }
 
     private fun redirectToOnboarding() {
-        startActivity(Intent(this, OnboardingActivity::class.java))
+        startActivity(Intent(this, OnboardingActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     /** Configure splash screen animation */

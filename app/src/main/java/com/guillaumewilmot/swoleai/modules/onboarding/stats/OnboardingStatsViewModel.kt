@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
@@ -29,8 +30,8 @@ class OnboardingStatsViewModel @Inject constructor(
     private val _user = dataStorage.dataHolder.userField
 
     private val _isMaleSubject = BehaviorSubject.createDefault(true)
-    private val _heightSubject = BehaviorSubject.createDefault(150)
-    private val _weightSubject = BehaviorSubject.createDefault(80000)
+    private val _heightSubject = BehaviorSubject.createDefault(183)
+    private val _weightSubject = BehaviorSubject.createDefault(83000)
 
     /**
      * UI
@@ -51,6 +52,22 @@ class OnboardingStatsViewModel @Inject constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
+    val heightText: Observable<String> = _heightSubject.map {
+        application.getString(R.string.app_onboarding_stats_height_value, it.toString())
+    }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
+    val weightText: Observable<String> = _weightSubject.map {
+        val weightInKg = it.toFloat() / 1000
+        application.getString(
+            R.string.app_onboarding_stats_weight_value,
+            String.format("%.2f", weightInKg)
+        )
+    }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
     /**
      * LOGIC
      */
@@ -59,12 +76,40 @@ class OnboardingStatsViewModel @Inject constructor(
         _isMaleSubject.onNext(isMale)
     }
 
+    fun onNextHeight() {
+        _heightSubject.value?.let {
+            _heightSubject.onNext(it + HEIGHT_STEP)
+        }
+    }
+
+    fun onPreviousHeight() {
+        _heightSubject.value?.let {
+            _heightSubject.onNext(it - HEIGHT_STEP)
+        }
+    }
+
     fun onHeightChanged(height: Int) {
-        _heightSubject.onNext(height)
+        val roundedHeight = HEIGHT_STEP * ((height / HEIGHT_STEP.toDouble()).roundToInt())
+        _heightSubject.onNext(roundedHeight)
+    }
+
+    fun onNextWeight() {
+        _weightSubject.value?.let {
+            _weightSubject.onNext(it + WEIGHT_STEP)
+        }
+
+    }
+
+    fun onPreviousWeight() {
+        _weightSubject.value?.let {
+            _weightSubject.onNext(it - WEIGHT_STEP)
+        }
+
     }
 
     fun onWeightChanged(weight: Int) {
-        _weightSubject.onNext(weight)
+        val roundedWeight = WEIGHT_STEP * ((weight / WEIGHT_STEP.toDouble()).roundToInt())
+        _weightSubject.onNext(roundedWeight)
     }
 
     fun init(): Completable = _user.linkToLoader(this)
@@ -95,5 +140,10 @@ class OnboardingStatsViewModel @Inject constructor(
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    companion object {
+        private const val HEIGHT_STEP = 1
+        private const val WEIGHT_STEP = 250
     }
 }

@@ -182,27 +182,59 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/heightValue"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:layout_marginTop="@dimen/marginTiny"
-                        android:textAlignment="center"
-                        android:textFontWeight="600"
-                        android:textSize="@dimen/textParagraphTitle"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/heightTitle"
-                        tools:text="183cm" />
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/previousHeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/app_onboarding_stats_previous_height_content_description"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:src="@drawable/icon_arrow"
+                            app:tint="@color/textSecondary" />
+
+                        <TextView
+                            android:id="@+id/heightValue"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+                            android:textFontWeight="600"
+                            android:textSize="@dimen/textParagraphTitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/heightTitle"
+                            tools:text="183cm" />
+
+                        <ImageButton
+                            android:id="@+id/nextHeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/app_onboarding_stats_next_height_content_description"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:rotation="180"
+                            android:src="@drawable/icon_arrow"
+                            app:tint="@color/textSecondary" />
+                    </LinearLayout>
 
                     <androidx.appcompat.widget.AppCompatSeekBar
                         android:id="@+id/heightSeekbar"
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
                         android:layout_marginTop="@dimen/marginSmall"
-                        android:max="230"
-                        android:min="100"
+                        android:max="200"
+                        android:min="150"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/heightValue" />
@@ -246,27 +278,59 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/weightValue"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:layout_marginTop="@dimen/marginTiny"
-                        android:textAlignment="center"
-                        android:textFontWeight="600"
-                        android:textSize="@dimen/textParagraphTitle"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/weightTitle"
-                        tools:text="83kg" />
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/previousWeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/app_onboarding_stats_previous_weight_content_description"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:src="@drawable/icon_arrow"
+                            app:tint="@color/textSecondary" />
+
+                        <TextView
+                            android:id="@+id/weightValue"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+                            android:textFontWeight="600"
+                            android:textSize="@dimen/textParagraphTitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/weightTitle"
+                            tools:text="83kg" />
+
+                        <ImageButton
+                            android:id="@+id/nextWeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/app_onboarding_stats_next_weight_content_description"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:rotation="180"
+                            android:src="@drawable/icon_arrow"
+                            app:tint="@color/textSecondary" />
+                    </LinearLayout>
 
                     <androidx.appcompat.widget.AppCompatSeekBar
                         android:id="@+id/weightSeekbar"
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
                         android:layout_marginTop="@dimen/marginSmall"
-                        android:max="200000"
-                        android:min="30000"
+                        android:max="140000"
+                        android:min="50000"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/weightValue" />
