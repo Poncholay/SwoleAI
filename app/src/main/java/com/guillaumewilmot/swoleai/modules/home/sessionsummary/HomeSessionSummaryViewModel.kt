@@ -113,26 +113,27 @@ class HomeSessionSummaryViewModel @Inject constructor(
      * LOGIC
      */
 
-    private fun storeSessionById(transformId: (Int) -> Int): Completable = Flowable.combineLatest(
-        programSessions,
-        _currentSession
-    ) { sessions, currentSession ->
-        Pair(sessions, currentSession)
-    }
-        .linkToLoader(this)
-        .take(1)
-        .switchMapCompletable { (sessions, currentSession) ->
-            currentSession.value?.id?.let { currentId ->
-                val newId = transformId(currentId)
-                sessions.find {
-                    it.id == newId
-                }?.let { nextSession ->
-                    dataStorage.toStorage(DataDefinition.CURRENT_SESSION, nextSession)
-                }
-            }
-            Completable.complete()
+    private fun storeCurrentSessionById(transformId: (Int) -> Int): Completable =
+        Flowable.combineLatest(
+            programSessions,
+            _currentSession
+        ) { sessions, currentSession ->
+            Pair(sessions, currentSession)
         }
+            .linkToLoader(this)
+            .take(1)
+            .switchMapCompletable { (sessions, currentSession) ->
+                currentSession.value?.id?.let { currentId ->
+                    val newId = transformId(currentId)
+                    sessions.find {
+                        it.id == newId
+                    }?.let { nextSession ->
+                        dataStorage.toStorage(DataDefinition.CURRENT_SESSION, nextSession)
+                    }
+                }
+                Completable.complete()
+            }
 
-    fun nextSession(): Completable = storeSessionById { currentId -> currentId + 1 }
-    fun previousSession(): Completable = storeSessionById { currentId -> currentId - 1 }
+    fun nextSession(): Completable = storeCurrentSessionById { currentId -> currentId + 1 }
+    fun previousSession(): Completable = storeCurrentSessionById { currentId -> currentId - 1 }
 }

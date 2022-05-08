@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import autodispose2.androidx.lifecycle.autoDispose
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingUsernameBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.AttachViewPagerIndicator
@@ -35,35 +35,31 @@ class OnboardingUsernameFragment : ParentFragment<FragmentOnboardingUsernameBind
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        binding?.usernameInput?.doAfterTextChanged(viewModel.usernameFieldChangeListener)
-        binding?.usernameInput?.onFocusChangeListener = viewModel.usernameFieldFocusChangeListener
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         viewModel.nextButtonEnabled
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.continueButton?.isEnabled = it
             }
 
         viewModel.usernameFieldError
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.usernameLayout?.error = it.value
                 binding?.usernameLayout?.errorContentDescription = it.value
             }
 
         viewModel.loaderVisibility
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.loader?.visibility = it
             }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        binding?.usernameInput?.doAfterTextChanged(viewModel.usernameFieldChangeListener)
+        binding?.usernameInput?.onFocusChangeListener = viewModel.usernameFieldFocusChangeListener
     }
 
     private fun ui() {
@@ -76,7 +72,7 @@ class OnboardingUsernameFragment : ParentFragment<FragmentOnboardingUsernameBind
         binding?.continueButton?.text = viewModel.nextButtonText
         binding?.continueButton?.setOnClickListener {
             viewModel.onNext()
-                ?.autoDispose(this, Lifecycle.Event.ON_STOP)
+                ?.autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 ?.subscribe {
                     parent?.userOnboardingUsernameNext()
                 }

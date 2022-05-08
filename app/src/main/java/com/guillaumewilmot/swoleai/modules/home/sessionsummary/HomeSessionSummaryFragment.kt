@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import autodispose2.androidx.lifecycle.autoDispose
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeSessionSummaryBinding
@@ -48,13 +48,13 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         ui()
 
         viewModel.toolbarCurrentSessionText
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.appBar?.currentSessionText?.text = it
             }
 
         viewModel.sessionExercises
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 exerciseSummaryAdapter?.data = it
             }
@@ -67,12 +67,12 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
 
         binding?.appBar?.nextSessionButton?.setOnClickListener {
             viewModel.nextSession()
-                .autoDispose(this)
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe()
         }
         binding?.appBar?.previousSessionButton?.setOnClickListener {
             viewModel.previousSession()
-                .autoDispose(this)
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe()
         }
 

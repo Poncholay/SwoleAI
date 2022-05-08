@@ -13,7 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
 import autodispose2.androidx.lifecycle.autoDispose
+import autodispose2.autoDispose
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -54,7 +56,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
 
         //FIXME : TMP, should be done when we generate the real program
         viewModel.preselectCurrentSession()
-            .autoDispose(this)
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe()
     }
 
@@ -78,7 +80,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         setupProgramChart()
 
         viewModel.loaderVisibility
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
             }
@@ -88,13 +90,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          */
 
         viewModel.userDashboardVisibility
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.userDashboard?.visibility = it
             }
 
         viewModel.noUserDashboardVisibility
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.noUserDashboard?.visibility = it
             }
@@ -104,13 +106,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          */
 
         viewModel.currentFatigueValue
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { fatigue ->
                 binding?.fatigueRatingValue?.text = fatigue.toString()
             }
 
         viewModel.fatigueChartState
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { state ->
                 binding?.fatigueChart?.apply {
                     val padding = (state.dataset.yMax - state.dataset.yMin) * 0.5f
@@ -143,14 +145,14 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          */
 
         viewModel.programSummaryState
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { state ->
                 binding?.programEndDaysRemaining?.text = state.daysRemainingText
                 binding?.programEndDate?.text = state.endDateText
             }
 
         viewModel.programChartState
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { state ->
                 binding?.programChart?.apply {
                     legend.setCustom(state.legend)
@@ -178,13 +180,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
          */
 
         viewModel.weekSummaryTitle
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.weekTitle?.text = it
             }
 
         viewModel.weekSummaryIsCompleteIconState
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.weekCompletedIcon?.apply {
                     visibility = it.visibility
@@ -193,7 +195,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
             }
 
         viewModel.weekSessions
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 sessionAdapter?.data = it
             }
@@ -203,13 +205,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
                 viewModel.onSessionSelected(indexClicked)
                     .andThen(Observable.just(indexClicked))
             }
-            ?.autoDispose(this, Lifecycle.Event.ON_STOP)
+            ?.autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             ?.subscribe {
                 (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
             }
 
         viewModel.weekSummaryCompleteButtonState
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.completeWeekButton?.apply {
                     text = it.text
@@ -263,17 +265,17 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         }
         binding?.nextWeekButton?.setOnClickListener {
             viewModel.goToNextWeek()
-                .autoDispose(this)
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe()
         }
         binding?.previousWeekButton?.setOnClickListener {
             viewModel.goToPreviousWeek()
-                .autoDispose(this)
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe()
         }
         binding?.completeWeekButton?.setOnClickListener {
             viewModel.completeWeek()
-                .autoDispose(this)
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe()
         }
     }

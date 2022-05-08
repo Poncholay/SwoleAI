@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import autodispose2.androidx.lifecycle.autoDispose
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingGreetingBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.AttachViewPagerIndicator
@@ -36,7 +36,7 @@ class OnboardingGreetingFragment : ParentFragment<FragmentOnboardingGreetingBind
         ui()
 
         viewModel.titleTextTest
-            .autoDispose(this, Lifecycle.Event.ON_STOP)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.titleText?.text = it
             }

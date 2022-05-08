@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import autodispose2.androidx.lifecycle.autoDispose
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.BuildConfig
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
@@ -39,7 +39,7 @@ class HomeSettingsFragment : ParentFragment<FragmentHomeSettingsBinding>() {
         ui()
 
         viewModel.loaderVisibility
-            .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
             }
@@ -56,7 +56,7 @@ class HomeSettingsFragment : ParentFragment<FragmentHomeSettingsBinding>() {
 
         binding?.optionDeleteAccount?.setOnClickListener {
             viewModel.deleteAccount()
-                .autoDispose(this, Lifecycle.Event.ON_PAUSE)
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe {
                     activity?.let {
                         Toast.makeText(

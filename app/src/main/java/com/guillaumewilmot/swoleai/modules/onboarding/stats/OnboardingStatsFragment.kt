@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import autodispose2.androidx.lifecycle.autoDispose
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingStatsBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.AttachViewPagerIndicator
@@ -41,19 +41,15 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         viewModel.loaderVisibility
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.loader?.visibility = it
             }
 
         viewModel.maleCardBackgroundColor
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 activity?.let { context ->
                     binding?.maleCard?.setCardBackgroundColor(ContextCompat.getColor(context, it))
@@ -61,7 +57,7 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
             }
 
         viewModel.femaleCardBackgroundColor
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 activity?.let { context ->
                     binding?.femaleCard?.setCardBackgroundColor(ContextCompat.getColor(context, it))
@@ -69,25 +65,25 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
             }
 
         viewModel.heightText
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.heightValue?.text = it
             }
 
         viewModel.heightValue
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.heightSeekbar?.progress = it
             }
 
         viewModel.weightText
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.weightValue?.text = it
             }
 
         viewModel.weightValue
-            .autoDispose(this)
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.weightSeekbar?.progress = it
             }
@@ -103,7 +99,7 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
 
         binding?.continueButton?.setOnClickListener {
             viewModel.onNext()
-                ?.autoDispose(this, Lifecycle.Event.ON_STOP)
+                ?.autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 ?.subscribe {
                     parent?.userOnboardingStatsNext()
                 }
