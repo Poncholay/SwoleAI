@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import autodispose2.androidx.lifecycle.autoDispose
-import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentOnboardingStatsBinding
 import com.guillaumewilmot.swoleai.modules.onboarding.AttachViewPagerIndicator
@@ -53,40 +52,19 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
                 binding?.loader?.visibility = it
             }
 
-        viewModel.isMale
+        viewModel.maleCardBackgroundColor
             .autoDispose(this)
             .subscribe {
                 activity?.let { context ->
-                    when (it) {
-                        true -> {
-                            binding?.maleCard?.setCardBackgroundColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.backgroundCardViewSelected
-                                )
-                            )
-                            binding?.femaleCard?.setCardBackgroundColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.backgroundCardView
-                                )
-                            )
-                        }
-                        false -> {
-                            binding?.maleCard?.setCardBackgroundColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.backgroundCardView
-                                )
-                            )
-                            binding?.femaleCard?.setCardBackgroundColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.backgroundCardViewSelected
-                                )
-                            )
-                        }
-                    }
+                    binding?.maleCard?.setCardBackgroundColor(ContextCompat.getColor(context, it))
+                }
+            }
+
+        viewModel.femaleCardBackgroundColor
+            .autoDispose(this)
+            .subscribe {
+                activity?.let { context ->
+                    binding?.femaleCard?.setCardBackgroundColor(ContextCompat.getColor(context, it))
                 }
             }
 
@@ -96,7 +74,7 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
                 binding?.heightValue?.text = it
             }
 
-        viewModel.height
+        viewModel.heightValue
             .autoDispose(this)
             .subscribe {
                 binding?.heightSeekbar?.progress = it
@@ -108,7 +86,7 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
                 binding?.weightValue?.text = it
             }
 
-        viewModel.weight
+        viewModel.weightValue
             .autoDispose(this)
             .subscribe {
                 binding?.weightSeekbar?.progress = it
@@ -154,6 +132,7 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
                 }
             }
         })
+
         binding?.previousWeight?.setOnClickListener {
             viewModel.onPreviousWeight()
         }

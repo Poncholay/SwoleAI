@@ -42,15 +42,28 @@ class OnboardingStatsViewModel @Inject constructor(
         R.string.app_onboarding_stats_continue_button_text
     )
 
-    val isMale: Observable<Boolean> = _isMaleSubject
+    val heightValue: Observable<Int> = _heightSubject
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-    val height: Observable<Int> = _heightSubject
+    val weightValue: Observable<Int> = _weightSubject
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-    val weight: Observable<Int> = _weightSubject
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+
+    val maleCardBackgroundColor: Observable<Int> = _isMaleSubject.map {
+        if (it) {
+            R.color.backgroundCardViewSelected
+        } else {
+            R.color.backgroundCardView
+        }
+    }
+
+    val femaleCardBackgroundColor: Observable<Int> = _isMaleSubject.map {
+        if (it) {
+            R.color.backgroundCardView
+        } else {
+            R.color.backgroundCardViewSelected
+        }
+    }
 
     val heightText: Observable<String> = _heightSubject.map {
         application.getString(R.string.app_onboarding_stats_height_value, it.toString())
