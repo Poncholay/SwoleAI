@@ -9,6 +9,14 @@ data class ProgramModel(
     @SerializedName("blocks")
     val blocks: List<ProgramBlockModel>,
 ) : Serializable {
+
+    val weeks = blocks.flatMap {
+        it.weeks
+    }
+    val sessions = weeks.flatMap { week ->
+        week.sessions
+    }
+
     companion object {
         private const val serialVersionUID = 3L
     }

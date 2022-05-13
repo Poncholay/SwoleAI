@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
@@ -9,26 +9,52 @@
     android:orientation="horizontal"
     android:padding="@dimen/marginSmall">
 
-    <ImageView
-        android:id="@+id/isCompleteIcon"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="@string/app_adapter_view_session_is_complete_icon_content_description"
-        android:src="@drawable/icon_check_circle"
-        app:tint="@color/textPrimary" />
+    <FrameLayout
+        android:id="@+id/iconsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/activeLoader"
+            style="@style/LoaderStyle"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:visibility="gone"
+            app:indicatorColor="@color/textPrimary"
+            app:indicatorSize="8dp"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/app_adapter_view_session_is_complete_icon_content_description"
+            android:src="@drawable/icon_check_circle"
+            android:visibility="gone"
+            app:tint="@color/textPrimary"
+            tools:visibility="visible" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/nameText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
         android:textFontWeight="600"
         android:textSize="@dimen/textParagraphPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/accessIcon"
+        app:layout_constraintStart_toEndOf="@id/iconsContainer"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Day 1 - Lower body" />
 
     <ImageButton
@@ -38,7 +64,11 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
         android:background="@color/transparent"
+        android:clickable="false"
         android:contentDescription="@string/app_adapter_view_session_access_icon_content_description"
         android:src="@drawable/icon_arrow_triangle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/textPrimary" />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

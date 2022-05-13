@@ -10,4 +10,5 @@ interface DataHolder {
     val userField: Flowable<Nullable<UserModel>>
     val programField: Flowable<Nullable<ProgramModel>>
     val currentSessionField: Flowable<Nullable<SessionModel>>
+    val activeSessionField: Flowable<Nullable<SessionModel>>
 }

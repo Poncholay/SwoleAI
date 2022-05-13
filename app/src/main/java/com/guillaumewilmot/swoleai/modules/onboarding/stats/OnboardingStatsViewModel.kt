@@ -125,7 +125,8 @@ class OnboardingStatsViewModel @Inject constructor(
         _weightSubject.onNext(roundedWeight)
     }
 
-    fun init(): Completable = _user.linkToLoader(this)
+    fun init(): Completable = _user
+        .linkToLoader(this)
         .take(1)
         .switchMapCompletable { user ->
             user.value?.isMale?.let { _isMaleSubject.onNext(it) }
@@ -141,7 +142,8 @@ class OnboardingStatsViewModel @Inject constructor(
         val height = _heightSubject.value ?: return null
         val weight = _weightSubject.value ?: return null
 
-        return _user.linkToLoader(this)
+        return _user
+            .linkToLoader(this)
             .take(1)
             .switchMapCompletable { user ->
                 val newUser = user.value ?: UserModel()

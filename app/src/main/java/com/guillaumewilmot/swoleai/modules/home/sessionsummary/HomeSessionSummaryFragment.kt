@@ -77,13 +77,17 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         }
 
         binding?.startButton?.setOnClickListener {
-            if (isAdded) {
-                fragmentBackstack.push(
-                    parentFragmentManager,
-                    HomeActiveSessionFragment(),
-                    FragmentBackstack.Animate.FORWARD
-                )
-            }
+            viewModel.startSession()
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                .subscribe {
+                    if (isAdded) {
+                        fragmentBackstack.push(
+                            parentFragmentManager,
+                            HomeActiveSessionFragment(),
+                            FragmentBackstack.Animate.FORWARD
+                        )
+                    }
+                }
         }
         binding?.skipButton?.setOnClickListener {
 

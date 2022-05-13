@@ -3,6 +3,7 @@ package com.guillaumewilmot.swoleai.modules.home.dashboard
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.guillaumewilmot.swoleai.databinding.AdapterViewSessionBinding
@@ -44,11 +45,25 @@ class SessionAdapter : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() 
         private val binding: AdapterViewSessionBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(sessionViewModel: ViewDataModel) {
-            binding.isCompleteIcon.setColorFilter(
+            binding.activeLoader.visibility = if (sessionViewModel.isLoading) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            binding.icon.visibility = if (sessionViewModel.iconId != null) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            if (sessionViewModel.iconId != null) {
+                binding.icon.setImageResource(sessionViewModel.iconId)
+            }
+            binding.icon.setColorFilter(
                 sessionViewModel.nameTextColor,
                 PorterDuff.Mode.SRC_IN
             )
-            binding.isCompleteIcon.visibility = sessionViewModel.isCompleteIconVisibility
+            binding.activeLoader.setIndicatorColor(sessionViewModel.nameTextColor)
+
             binding.nameText.text = sessionViewModel.nameText
             binding.nameText.setTextColor(sessionViewModel.nameTextColor)
         }
@@ -56,7 +71,8 @@ class SessionAdapter : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() 
         data class ViewDataModel(
             val nameText: String,
             val nameTextColor: Int,
-            val isCompleteIconVisibility: Int
+            val isLoading: Boolean,
+            val iconId: Int?,
         )
     }
 }

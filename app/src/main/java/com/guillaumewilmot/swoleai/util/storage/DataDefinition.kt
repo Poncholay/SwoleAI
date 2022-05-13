@@ -4,5 +4,7 @@ enum class DataDefinition(
     val key: String
 ) {
     USER("storage_user"),
-    CURRENT_SESSION("storage_current_session");
+    PROGRAM("storage_program"),
+    SELECTED_SESSION("storage_selected_session"),
+    ACTIVE_SESSION("storage_active_session");
 }

@@ -207,7 +207,10 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
             }
             ?.autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             ?.subscribe {
-                (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
+                (activity as? HomeActivity)?.selectTab(
+                    FragmentBackstack.Tab.SESSION,
+                    firstSelect = false
+                )
             }
 
         viewModel.weekSummaryCompleteButtonState

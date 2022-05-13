@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeActiveSessionBinding
-import com.guillaumewilmot.swoleai.modules.home.sessionsummary.HomeSessionSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -15,7 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HomeActiveSessionFragment : ParentFragment<FragmentHomeActiveSessionBinding>() {
 
-    private val viewModel: HomeSessionSummaryViewModel by viewModels()
+    private val viewModel: HomeActiveSessionViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +33,12 @@ class HomeActiveSessionFragment : ParentFragment<FragmentHomeActiveSessionBindin
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
+
+        viewModel.toolbarCurrentSessionText
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                binding?.toolbarLayout?.toolbarContent?.toolbarTitle?.text = it
+            }
     }
 
     //FIXME : TMP just some hardcoded UI blueprint
@@ -43,6 +50,9 @@ class HomeActiveSessionFragment : ParentFragment<FragmentHomeActiveSessionBindin
 
         }
 
-        binding?.toolbarLayout?.toolbarContent?.toolbarTitle?.text = "Week 1 - day 1"
+        binding?.toolbarLayout?.toolbarContent?.backButton?.visibility = View.VISIBLE
+        binding?.toolbarLayout?.toolbarContent?.backButton?.setOnClickListener {
+            onBackPressed()
+        }
     }
 }

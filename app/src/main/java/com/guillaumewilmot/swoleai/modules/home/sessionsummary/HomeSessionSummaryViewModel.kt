@@ -8,8 +8,9 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
-import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgram
-import com.guillaumewilmot.swoleai.modules.home.program.CanLookupProgramImpl
+import com.guillaumewilmot.swoleai.model.SessionModel
+import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgram
+import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgramImpl
 import com.guillaumewilmot.swoleai.util.extension.withSpans
 import com.guillaumewilmot.swoleai.util.loading.HasLoader
 import com.guillaumewilmot.swoleai.util.loading.HasLoaderImpl
@@ -31,7 +32,7 @@ class HomeSessionSummaryViewModel @Inject constructor(
     application: Application,
     private val dataStorage: DataStorage
 ) : ParentViewModel(application),
-    CanLookupProgram by CanLookupProgramImpl(dataStorage),
+    CanInteractWithProgram by CanInteractWithProgramImpl(dataStorage),
     HasLoader by HasLoaderImpl() {
     private val _currentSession = dataStorage.dataHolder.currentSessionField
     private val _currentWeek = getProgramWeekFromSession(_currentSession)
@@ -128,12 +129,46 @@ class HomeSessionSummaryViewModel @Inject constructor(
                     sessions.find {
                         it.id == newId
                     }?.let { nextSession ->
-                        dataStorage.toStorage(DataDefinition.CURRENT_SESSION, nextSession)
+                        dataStorage.toStorage(DataDefinition.SELECTED_SESSION, nextSession)
                     }
                 }
                 Completable.complete()
             }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 
     fun nextSession(): Completable = storeCurrentSessionById { currentId -> currentId + 1 }
     fun previousSession(): Completable = storeCurrentSessionById { currentId -> currentId - 1 }
+
+    fun startSession(): Completable = _currentSession
+        .linkToLoader(this)
+        .take(1)
+        .switchMapCompletable {
+            val currentSession = it.value
+            if (currentSession != null) {
+
+                //TODO: Check if complete or skipped. Show dialog.
+
+                val newActiveSession = SessionModel(
+                    id = currentSession.id,
+                    weekId = currentSession.weekId,
+                    name = currentSession.name,
+                    isComplete = false,
+                    isSkipped = false,
+                    exercises = currentSession.exercises
+                )
+
+                val completable1 = insertSession(newActiveSession)
+                val completable2 = dataStorage.toStorage(
+                    DataDefinition.ACTIVE_SESSION,
+                    newActiveSession
+                )
+
+                Completable.mergeArray(completable1, completable2)
+            } else {
+                Completable.complete()
+            }
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
 }

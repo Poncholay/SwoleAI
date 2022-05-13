@@ -33,8 +33,7 @@ object FakeProgram {
                         startDate.minusDays(2 * 7),
                         0.5f,
                         1.5f,
-                        listOf(),
-                        true
+                        listOf()
                     ),
                     ProgramWeekModel(
                         2,
@@ -43,8 +42,7 @@ object FakeProgram {
                         startDate.minusDays(1 * 7),
                         2.5f,
                         2f,
-                        listOf(),
-                        true
+                        listOf()
                     ),
                     ProgramWeekModel(
                         3,
@@ -53,8 +51,7 @@ object FakeProgram {
                         startDate,
                         3f,
                         3f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         4,
@@ -63,8 +60,7 @@ object FakeProgram {
                         startDate.plusDays(1 * 7),
                         2.5f,
                         4f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         5,
@@ -73,8 +69,7 @@ object FakeProgram {
                         startDate.plusDays(2 * 7),
                         1.8f,
                         1f,
-                        listOf(),
-                        false
+                        listOf()
                     )
                 ).onEach {
                     it.generateFakeSessions()
@@ -91,8 +86,7 @@ object FakeProgram {
                         startDate.plusDays(3 * 7),
                         2f,
                         2f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         7,
@@ -101,8 +95,7 @@ object FakeProgram {
                         startDate.plusDays(4 * 7),
                         2.8f,
                         3f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         8,
@@ -111,8 +104,7 @@ object FakeProgram {
                         startDate.plusDays(5 * 7),
                         2.5f,
                         4f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         9,
@@ -121,8 +113,7 @@ object FakeProgram {
                         startDate.plusDays(6 * 7),
                         1.8f,
                         1f,
-                        listOf(),
-                        false
+                        listOf()
                     )
                 ).onEach {
                     it.generateFakeSessions()
@@ -139,8 +130,7 @@ object FakeProgram {
                         startDate.plusDays(7 * 7),
                         4f,
                         3.5f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         11,
@@ -149,8 +139,7 @@ object FakeProgram {
                         startDate.plusDays(8 * 7),
                         4.5f,
                         2.5f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         12,
@@ -159,8 +148,7 @@ object FakeProgram {
                         startDate.plusDays(9 * 7),
                         5f,
                         1.5f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         13,
@@ -169,8 +157,7 @@ object FakeProgram {
                         startDate.plusDays(10 * 7),
                         4f,
                         1f,
-                        listOf(),
-                        false
+                        listOf()
                     )
                 ).onEach {
                     it.generateFakeSessions()
@@ -187,8 +174,7 @@ object FakeProgram {
                         startDate.plusDays(11 * 7),
                         7.5f,
                         2.5f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         15,
@@ -197,8 +183,7 @@ object FakeProgram {
                         startDate.plusDays(12 * 7),
                         8f,
                         2f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                     ProgramWeekModel(
                         16,
@@ -207,8 +192,7 @@ object FakeProgram {
                         startDate.plusDays(13 * 7 - 1),
                         4f,
                         1.5f,
-                        listOf(),
-                        false
+                        listOf()
                     ),
                 ).onEach {
                     it.generateFakeSessions()
