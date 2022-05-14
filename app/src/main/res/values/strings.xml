@@ -64,6 +64,10 @@
     <string name="app_onboarding_stats_next_height_content_description">Next height</string>
     <string name="app_onboarding_stats_previous_weight_content_description">Previous weight</string>
     <string name="app_onboarding_stats_next_weight_content_description">Next weight</string>
+    <string name="app_dialog_restart_session_title_text">You already smashed that workout</string>
+    <string name="app_dialog_restart_session_description_text">You sure you wanna do it again bro? Who hurt you?</string>
+    <string name="app_dialog_restart_session_confirm_button_text">No pain no gain</string>
+    <string name="app_dialog_restart_session_cancel_button_text">No, I\'m a pussy</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
         <item quantity="one">Hi %1$s,\nYou are %2$s Day out</item>

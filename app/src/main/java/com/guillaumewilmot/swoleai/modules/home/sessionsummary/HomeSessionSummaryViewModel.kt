@@ -140,35 +140,54 @@ class HomeSessionSummaryViewModel @Inject constructor(
     fun nextSession(): Completable = storeCurrentSessionById { currentId -> currentId + 1 }
     fun previousSession(): Completable = storeCurrentSessionById { currentId -> currentId - 1 }
 
+    fun restartSession(): Completable = _currentSession
+        .linkToLoader(this)
+        .take(1)
+        .switchMapCompletable {
+            val currentSession = it.value ?: return@switchMapCompletable Completable.complete()
+
+            val newActiveSession = SessionModel(
+                id = currentSession.id,
+                weekId = currentSession.weekId,
+                name = currentSession.name,
+                isComplete = false,
+                isSkipped = false,
+                exercises = currentSession.exercises
+            )
+
+            val completable1 = insertSession(newActiveSession)
+            val completable2 = dataStorage.toStorage(
+                DataDefinition.ACTIVE_SESSION,
+                newActiveSession
+            )
+
+            Completable.mergeArray(completable1, completable2)
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
     fun startSession(): Completable = _currentSession
         .linkToLoader(this)
         .take(1)
         .switchMapCompletable {
-            val currentSession = it.value
-            if (currentSession != null) {
+            val currentSession = it.value ?: return@switchMapCompletable Completable.complete()
 
-                //TODO: Check if complete or skipped. Show dialog.
-
-                val newActiveSession = SessionModel(
-                    id = currentSession.id,
-                    weekId = currentSession.weekId,
-                    name = currentSession.name,
-                    isComplete = false,
-                    isSkipped = false,
-                    exercises = currentSession.exercises
+            if (currentSession.isComplete) {
+                return@switchMapCompletable Completable.error(
+                    CannotStartCompletedSessionException()
                 )
-
-                val completable1 = insertSession(newActiveSession)
-                val completable2 = dataStorage.toStorage(
-                    DataDefinition.ACTIVE_SESSION,
-                    newActiveSession
-                )
-
-                Completable.mergeArray(completable1, completable2)
-            } else {
-                Completable.complete()
             }
+            if (currentSession.isSkipped) {
+                return@switchMapCompletable Completable.error(
+                    CannotStartSkippedSessionException()
+                )
+            }
+
+            dataStorage.toStorage(DataDefinition.ACTIVE_SESSION, currentSession)
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+
+    class CannotStartCompletedSessionException : Exception()
+    class CannotStartSkippedSessionException : Exception()
 }

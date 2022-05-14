@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.clearFragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,9 +45,15 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         binding = it
     }.root
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        clearFragmentResultListener(RestartSessionDialog.name())
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
+        setupDialogListener()
 
         viewModel.toolbarCurrentSessionText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
@@ -77,17 +85,7 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         }
 
         binding?.startButton?.setOnClickListener {
-            viewModel.startSession()
-                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-                .subscribe {
-                    if (isAdded) {
-                        fragmentBackstack.push(
-                            parentFragmentManager,
-                            HomeActiveSessionFragment(),
-                            FragmentBackstack.Animate.FORWARD
-                        )
-                    }
-                }
+            startSession()
         }
         binding?.skipButton?.setOnClickListener {
 
@@ -102,4 +100,47 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
             adapter = ExerciseSummaryAdapter()
         }
     }
+
+    private fun setupDialogListener() {
+        setFragmentResultListener(RestartSessionDialog.name()) { _, result ->
+            when (result.getString(RestartSessionDialog.ACTION)) {
+                RestartSessionDialog.ACTION_RESTART -> restartSession()
+                else -> Unit
+            }
+        }
+    }
+
+    private fun startSession() = viewModel.startSession()
+        .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+        .subscribe({
+            if (isAdded) {
+                fragmentBackstack.push(
+                    parentFragmentManager,
+                    HomeActiveSessionFragment(),
+                    FragmentBackstack.Animate.FORWARD
+                )
+            }
+        }, { exception ->
+            when (exception) {
+                is HomeSessionSummaryViewModel.CannotStartCompletedSessionException,
+                is HomeSessionSummaryViewModel.CannotStartSkippedSessionException -> {
+                    if (isAdded) {
+                        RestartSessionDialog().show(parentFragmentManager, name())
+                    }
+                }
+                else -> Unit
+            }
+        })
+
+    private fun restartSession() = viewModel.restartSession()
+        .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+        .subscribe {
+            if (isAdded) {
+                fragmentBackstack.push(
+                    parentFragmentManager,
+                    HomeActiveSessionFragment(),
+                    FragmentBackstack.Animate.FORWARD
+                )
+            }
+        }
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:padding="@dimen/marginSmall">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_dialog_restart_session_title_text"
+        android:textFontWeight="600"
+        android:textSize="@dimen/textParagraphTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/descriptionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginRegular"
+        android:text="@string/app_dialog_restart_session_description_text"
+        android:textSize="@dimen/textParagraphRegular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText" />
+
+    <com.guillaumewilmot.swoleai.view.AnimatedButton
+        android:id="@+id/restartButton"
+        style="@style/ButtonMainStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/heightButton"
+        android:layout_marginTop="@dimen/marginRegular"
+        android:text="@string/app_dialog_restart_session_confirm_button_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descriptionText" />
+
+    <com.guillaumewilmot.swoleai.view.AnimatedButton
+        android:id="@+id/cancelButton"
+        style="@style/ButtonSecondaryStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/heightButton"
+        android:layout_marginTop="@dimen/marginSmall"
+        android:text="@string/app_dialog_restart_session_cancel_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/restartButton" />
+</androidx.constraintlayout.widget.ConstraintLayout>

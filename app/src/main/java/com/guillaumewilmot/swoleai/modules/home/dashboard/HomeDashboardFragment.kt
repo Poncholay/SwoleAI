@@ -224,12 +224,6 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
             }
     }
 
-    /**
-     * FIXME : Below is temporary hardcoded UI blueprint
-     * Includes a fake program summary
-     * Includes a fake fatigue chart
-     */
-
     private fun setupToolbar() {
         binding?.toolbarLayout?.toolbarContent?.apply {
             iconAction.visibility = View.VISIBLE

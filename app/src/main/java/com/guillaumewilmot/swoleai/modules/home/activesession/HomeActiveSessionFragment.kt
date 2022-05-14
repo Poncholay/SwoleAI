@@ -41,7 +41,6 @@ class HomeActiveSessionFragment : ParentFragment<FragmentHomeActiveSessionBindin
             }
     }
 
-    //FIXME : TMP just some hardcoded UI blueprint
     private fun ui() {
         binding?.finishButton?.setOnClickListener {
 
@@ -52,7 +51,7 @@ class HomeActiveSessionFragment : ParentFragment<FragmentHomeActiveSessionBindin
 
         binding?.toolbarLayout?.toolbarContent?.backButton?.visibility = View.VISIBLE
         binding?.toolbarLayout?.toolbarContent?.backButton?.setOnClickListener {
-            onBackPressed()
+            activity?.onBackPressed()
         }
     }
 }
