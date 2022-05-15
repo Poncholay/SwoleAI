@@ -34,17 +34,24 @@
     <string name="app_home_dashboard_week_summary_next_week_button_content_description">Next week</string>
     <string name="app_home_dashboard_week_summary_week_completed_icon_content_description">Week completed</string>
     <string name="app_home_dashboard_week_summary_session_active_text">%1$s - Active</string>
-    <string name="app_home_dashboard_week_summary_complete_week_button_text_complete">Week completed</string>
+    <string name="app_home_dashboard_week_summary_session_skipped_text">%1$s - Skipped</string>
+    <string name="app_home_dashboard_week_summary_complete_week_button_text_completed">Week completed</string>
     <string name="app_home_dashboard_week_summary_complete_week_button_text_incomplete">Complete week</string>
     <string name="app_home_dashboard_program_summary_review_program_button_text">Review program</string>
+
     <string name="app_settings_option_delete_user_text">Delete user</string>
     <string name="app_settings_option_dark_mode_text">Dark mode</string>
     <string name="app_home_settings_title_text">Settings</string>
     <string name="app_home_settings_app_version_text">App version: %1$s</string>
     <string name="app_home_settings_delete_account_success_text">Account deleted successfully</string>
-    <string name="app_home_session_summary_start_button_text">Start session</string>
+
+    <string name="app_home_session_summary_start_button_text_active">Resume session</string>
+    <string name="app_home_session_summary_start_button_text_skipped">Restart session</string>
+    <string name="app_home_session_summary_start_button_text_completed">Restart session</string>
+    <string name="app_home_session_summary_start_button_text_default">Start session</string>
     <string name="app_home_session_summary_skip_button_text">Skip session</string>
     <string name="app_home_session_summary_preview_button_text">Preview session</string>
+    <string name="app_home_session_summary_preview_button_text_completed">Review session</string>
     <string name="app_home_session_summary_overview_text">Session details</string>
     <string name="app_home_session_summary_toolbar_text">Session summary</string>
     <string name="app_adapter_view_exercise_summary_swap_icon">Swap</string>
@@ -64,10 +71,18 @@
     <string name="app_onboarding_stats_next_height_content_description">Next height</string>
     <string name="app_onboarding_stats_previous_weight_content_description">Previous weight</string>
     <string name="app_onboarding_stats_next_weight_content_description">Next weight</string>
-    <string name="app_dialog_restart_session_title_text">You already smashed that workout</string>
-    <string name="app_dialog_restart_session_description_text">You sure you wanna do it again bro? Who hurt you?</string>
+
+    <string name="app_dialog_restart_session_title_text_completed">You already smashed that workout</string>
+    <string name="app_dialog_restart_session_title_text_skipped">You already skipped that workout</string>
+    <string name="app_dialog_restart_session_description_text_completed">You sure you want to do it again bro? Who hurt you?</string>
+    <string name="app_dialog_restart_session_description_text_skipped">Did you finally grow a pair? Let\'s get it done king!</string>
     <string name="app_dialog_restart_session_confirm_button_text">No pain no gain</string>
-    <string name="app_dialog_restart_session_cancel_button_text">No, I\'m a pussy</string>
+    <string name="app_dialog_restart_session_cancel_button_text_completed">No, I\'m good</string>
+    <string name="app_dialog_restart_session_cancel_button_text_skipped">No, I\'m still a pussy</string>
+
+    <string name="app_session_status_active">Active</string>
+    <string name="app_session_status_skipped">Skipped</string>
+    <string name="app_session_status_completed">Completed</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
         <item quantity="one">Hi %1$s,\nYou are %2$s Day out</item>

@@ -16,6 +16,7 @@ import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeSessionSummaryBinding
 import com.guillaumewilmot.swoleai.modules.home.activesession.HomeActiveSessionFragment
 import com.guillaumewilmot.swoleai.util.extension.dpToPixel
+import com.guillaumewilmot.swoleai.util.extension.withFragmentManager
 import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,13 +48,19 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
 
     override fun onDestroyView() {
         super.onDestroyView()
-        clearFragmentResultListener(RestartSessionDialog.name())
+        clearFragmentResultListener(RestartSessionDialog.REQUEST_KEY)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
-        setupDialogListener()
+
+        setFragmentResultListener(RestartSessionDialog.REQUEST_KEY) { _, result ->
+            when (result.getString(RestartSessionDialog.ACTION)) {
+                RestartSessionDialog.ACTION_RESTART -> restartSession()
+                else -> Unit
+            }
+        }
 
         viewModel.toolbarCurrentSessionText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
@@ -61,10 +68,43 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
                 binding?.appBar?.currentSessionText?.text = it
             }
 
+        viewModel.sessionStatusState
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                binding?.appBar?.sessionStatus?.setCardBackgroundColor(it.backgroundColor)
+                binding?.appBar?.sessionStatusText?.text = it.text
+                binding?.appBar?.sessionStatusText?.setTextColor(it.textColor)
+                binding?.appBar?.sessionStatus?.visibility = it.visibility
+            }
+
         viewModel.sessionExercises
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 exerciseSummaryAdapter?.data = it
+            }
+
+        viewModel.startButtonText
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                binding?.startButton?.text = it
+            }
+
+        viewModel.previewButtonText
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                binding?.previewButton?.text = it
+            }
+
+        viewModel.skipButtonVisibility
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                binding?.skipButton?.visibility = it
+            }
+
+        viewModel.previewButtonVisibility
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                binding?.previewButton?.visibility = it
             }
     }
 
@@ -88,25 +128,18 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
             startSession()
         }
         binding?.skipButton?.setOnClickListener {
-
+            viewModel.skipSession()
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                .subscribe()
         }
         binding?.previewButton?.setOnClickListener {
-
+            //TODO
         }
 
         binding?.exerciseSummary?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
             adapter = ExerciseSummaryAdapter()
-        }
-    }
-
-    private fun setupDialogListener() {
-        setFragmentResultListener(RestartSessionDialog.name()) { _, result ->
-            when (result.getString(RestartSessionDialog.ACTION)) {
-                RestartSessionDialog.ACTION_RESTART -> restartSession()
-                else -> Unit
-            }
         }
     }
 
@@ -121,14 +154,14 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
                 )
             }
         }, { exception ->
-            when (exception) {
-                is HomeSessionSummaryViewModel.CannotStartCompletedSessionException,
-                is HomeSessionSummaryViewModel.CannotStartSkippedSessionException -> {
-                    if (isAdded) {
-                        RestartSessionDialog().show(parentFragmentManager, name())
-                    }
+            withFragmentManager { fm ->
+                when (exception) {
+                    is HomeSessionSummaryViewModel.CannotStartCompletedSessionException ->
+                        RestartSessionDialog(RestartSessionDialog.Status.COMPLETED).show(fm, name())
+                    is HomeSessionSummaryViewModel.CannotStartSkippedSessionException ->
+                        RestartSessionDialog(RestartSessionDialog.Status.SKIPPED).show(fm, name())
+                    else -> Unit
                 }
-                else -> Unit
             }
         })
 

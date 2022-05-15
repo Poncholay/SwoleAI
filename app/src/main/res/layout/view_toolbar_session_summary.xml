@@ -32,17 +32,45 @@
 
             <TextView
                 android:id="@+id/currentSessionText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/marginSmall"
                 android:textAlignment="textStart"
                 android:textColor="@color/textPrimary"
                 android:textSize="@dimen/textParagraphPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/previousSessionButton"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/marginView"
-                tools:text="Hypertrophy\nWeek4\nDay 1" />
+                app:layout_constraintVertical_bias="1"
+                tools:text="Hypertrophy\nWeek4\nDay 1 - Lower body"
+                tools:textSize="@dimen/textParagraphTitle" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/sessionStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginSmall"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/cornerRadiusCardView"
+                app:cardElevation="@dimen/elevationCardView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/marginView">
+
+                <TextView
+                    android:id="@+id/sessionStatusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingStart="@dimen/marginSmall"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="@dimen/marginSmall"
+                    android:paddingBottom="4dp"
+                    tools:background="@color/hypertrophyPast"
+                    tools:text="Active"
+                    tools:textColor="@color/hypertrophy" />
+            </androidx.cardview.widget.CardView>
 
             <ImageButton
                 android:id="@+id/previousSessionButton"
@@ -50,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/marginSmall"
+                android:layout_marginTop="@dimen/marginTiny"
                 android:layout_marginEnd="@dimen/marginSmall"
                 android:layout_marginBottom="@dimen/marginSmall"
                 android:background="?selectableItemBackgroundBorderless"
@@ -58,7 +87,7 @@
                 android:src="@drawable/icon_arrow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/nextSessionButton"
-                app:layout_constraintTop_toBottomOf="@id/marginView"
+                app:layout_constraintTop_toBottomOf="@id/sessionStatus"
                 app:layout_constraintVertical_bias="1"
                 app:tint="@color/textSecondary" />
 
@@ -68,6 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/marginRegular"
+                android:layout_marginTop="@dimen/marginTiny"
+                android:layout_marginEnd="@dimen/marginTiny"
                 android:layout_marginBottom="@dimen/marginSmall"
                 android:background="?selectableItemBackgroundBorderless"
                 android:contentDescription="@string/app_home_dashboard_week_summary_next_week_button_content_description"
@@ -76,7 +107,7 @@
                 android:src="@drawable/icon_arrow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/marginView"
+                app:layout_constraintTop_toBottomOf="@id/sessionStatus"
                 app:layout_constraintVertical_bias="1"
                 app:tint="@color/textSecondary" />
 
@@ -96,12 +127,12 @@
             android:layout_height="@dimen/heightToolbar"
             android:background="@color/backgroundToolbar"
             android:elevation="8dp"
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
+            app:contentInsetStart="0dp"
             app:layout_collapseMode="pin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
-            app:contentInsetStart="0dp">
+            app:layout_constraintTop_toTopOf="parent">
 
             <include
                 android:id="@+id/toolbarContent"

@@ -426,9 +426,13 @@ class HomeDashboardViewModel @Inject constructor(
             currentWeek.value?.sessions?.map { session ->
                 val sessionIsActive = activeSessionId != null && session.id == activeSessionId
                 SessionAdapter.SessionViewHolder.ViewDataModel(
-                    nameText = when (sessionIsActive) {
-                        true -> application.getString(
+                    nameText = when {
+                        sessionIsActive -> application.getString(
                             R.string.app_home_dashboard_week_summary_session_active_text,
+                            session.name
+                        )
+                        session.isSkipped -> application.getString(
+                            R.string.app_home_dashboard_week_summary_session_skipped_text,
                             session.name
                         )
                         else -> session.name
@@ -453,7 +457,7 @@ class HomeDashboardViewModel @Inject constructor(
 
     private val _weekSummaryCompleteButtonText: Flowable<String> = _currentWeek.map {
         if (it.value?.isComplete == true) {
-            application.getString(R.string.app_home_dashboard_week_summary_complete_week_button_text_complete)
+            application.getString(R.string.app_home_dashboard_week_summary_complete_week_button_text_completed)
         } else {
             application.getString(R.string.app_home_dashboard_week_summary_complete_week_button_text_incomplete)
         }
