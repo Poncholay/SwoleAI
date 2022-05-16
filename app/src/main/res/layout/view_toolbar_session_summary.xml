@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/currentSessionText"
+                android:id="@+id/selectedSessionText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/marginSmall"
@@ -67,6 +67,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="@dimen/marginSmall"
                     android:paddingBottom="4dp"
+                    android:textFontWeight="600"
                     tools:background="@color/hypertrophyPast"
                     tools:text="Active"
                     tools:textColor="@color/hypertrophy" />

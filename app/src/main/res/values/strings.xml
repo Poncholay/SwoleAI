@@ -1,5 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">SwoleAi</string>
+    <string name="app_name">Swole AI</string>
+    <string name="app_name_accent">AI</string>
+
     <string name="app_onboarding_greeting_description_text" tools:ignore="Typos">So you wanna get swole? I\'m here to help.\nI\'ll just need to ask you a few questions about yourself so I can get started.</string>
     <string name="app_onboarding_greeting_title_text">Hi there</string>
     <string name="app_onboarding_greeting_continue_button_text">Let\'s get Swole</string>
@@ -73,12 +75,17 @@
     <string name="app_onboarding_stats_next_weight_content_description">Next weight</string>
 
     <string name="app_dialog_restart_session_title_text_completed">You already smashed that workout</string>
-    <string name="app_dialog_restart_session_title_text_skipped">You already skipped that workout</string>
     <string name="app_dialog_restart_session_description_text_completed">You sure you want to do it again bro? Who hurt you?</string>
-    <string name="app_dialog_restart_session_description_text_skipped">Did you finally grow a pair? Let\'s get it done king!</string>
-    <string name="app_dialog_restart_session_confirm_button_text">No pain no gain</string>
+    <string name="app_dialog_restart_session_confirm_button_text_completed">No pain no gain</string>
     <string name="app_dialog_restart_session_cancel_button_text_completed">No, I\'m good</string>
+    <string name="app_dialog_restart_session_title_text_skipped">You already skipped that workout</string>
+    <string name="app_dialog_restart_session_description_text_skipped">Did you finally grow a pair? Let\'s get it done king!</string>
+    <string name="app_dialog_restart_session_confirm_button_text_skipped">No pain no gain</string>
     <string name="app_dialog_restart_session_cancel_button_text_skipped">No, I\'m still a pussy</string>
+    <string name="app_dialog_restart_session_title_text_active">A session is already active</string>
+    <string name="app_dialog_restart_session_description_text_active">You\'re trying to skip leg day aren\'t you?</string>
+    <string name="app_dialog_restart_session_confirm_button_text_active">Cancel the session</string>
+    <string name="app_dialog_restart_session_cancel_button_text_active">Let me finish it first</string>
 
     <string name="app_session_status_active">Active</string>
     <string name="app_session_status_skipped">Skipped</string>

@@ -13,6 +13,7 @@ import java.util.function.UnaryOperator
 @ExperimentalCoroutinesApi
 class CanInteractWithProgramImpl(private val dataStorage: DataStorage) : CanInteractWithProgram {
 
+    private val _selectedSessionId = dataStorage.dataHolder.selectedSessionIdField
     private val _program = dataStorage.dataHolder.programField
 
     override val programBlocks: Flowable<List<ProgramBlockModel>> = _program.map {
@@ -27,22 +28,34 @@ class CanInteractWithProgramImpl(private val dataStorage: DataStorage) : CanInte
         it.value?.sessions ?: listOf()
     }
 
+    override val selectedSession: Flowable<Nullable<SessionModel>> = Flowable.combineLatest(
+        programSessions,
+        _selectedSessionId
+    ) { sessions, selectedSessionId ->
+        val id = selectedSessionId.value
+        sessions.find { id != null && it.id == id }.asNullable()
+    }.distinctUntilChanged()
+
+    override val activeSession: Flowable<Nullable<SessionModel>> = programSessions.map { sessions ->
+        sessions.find { it.isActive }.asNullable()
+    }
+
     override fun getProgramBlockFromProgramWeek(
-        currentWeekFlowable: Flowable<Nullable<ProgramWeekModel>>
+        weekFlowable: Flowable<Nullable<ProgramWeekModel>>
     ): Flowable<Nullable<ProgramBlockModel>> = Flowable.combineLatest(
-        currentWeekFlowable,
+        weekFlowable,
         programBlocks
     ) { currentWeek, programBlocks ->
         getProgramBlockFromProgramWeek(currentWeek.value, programBlocks).asNullable()
     }.distinctUntilChanged()
 
     override fun getProgramWeekFromSession(
-        currentSessionFlowable: Flowable<Nullable<SessionModel>>
+        sessionFlowable: Flowable<Nullable<SessionModel>>
     ): Flowable<Nullable<ProgramWeekModel>> = Flowable.combineLatest(
-        currentSessionFlowable,
+        sessionFlowable,
         programWeeks
-    ) { currentSession, programWeeks ->
-        getProgramWeekFromSession(currentSession.value, programWeeks).asNullable()
+    ) { session, programWeeks ->
+        getProgramWeekFromSession(session.value, programWeeks).asNullable()
     }.distinctUntilChanged()
 
     /**
@@ -128,16 +141,16 @@ class CanInteractWithProgramImpl(private val dataStorage: DataStorage) : CanInte
      */
 
     private fun getProgramBlockFromProgramWeek(
-        currentWeek: ProgramWeekModel?,
+        week: ProgramWeekModel?,
         programBlocks: List<ProgramBlockModel>?
     ): ProgramBlockModel? = programBlocks?.find {
-        it.id == currentWeek?.blockId
+        it.id == week?.blockId
     }
 
     private fun getProgramWeekFromSession(
-        currentSession: SessionModel?,
+        session: SessionModel?,
         programWeeks: List<ProgramWeekModel>?
     ): ProgramWeekModel? = programWeeks?.find {
-        it.id == currentSession?.weekId
+        it.id == session?.weekId
     }
 }

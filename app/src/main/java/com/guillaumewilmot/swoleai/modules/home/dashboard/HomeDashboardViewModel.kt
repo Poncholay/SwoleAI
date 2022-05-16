@@ -56,9 +56,6 @@ class HomeDashboardViewModel @Inject constructor(
     CanInteractWithProgram by CanInteractWithProgramImpl(dataStorage) {
 
     private val _user = dataStorage.dataHolder.userField
-    private val _activeSession = dataStorage.dataHolder.activeSessionField
-    private val _activeSessionWeek = getProgramWeekFromSession(_activeSession)
-    private val _activeSessionBlock = getProgramBlockFromProgramWeek(_activeSessionWeek)
 
     val userDashboardVisibility: Flowable<Int> = _user.map {
         if (it.value == null) View.GONE else View.VISIBLE
@@ -203,7 +200,7 @@ class HomeDashboardViewModel @Inject constructor(
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-    
+
     data class ProgramSummaryState(
         val daysRemainingText: String,
         val endDateText: String
@@ -225,9 +222,9 @@ class HomeDashboardViewModel @Inject constructor(
                         setDrawCircles(false)
                         setDrawValues(false)
                         setDrawFilled(false)
-                    enableDashedLine(5f, 5f, 0f)
-                    color = application.getColor(R.color.textTertiary)
-                })
+                        enableDashedLine(5f, 5f, 0f)
+                        color = application.getColor(R.color.textTertiary)
+                    })
             }
         }
 
@@ -411,23 +408,19 @@ class HomeDashboardViewModel @Inject constructor(
     val weekSessions: Flowable<List<SessionAdapter.SessionViewHolder.ViewDataModel>> =
         Flowable.combineLatest(
             _currentWeek,
-            _activeSession,
-            _activeSessionBlock
-        ) { currentWeek, activeSession, activeSessionBlock ->
+            _currentBlock
+        ) { currentWeek, currentBlock ->
             val textColor = application.getColor(R.color.textPrimary)
             val textColorCompleted = application.getColor(R.color.textTertiary)
             val textColorSkipped = application.getColor(R.color.textQuaternary)
-            val textColorActive = activeSessionBlock.value?.type?.colorId?.let {
+            val textColorActive = currentBlock.value?.type?.colorId?.let {
                 application.getColor(it)
             } ?: textColor
 
-            val activeSessionId = activeSession.value?.id
-
             currentWeek.value?.sessions?.map { session ->
-                val sessionIsActive = activeSessionId != null && session.id == activeSessionId
                 SessionAdapter.SessionViewHolder.ViewDataModel(
                     nameText = when {
-                        sessionIsActive -> application.getString(
+                        session.isActive -> application.getString(
                             R.string.app_home_dashboard_week_summary_session_active_text,
                             session.name
                         )
@@ -440,7 +433,7 @@ class HomeDashboardViewModel @Inject constructor(
                     nameTextColor = when {
                         session.isComplete -> textColorCompleted
                         session.isSkipped -> textColorSkipped
-                        sessionIsActive -> textColorActive
+                        session.isActive -> textColorActive
                         else -> textColor
                     },
                     iconId = when {
@@ -448,7 +441,7 @@ class HomeDashboardViewModel @Inject constructor(
                         session.isSkipped -> R.drawable.icon_cross_circle
                         else -> null
                     },
-                    isLoading = sessionIsActive
+                    isLoading = session.isActive
                 )
             } ?: listOf()
         }
@@ -531,7 +524,7 @@ class HomeDashboardViewModel @Inject constructor(
         .take(1)
         .switchMapCompletable { currentWeek ->
             val session = currentWeek.value?.sessions?.getOrNull(index)
-            dataStorage.toStorage(DataDefinition.SELECTED_SESSION, session)
+            dataStorage.toStorage(DataDefinition.SELECTED_SESSION_ID, session?.id)
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -539,13 +532,13 @@ class HomeDashboardViewModel @Inject constructor(
     fun completeWeek(): Completable = Completable.complete() //TODO
 
     //FIXME : TMP, should be done when we generate the real program
-    fun preselectCurrentSession(): Completable = _currentWeek
+    fun preselectSelectedSession(): Completable = _currentWeek
         .linkToLoader(this)
         .take(1)
         .switchMapCompletable { currentWeek ->
             dataStorage.toStorage(
-                DataDefinition.SELECTED_SESSION,
-                currentWeek.value?.sessions?.getOrNull(0)
+                DataDefinition.SELECTED_SESSION_ID,
+                currentWeek.value?.sessions?.getOrNull(0)?.id
             )
         }
         .subscribeOn(Schedulers.io())

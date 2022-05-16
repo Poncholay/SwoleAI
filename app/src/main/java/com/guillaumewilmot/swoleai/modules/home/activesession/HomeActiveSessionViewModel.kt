@@ -2,6 +2,8 @@ package com.guillaumewilmot.swoleai.modules.home.activesession
 
 import android.app.Application
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
+import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgram
+import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgramImpl
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -15,12 +17,11 @@ import javax.inject.Inject
 class HomeActiveSessionViewModel @Inject constructor(
     application: Application,
     dataStorage: DataStorage
-) : ParentViewModel(application) {
+) : ParentViewModel(application),
+    CanInteractWithProgram by CanInteractWithProgramImpl(dataStorage) {
 
-    private val _currentSession = dataStorage.dataHolder.activeSessionField
-
-    val toolbarCurrentSessionText: Flowable<String> = _currentSession.map { currentSession ->
-        currentSession.value?.name ?: ""
+    val toolbarActiveSessionText: Flowable<String> = activeSession.map { activeSession ->
+        activeSession.value?.name ?: ""
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

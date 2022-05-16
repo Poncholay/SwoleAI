@@ -9,7 +9,10 @@ import androidx.datastore.preferences.rxjava3.rxPreferencesDataStore
 import androidx.datastore.rxjava3.RxDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.guillaumewilmot.swoleai.model.*
+import com.guillaumewilmot.swoleai.model.Nullable
+import com.guillaumewilmot.swoleai.model.ProgramModel
+import com.guillaumewilmot.swoleai.model.UserModel
+import com.guillaumewilmot.swoleai.model.asNullable
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -130,12 +133,8 @@ class DataStorageImpl constructor(
             this@DataStorageImpl.fromStorage(DataDefinition.PROGRAM)
         }
 
-        override val currentSessionField: Flowable<Nullable<SessionModel>> by lazy {
-            this@DataStorageImpl.fromStorage(DataDefinition.SELECTED_SESSION)
-        }
-
-        override val activeSessionField: Flowable<Nullable<SessionModel>> by lazy {
-            this@DataStorageImpl.fromStorage(DataDefinition.ACTIVE_SESSION)
+        override val selectedSessionIdField: Flowable<Nullable<Int>> by lazy {
+            this@DataStorageImpl.fromStorage(DataDefinition.SELECTED_SESSION_ID)
         }
     }
 }

@@ -98,9 +98,6 @@ class OnboardingActivity : ParentActivity<ActivityOnboardingBinding>(),
         GREETING,
         ENTER_NAME,
         ENTER_STATS,
-
-        //TODO
-        ENTER_BIRTHDATE,
     }
 
     companion object {

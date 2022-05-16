@@ -5,6 +5,5 @@ enum class DataDefinition(
 ) {
     USER("storage_user"),
     PROGRAM("storage_program"),
-    SELECTED_SESSION("storage_selected_session"),
-    ACTIVE_SESSION("storage_active_session");
+    SELECTED_SESSION_ID("storage_selected_session_id");
 }

@@ -58,7 +58,7 @@ class FragmentBackstack {
     }
 
 
-    private var _currentFragment: WeakReference<ParentFragment<*>>? = null //TODO : WeakReference
+    private var _currentFragment: WeakReference<ParentFragment<*>>? = null
     private var _currentTab: FragmentTab = Tab.DASHBOARD
     private val _pool: Bundle = Bundle()
     private val _tagStacks = mapOf<FragmentTab, Stack<String>>(

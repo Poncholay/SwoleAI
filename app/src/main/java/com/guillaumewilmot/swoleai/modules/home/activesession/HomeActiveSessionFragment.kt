@@ -34,7 +34,7 @@ class HomeActiveSessionFragment : ParentFragment<FragmentHomeActiveSessionBindin
         super.onViewCreated(view, savedInstanceState)
         ui()
 
-        viewModel.toolbarCurrentSessionText
+        viewModel.toolbarActiveSessionText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 binding?.toolbarLayout?.toolbarContent?.toolbarTitle?.text = it

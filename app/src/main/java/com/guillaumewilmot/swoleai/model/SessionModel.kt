@@ -14,6 +14,8 @@ data class SessionModel(
     val isComplete: Boolean,
     @SerializedName("isSkipped")
     val isSkipped: Boolean,
+    @SerializedName("isActive")
+    val isActive: Boolean,
     @SerializedName("exercises")
     val exercises: List<SessionExerciseModel>
 ) : Serializable {

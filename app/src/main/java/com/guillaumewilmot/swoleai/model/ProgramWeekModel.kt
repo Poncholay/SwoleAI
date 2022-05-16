@@ -38,6 +38,7 @@ data class ProgramWeekModel(
                 name = "Day 1 - Lower body",
                 isComplete = date.before(Date()),
                 isSkipped = false,
+                isActive = false,
                 exercises = listOf(),
             ),
             SessionModel(
@@ -46,6 +47,7 @@ data class ProgramWeekModel(
                 name = "Day 2 - Upper body",
                 isComplete = date.plusDays(2).before(Date()),
                 isSkipped = false,
+                isActive = false,
                 exercises = listOf(),
             ),
             SessionModel(
@@ -54,6 +56,7 @@ data class ProgramWeekModel(
                 name = "Day 3 - Lower body",
                 isComplete = date.plusDays(3).before(Date()),
                 isSkipped = false,
+                isActive = false,
                 exercises = listOf(),
             ),
             SessionModel(
@@ -62,6 +65,7 @@ data class ProgramWeekModel(
                 name = "Day 4 - Upper body",
                 isComplete = date.plusDays(5).before(Date()),
                 isSkipped = false,
+                isActive = false,
                 exercises = listOf(),
             )
         )

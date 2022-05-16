@@ -12,12 +12,15 @@ interface CanInteractWithProgram {
     val programWeeks: Flowable<List<ProgramWeekModel>>
     val programSessions: Flowable<List<SessionModel>>
 
+    val selectedSession: Flowable<Nullable<SessionModel>>
+    val activeSession: Flowable<Nullable<SessionModel>>
+
     fun getProgramWeekFromSession(
-        currentSessionFlowable: Flowable<Nullable<SessionModel>>
+        sessionFlowable: Flowable<Nullable<SessionModel>>
     ): Flowable<Nullable<ProgramWeekModel>>
 
     fun getProgramBlockFromProgramWeek(
-        currentWeekFlowable: Flowable<Nullable<ProgramWeekModel>>
+        weekFlowable: Flowable<Nullable<ProgramWeekModel>>
     ): Flowable<Nullable<ProgramBlockModel>>
 
     fun insertSession(newSession: SessionModel): Completable

@@ -30,6 +30,7 @@ import com.guillaumewilmot.swoleai.modules.home.HomeActivity
 import com.guillaumewilmot.swoleai.modules.home.setting.HomeSettingsFragment
 import com.guillaumewilmot.swoleai.util.extension.dpToPixel
 import com.guillaumewilmot.swoleai.util.extension.pixelToDp
+import com.guillaumewilmot.swoleai.util.extension.withFragmentManager
 import com.guillaumewilmot.swoleai.util.extension.withSpans
 import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
@@ -55,7 +56,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         super.onCreate(savedInstanceState)
 
         //FIXME : TMP, should be done when we generate the real program
-        viewModel.preselectCurrentSession()
+        viewModel.preselectSelectedSession()
             .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe()
     }
@@ -234,17 +235,17 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
                 )
             )
             iconAction.setOnClickListener {
-                if (isAdded) {
+                withFragmentManager { fm ->
                     fragmentBackstack.push(
-                        parentFragmentManager,
+                        fm,
                         HomeSettingsFragment(),
                         FragmentBackstack.Animate.FORWARD
                     )
                 }
             }
 
-            toolbarTitle.text = SpannableString("Swole AI").withSpans(
-                "AI",
+            toolbarTitle.text = SpannableString(getString(R.string.app_name)).withSpans(
+                getString(R.string.app_name_accent),
                 ForegroundColorSpan(this.iconAction.context.getColor(R.color.secondary))
             )
         }

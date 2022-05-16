@@ -57,15 +57,21 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
 
         setFragmentResultListener(RestartSessionDialog.REQUEST_KEY) { _, result ->
             when (result.getString(RestartSessionDialog.ACTION)) {
-                RestartSessionDialog.ACTION_RESTART -> restartSession()
+                RestartSessionDialog.ACTION_RESTART -> startSession()
                 else -> Unit
             }
         }
 
-        viewModel.toolbarCurrentSessionText
+        viewModel.loaderVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.appBar?.currentSessionText?.text = it
+                binding?.appBar?.toolbarContent?.loader?.visibility = it
+            }
+
+        viewModel.toolbarSelectedSessionText
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                binding?.appBar?.selectedSessionText?.text = it
             }
 
         viewModel.sessionStatusState
@@ -146,9 +152,9 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
     private fun startSession() = viewModel.startSession()
         .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
         .subscribe({
-            if (isAdded) {
+            withFragmentManager { fm ->
                 fragmentBackstack.push(
-                    parentFragmentManager,
+                    fm,
                     HomeActiveSessionFragment(),
                     FragmentBackstack.Animate.FORWARD
                 )
@@ -160,20 +166,10 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
                         RestartSessionDialog(RestartSessionDialog.Status.COMPLETED).show(fm, name())
                     is HomeSessionSummaryViewModel.CannotStartSkippedSessionException ->
                         RestartSessionDialog(RestartSessionDialog.Status.SKIPPED).show(fm, name())
+                    is HomeSessionSummaryViewModel.CannotStartSessionWhileActiveSessionExistsException ->
+                        RestartSessionDialog(RestartSessionDialog.Status.ACTIVE).show(fm, name())
                     else -> Unit
                 }
             }
         })
-
-    private fun restartSession() = viewModel.restartSession()
-        .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-        .subscribe {
-            if (isAdded) {
-                fragmentBackstack.push(
-                    parentFragmentManager,
-                    HomeActiveSessionFragment(),
-                    FragmentBackstack.Animate.FORWARD
-                )
-            }
-        }
 }

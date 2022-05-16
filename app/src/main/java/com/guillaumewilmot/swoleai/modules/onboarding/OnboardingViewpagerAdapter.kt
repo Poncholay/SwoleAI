@@ -25,7 +25,6 @@ internal class OnboardingViewpagerAdapter(
         OnboardingActivity.Step.GREETING -> OnboardingGreetingFragment()
         OnboardingActivity.Step.ENTER_NAME -> OnboardingUsernameFragment()
         OnboardingActivity.Step.ENTER_STATS -> OnboardingStatsFragment()
-        //TODO :
         else -> OnboardingGreetingFragment()
     }
 }

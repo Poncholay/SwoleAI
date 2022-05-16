@@ -37,33 +37,22 @@ class HomeSessionSummaryViewModel @Inject constructor(
     CanInteractWithProgram by CanInteractWithProgramImpl(dataStorage),
     HasLoader by HasLoaderImpl() {
 
-    private val _currentSession = dataStorage.dataHolder.currentSessionField
-    private val _currentWeek = getProgramWeekFromSession(_currentSession)
+    private val _currentWeek = getProgramWeekFromSession(selectedSession)
     private val _currentBlock = getProgramBlockFromProgramWeek(_currentWeek)
 
-    private val _activeSession = dataStorage.dataHolder.activeSessionField
-    private val _currentSessionIsActive: Flowable<Boolean> = Flowable.combineLatest(
-        _currentSession,
-        _activeSession
-    ) { currentSession, activeSession ->
-        val currentSessionId = currentSession.value?.id
-        val activeSessionId = activeSession.value?.id
-        activeSessionId != null && currentSessionId == activeSessionId
-    }
-
-    val toolbarCurrentSessionText: Flowable<SpannableString> = Flowable.combineLatest(
-        _currentSession,
+    val toolbarSelectedSessionText: Flowable<SpannableString> = Flowable.combineLatest(
+        selectedSession,
         _currentWeek,
         _currentBlock
-    ) { currentSession, currentWeek, currentBlock ->
-        if (currentSession.value == null || currentWeek.value == null || currentBlock.value == null) {
+    ) { selectedSession, currentWeek, currentBlock ->
+        if (selectedSession.value == null || currentWeek.value == null || currentBlock.value == null) {
             return@combineLatest SpannableString("")
         }
 
         val blockType = currentBlock.value.type
         val blockTypeName = application.getString(blockType.nameId)
         val weekName = currentWeek.value.name
-        val sessionName = currentSession.value.name
+        val sessionName = selectedSession.value.name
 
         SpannableString("$blockTypeName\n$weekName\n$sessionName")
             .withSpans(
@@ -84,14 +73,11 @@ class HomeSessionSummaryViewModel @Inject constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    private val _sessionStatusVisibility: Flowable<Int> = Flowable.combineLatest(
-        _currentSession,
-        _currentSessionIsActive
-    ) { currentSession, sessionIsActive ->
+    private val _sessionStatusVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
         if (
-            sessionIsActive ||
-            currentSession.value?.isSkipped == true ||
-            currentSession.value?.isComplete == true
+            selectedSession.value?.isActive == true ||
+            selectedSession.value?.isSkipped == true ||
+            selectedSession.value?.isComplete == true
         ) {
             View.VISIBLE
         } else {
@@ -99,23 +85,19 @@ class HomeSessionSummaryViewModel @Inject constructor(
         }
     }
 
-    private val _sessionStatusText: Flowable<String> = Flowable.combineLatest(
-        _currentSession,
-        _currentSessionIsActive
-    ) { currentSession, sessionIsActive ->
+    private val _sessionStatusText: Flowable<String> = selectedSession.map { selectedSession ->
         when {
-            sessionIsActive -> application.getString(R.string.app_session_status_active)
-            currentSession.value?.isSkipped == true -> application.getString(R.string.app_session_status_skipped)
-            currentSession.value?.isComplete == true -> application.getString(R.string.app_session_status_completed)
+            selectedSession.value?.isActive == true -> application.getString(R.string.app_session_status_active)
+            selectedSession.value?.isSkipped == true -> application.getString(R.string.app_session_status_skipped)
+            selectedSession.value?.isComplete == true -> application.getString(R.string.app_session_status_completed)
             else -> ""
         }
     }
 
     private val _sessionStatusTextColor: Flowable<Int> = Flowable.combineLatest(
-        _currentSession,
-        _currentSessionIsActive,
+        selectedSession,
         _currentBlock
-    ) { currentSession, sessionIsActive, currentBlock ->
+    ) { selectedSession, currentBlock ->
         val textColor = application.getColor(R.color.textPrimary)
         val textColorCompleted = application.getColor(R.color.textTertiary)
         val textColorSkipped = application.getColor(R.color.textQuaternary)
@@ -124,9 +106,9 @@ class HomeSessionSummaryViewModel @Inject constructor(
         } ?: textColor
 
         when {
-            sessionIsActive -> textColorActive
-            currentSession.value?.isSkipped == true -> textColorSkipped
-            currentSession.value?.isComplete == true -> textColorCompleted
+            selectedSession.value?.isActive == true -> textColorActive
+            selectedSession.value?.isSkipped == true -> textColorSkipped
+            selectedSession.value?.isComplete == true -> textColorCompleted
             else -> textColor
         }
     }
@@ -153,22 +135,19 @@ class HomeSessionSummaryViewModel @Inject constructor(
         val backgroundColor: Int
     )
 
-    val startButtonText: Flowable<String> = Flowable.combineLatest(
-        _currentSession,
-        _currentSessionIsActive
-    ) { currentSession, sessionIsActive ->
+    val startButtonText: Flowable<String> = selectedSession.map { selectedSession ->
         when {
-            sessionIsActive -> application.getString(R.string.app_home_session_summary_start_button_text_active)
-            currentSession.value?.isSkipped == true -> application.getString(R.string.app_home_session_summary_start_button_text_skipped)
-            currentSession.value?.isComplete == true -> application.getString(R.string.app_home_session_summary_start_button_text_completed)
+            selectedSession.value?.isActive == true -> application.getString(R.string.app_home_session_summary_start_button_text_active)
+            selectedSession.value?.isSkipped == true -> application.getString(R.string.app_home_session_summary_start_button_text_skipped)
+            selectedSession.value?.isComplete == true -> application.getString(R.string.app_home_session_summary_start_button_text_completed)
             else -> application.getString(R.string.app_home_session_summary_start_button_text_default)
         }
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    val previewButtonText: Flowable<String> = _currentSession.map { currentSession ->
-        when (currentSession.value?.isComplete) {
+    val previewButtonText: Flowable<String> = selectedSession.map { selectedSession ->
+        when (selectedSession.value?.isComplete) {
             true -> application.getString(R.string.app_home_session_summary_preview_button_text_completed)
             else -> application.getString(R.string.app_home_session_summary_preview_button_text)
         }
@@ -176,14 +155,11 @@ class HomeSessionSummaryViewModel @Inject constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    val skipButtonVisibility: Flowable<Int> = Flowable.combineLatest(
-        _currentSession,
-        _currentSessionIsActive
-    ) { currentSession, sessionIsActive ->
+    val skipButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
         if (
-            sessionIsActive ||
-            currentSession.value?.isSkipped == true ||
-            currentSession.value?.isComplete == true
+            selectedSession.value?.isActive == true ||
+            selectedSession.value?.isSkipped == true ||
+            selectedSession.value?.isComplete == true
         ) {
             View.GONE
         } else {
@@ -193,8 +169,8 @@ class HomeSessionSummaryViewModel @Inject constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    val previewButtonVisibility: Flowable<Int> = _currentSessionIsActive.map { sessionIsActive ->
-        if (sessionIsActive) View.GONE else View.VISIBLE
+    val previewButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
+        if (selectedSession.value?.isActive == true) View.GONE else View.VISIBLE
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -243,22 +219,22 @@ class HomeSessionSummaryViewModel @Inject constructor(
      * LOGIC
      */
 
-    private fun storeCurrentSessionById(transformId: (Int) -> Int): Completable =
+    private fun storeSelectedSessionById(transformId: (Int) -> Int): Completable =
         Flowable.combineLatest(
             programSessions,
-            _currentSession
-        ) { sessions, currentSession ->
-            Pair(sessions, currentSession)
+            selectedSession
+        ) { sessions, selectedSession ->
+            Pair(sessions, selectedSession)
         }
             .linkToLoader(this)
             .take(1)
-            .switchMapCompletable { (sessions, currentSession) ->
-                currentSession.value?.id?.let { currentId ->
+            .switchMapCompletable { (sessions, selectedSession) ->
+                selectedSession.value?.id?.let { currentId ->
                     val newId = transformId(currentId)
                     sessions.find {
                         it.id == newId
                     }?.let { nextSession ->
-                        dataStorage.toStorage(DataDefinition.SELECTED_SESSION, nextSession)
+                        dataStorage.toStorage(DataDefinition.SELECTED_SESSION_ID, nextSession.id)
                     }
                 }
                 Completable.complete()
@@ -266,87 +242,76 @@ class HomeSessionSummaryViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun nextSession(): Completable = storeCurrentSessionById { currentId -> currentId + 1 }
-    fun previousSession(): Completable = storeCurrentSessionById { currentId -> currentId - 1 }
+    fun nextSession(): Completable = storeSelectedSessionById { currentId -> currentId + 1 }
+    fun previousSession(): Completable = storeSelectedSessionById { currentId -> currentId - 1 }
 
-    fun restartSession(): Completable = _currentSession
+    fun startSession(): Completable = Flowable.combineLatest(
+        selectedSession,
+        activeSession
+    ) { selectedSession, activeSession ->
+        Pair(selectedSession, activeSession)
+    }
         .linkToLoader(this)
         .take(1)
-        .switchMapCompletable {
-            val currentSession = it.value ?: return@switchMapCompletable Completable.complete()
+        .switchMapCompletable { (nullableSelectedSession, nullableActiveSession) ->
+            val selectedSession = nullableSelectedSession.value
+                ?: return@switchMapCompletable Completable.complete()
 
-            val newActiveSession = SessionModel(
-                id = currentSession.id,
-                weekId = currentSession.weekId,
-                name = currentSession.name,
-                isComplete = false,
-                isSkipped = false,
-                exercises = currentSession.exercises
-            )
-
-            val completable1 = insertSession(newActiveSession)
-            val completable2 = dataStorage.toStorage(
-                DataDefinition.ACTIVE_SESSION,
-                newActiveSession
-            )
-            val completable3 = dataStorage.toStorage(
-                DataDefinition.SELECTED_SESSION,
-                newActiveSession
-            )
-
-            Completable.mergeArray(completable1, completable2, completable3)
-        }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-
-    fun startSession(): Completable = _currentSession
-        .linkToLoader(this)
-        .take(1)
-        .switchMapCompletable {
-            val currentSession = it.value ?: return@switchMapCompletable Completable.complete()
-
-            if (currentSession.isComplete) {
+            if (selectedSession.isComplete) {
                 return@switchMapCompletable Completable.error(
                     CannotStartCompletedSessionException()
                 )
             }
-            if (currentSession.isSkipped) {
+            if (selectedSession.isSkipped) {
                 return@switchMapCompletable Completable.error(
                     CannotStartSkippedSessionException()
                 )
             }
 
-            dataStorage.toStorage(DataDefinition.ACTIVE_SESSION, currentSession)
+            val activeSession = nullableActiveSession.value
+            if (activeSession != null) {
+                return@switchMapCompletable Completable.error(
+                    CannotStartSessionWhileActiveSessionExistsException()
+                )
+            }
+
+            val newActiveSession = SessionModel(
+                id = selectedSession.id,
+                weekId = selectedSession.weekId,
+                name = selectedSession.name,
+                isComplete = false,
+                isSkipped = false,
+                isActive = true,
+                exercises = selectedSession.exercises
+            )
+
+            insertSession(newActiveSession)
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    fun skipSession(): Completable = _currentSession
+    fun skipSession(): Completable = selectedSession
         .linkToLoader(this)
         .take(1)
         .switchMapCompletable {
-            val currentSession = it.value ?: return@switchMapCompletable Completable.complete()
+            val selectedSession = it.value ?: return@switchMapCompletable Completable.complete()
 
             val newActiveSession = SessionModel(
-                id = currentSession.id,
-                weekId = currentSession.weekId,
-                name = currentSession.name,
+                id = selectedSession.id,
+                weekId = selectedSession.weekId,
+                name = selectedSession.name,
                 isComplete = false,
                 isSkipped = true,
-                exercises = currentSession.exercises
+                isActive = false,
+                exercises = selectedSession.exercises
             )
 
-            val completable1 = insertSession(newActiveSession)
-            val completable2 = dataStorage.toStorage(
-                DataDefinition.SELECTED_SESSION,
-                newActiveSession
-            )
-
-            Completable.mergeArray(completable1, completable2)
+            insertSession(newActiveSession)
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     class CannotStartCompletedSessionException : Exception()
     class CannotStartSkippedSessionException : Exception()
+    class CannotStartSessionWhileActiveSessionExistsException : Exception()
 }
