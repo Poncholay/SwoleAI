@@ -34,25 +34,23 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
         inflater,
         container,
         false
-    ).also {
-        binding = it
-    }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        ui()
-
+    ).also { binding ->
         viewModel.loaderVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.loader?.visibility = it
+                this.binding?.loader?.visibility = it
             }
 
         viewModel.maleCardBackgroundColor
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 activity?.let { context ->
-                    binding?.maleCard?.setCardBackgroundColor(ContextCompat.getColor(context, it))
+                    this.binding?.maleCard?.setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            it
+                        )
+                    )
                 }
             }
 
@@ -60,33 +58,45 @@ class OnboardingStatsFragment : ParentFragment<FragmentOnboardingStatsBinding>()
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
                 activity?.let { context ->
-                    binding?.femaleCard?.setCardBackgroundColor(ContextCompat.getColor(context, it))
+                    this.binding?.femaleCard?.setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            it
+                        )
+                    )
                 }
             }
 
         viewModel.heightText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.heightValue?.text = it
+                this.binding?.heightValue?.text = it
             }
 
         viewModel.heightValue
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.heightSeekbar?.progress = it
+                this.binding?.heightSeekbar?.progress = it
             }
 
         viewModel.weightText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.weightValue?.text = it
+                this.binding?.weightValue?.text = it
             }
 
         viewModel.weightValue
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.weightSeekbar?.progress = it
+                this.binding?.weightSeekbar?.progress = it
             }
+
+        this.binding = binding
+    }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ui()
     }
 
     private fun ui() {

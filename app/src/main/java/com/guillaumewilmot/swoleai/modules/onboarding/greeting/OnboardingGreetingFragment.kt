@@ -27,19 +27,19 @@ class OnboardingGreetingFragment : ParentFragment<FragmentOnboardingGreetingBind
         inflater,
         container,
         false
-    ).also {
-        binding = it
+    ).also { binding ->
+        viewModel.titleTextTest
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                this.binding?.titleText?.text = it
+            }
+
+        this.binding = binding
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
-
-        viewModel.titleTextTest
-            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            .subscribe {
-                binding?.titleText?.text = it
-            }
     }
 
     private fun ui() {

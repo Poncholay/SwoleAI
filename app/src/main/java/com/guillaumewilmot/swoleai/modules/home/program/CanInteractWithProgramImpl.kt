@@ -37,7 +37,9 @@ class CanInteractWithProgramImpl(private val dataStorage: DataStorage) : CanInte
     }.distinctUntilChanged()
 
     override val activeSession: Flowable<Nullable<SessionModel>> = programSessions.map { sessions ->
-        sessions.find { it.isActive }.asNullable()
+        sessions.find {
+            it.status == SessionModel.Status.ACTIVE
+        }.asNullable()
     }
 
     override fun getProgramBlockFromProgramWeek(

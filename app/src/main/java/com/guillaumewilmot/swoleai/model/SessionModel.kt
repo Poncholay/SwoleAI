@@ -19,6 +19,22 @@ data class SessionModel(
     @SerializedName("exercises")
     val exercises: List<SessionExerciseModel>
 ) : Serializable {
+
+    val status: Status
+        get() = when {
+            isComplete -> Status.COMPLETE
+            isSkipped -> Status.SKIPPED
+            isActive -> Status.ACTIVE
+            else -> Status.PENDING
+        }
+
+    enum class Status {
+        COMPLETE,
+        SKIPPED,
+        ACTIVE,
+        PENDING
+    }
+
     companion object {
         private const val serialVersionUID = 6L
     }

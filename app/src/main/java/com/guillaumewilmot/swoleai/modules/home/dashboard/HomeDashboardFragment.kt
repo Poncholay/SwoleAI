@@ -35,7 +35,6 @@ import com.guillaumewilmot.swoleai.util.extension.withSpans
 import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
 import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.Float.max
 import javax.inject.Inject
@@ -69,21 +68,11 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         inflater,
         container,
         false
-    ).also {
-        binding = it
-    }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-        setupUi()
-        setupFatigueChart()
-        setupProgramChart()
-
+    ).also { binding ->
         viewModel.loaderVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
+                this.binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
             }
 
         /**
@@ -93,13 +82,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         viewModel.userDashboardVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.userDashboard?.visibility = it
+                this.binding?.userDashboard?.visibility = it
             }
 
         viewModel.noUserDashboardVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.noUserDashboard?.visibility = it
+                this.binding?.noUserDashboard?.visibility = it
             }
 
         /**
@@ -109,13 +98,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         viewModel.currentFatigueValue
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { fatigue ->
-                binding?.fatigueRatingValue?.text = fatigue.toString()
+                this.binding?.fatigueRatingValue?.text = fatigue.toString()
             }
 
         viewModel.fatigueChartState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { state ->
-                binding?.fatigueChart?.apply {
+                this.binding?.fatigueChart?.apply {
                     val padding = (state.dataset.yMax - state.dataset.yMin) * 0.5f
 
                     axisLeft.axisMaximum = state.dataset.yMax + padding
@@ -133,7 +122,9 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
                     })
 
                     state.limitLines.forEach { limitLine ->
-                        binding?.fatigueChart?.xAxis?.addLimitLine(limitLine)
+                        this@HomeDashboardFragment.binding?.fatigueChart?.xAxis?.addLimitLine(
+                            limitLine
+                        )
                     }
 
                     invalidate()
@@ -148,14 +139,14 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         viewModel.programSummaryState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { state ->
-                binding?.programEndDaysRemaining?.text = state.daysRemainingText
-                binding?.programEndDate?.text = state.endDateText
+                this.binding?.programEndDaysRemaining?.text = state.daysRemainingText
+                this.binding?.programEndDate?.text = state.endDateText
             }
 
         viewModel.programChartState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe { state ->
-                binding?.programChart?.apply {
+                this.binding?.programChart?.apply {
                     legend.setCustom(state.legend)
                     legend.isWordWrapEnabled = true
 
@@ -183,13 +174,13 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         viewModel.weekSummaryTitle
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.weekTitle?.text = it
+                this.binding?.weekTitle?.text = it
             }
 
         viewModel.weekSummaryIsCompleteIconState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.weekCompletedIcon?.apply {
+                this.binding?.weekCompletedIcon?.apply {
                     visibility = it.visibility
                     setColorFilter(it.iconColor, PorterDuff.Mode.SRC_IN)
                 }
@@ -201,28 +192,25 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
                 sessionAdapter?.data = it
             }
 
-        sessionAdapter?.getIndexClickedObservable()
-            ?.flatMap { indexClicked ->
-                viewModel.onSessionSelected(indexClicked)
-                    .andThen(Observable.just(indexClicked))
-            }
-            ?.autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            ?.subscribe {
-                (activity as? HomeActivity)?.selectTab(
-                    FragmentBackstack.Tab.SESSION,
-                    firstSelect = false
-                )
-            }
-
         viewModel.weekSummaryCompleteButtonState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.completeWeekButton?.apply {
+                this.binding?.completeWeekButton?.apply {
                     text = it.text
                     background = AppCompatResources.getDrawable(context, it.backgroundId)
                     isEnabled = it.isEnabled
                 }
             }
+
+        this.binding = binding
+    }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
+        setupUi()
+        setupFatigueChart()
+        setupProgramChart()
     }
 
     private fun setupToolbar() {
@@ -236,11 +224,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
             )
             iconAction.setOnClickListener {
                 withFragmentManager { fm ->
-                    fragmentBackstack.push(
-                        fm,
-                        HomeSettingsFragment(),
-                        FragmentBackstack.Animate.FORWARD
-                    )
+                    fragmentBackstack.push(fm, HomeSettingsFragment())
                 }
             }
 
@@ -255,11 +239,24 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         binding?.weekSessions?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
-            adapter = SessionAdapter()
+            adapter = SessionAdapter().apply {
+                getIndexClickedObservable()
+                    .switchMap { indexClicked ->
+                        viewModel.onSessionSelected(indexClicked).toObservable()
+                    }
+                    .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                    .subscribe { shouldGoBackToRoot ->
+                        if (shouldGoBackToRoot) {
+                            (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
+                        } else {
+                            (activity as? HomeActivity)?.selectTab(FragmentBackstack.Tab.SESSION)
+                        }
+                    }
+            }
         }
 
         binding?.programReviewButton?.setOnClickListener {
-
+            //TODO
         }
         binding?.nextWeekButton?.setOnClickListener {
             viewModel.goToNextWeek()

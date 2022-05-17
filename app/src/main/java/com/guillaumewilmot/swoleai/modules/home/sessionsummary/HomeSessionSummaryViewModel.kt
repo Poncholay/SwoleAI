@@ -75,9 +75,9 @@ class HomeSessionSummaryViewModel @Inject constructor(
 
     private val _sessionStatusVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
         if (
-            selectedSession.value?.isActive == true ||
-            selectedSession.value?.isSkipped == true ||
-            selectedSession.value?.isComplete == true
+            selectedSession.value?.status == SessionModel.Status.ACTIVE ||
+            selectedSession.value?.status == SessionModel.Status.SKIPPED ||
+            selectedSession.value?.status == SessionModel.Status.COMPLETE
         ) {
             View.VISIBLE
         } else {
@@ -86,10 +86,13 @@ class HomeSessionSummaryViewModel @Inject constructor(
     }
 
     private val _sessionStatusText: Flowable<String> = selectedSession.map { selectedSession ->
-        when {
-            selectedSession.value?.isActive == true -> application.getString(R.string.app_session_status_active)
-            selectedSession.value?.isSkipped == true -> application.getString(R.string.app_session_status_skipped)
-            selectedSession.value?.isComplete == true -> application.getString(R.string.app_session_status_completed)
+        when (selectedSession.value?.status) {
+            SessionModel.Status.ACTIVE ->
+                application.getString(R.string.app_session_status_active)
+            SessionModel.Status.SKIPPED ->
+                application.getString(R.string.app_session_status_skipped)
+            SessionModel.Status.COMPLETE ->
+                application.getString(R.string.app_session_status_completed)
             else -> ""
         }
     }
@@ -105,10 +108,10 @@ class HomeSessionSummaryViewModel @Inject constructor(
             application.getColor(it)
         } ?: textColor
 
-        when {
-            selectedSession.value?.isActive == true -> textColorActive
-            selectedSession.value?.isSkipped == true -> textColorSkipped
-            selectedSession.value?.isComplete == true -> textColorCompleted
+        when (selectedSession.value?.status) {
+            SessionModel.Status.ACTIVE -> textColorActive
+            SessionModel.Status.SKIPPED -> textColorSkipped
+            SessionModel.Status.COMPLETE -> textColorCompleted
             else -> textColor
         }
     }
@@ -136,19 +139,25 @@ class HomeSessionSummaryViewModel @Inject constructor(
     )
 
     val startButtonText: Flowable<String> = selectedSession.map { selectedSession ->
-        when {
-            selectedSession.value?.isActive == true -> application.getString(R.string.app_home_session_summary_start_button_text_active)
-            selectedSession.value?.isSkipped == true -> application.getString(R.string.app_home_session_summary_start_button_text_skipped)
-            selectedSession.value?.isComplete == true -> application.getString(R.string.app_home_session_summary_start_button_text_completed)
-            else -> application.getString(R.string.app_home_session_summary_start_button_text_default)
+        when (selectedSession.value?.status) {
+            SessionModel.Status.ACTIVE ->
+                application.getString(R.string.app_home_session_summary_start_button_text_active)
+            SessionModel.Status.SKIPPED ->
+                application.getString(R.string.app_home_session_summary_start_button_text_skipped)
+            SessionModel.Status.COMPLETE ->
+                application.getString(R.string.app_home_session_summary_start_button_text_completed)
+            else ->
+                application.getString(R.string.app_home_session_summary_start_button_text_default)
         }
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     val previewButtonText: Flowable<String> = selectedSession.map { selectedSession ->
-        when (selectedSession.value?.isComplete) {
-            true -> application.getString(R.string.app_home_session_summary_preview_button_text_completed)
+        when (selectedSession.value?.status == SessionModel.Status.COMPLETE) {
+            true -> application.getString(
+                R.string.app_home_session_summary_preview_button_text_completed
+            )
             else -> application.getString(R.string.app_home_session_summary_preview_button_text)
         }
     }
@@ -157,9 +166,9 @@ class HomeSessionSummaryViewModel @Inject constructor(
 
     val skipButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
         if (
-            selectedSession.value?.isActive == true ||
-            selectedSession.value?.isSkipped == true ||
-            selectedSession.value?.isComplete == true
+            selectedSession.value?.status == SessionModel.Status.ACTIVE ||
+            selectedSession.value?.status == SessionModel.Status.SKIPPED ||
+            selectedSession.value?.status == SessionModel.Status.COMPLETE
         ) {
             View.GONE
         } else {
@@ -170,7 +179,7 @@ class HomeSessionSummaryViewModel @Inject constructor(
         .observeOn(AndroidSchedulers.mainThread())
 
     val previewButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
-        if (selectedSession.value?.isActive == true) View.GONE else View.VISIBLE
+        if (selectedSession.value?.status == SessionModel.Status.ACTIVE) View.GONE else View.VISIBLE
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -255,14 +264,16 @@ class HomeSessionSummaryViewModel @Inject constructor(
         .take(1)
         .switchMapCompletable { (nullableSelectedSession, nullableActiveSession) ->
             val selectedSession = nullableSelectedSession.value
-                ?: return@switchMapCompletable Completable.complete()
+                ?: return@switchMapCompletable Completable.error(
+                    SessionNotFoundException()
+                )
 
-            if (selectedSession.isComplete) {
+            if (selectedSession.status == SessionModel.Status.COMPLETE) {
                 return@switchMapCompletable Completable.error(
                     CannotStartCompletedSessionException()
                 )
             }
-            if (selectedSession.isSkipped) {
+            if (selectedSession.status == SessionModel.Status.SKIPPED) {
                 return@switchMapCompletable Completable.error(
                     CannotStartSkippedSessionException()
                 )
@@ -270,9 +281,12 @@ class HomeSessionSummaryViewModel @Inject constructor(
 
             val activeSession = nullableActiveSession.value
             if (activeSession != null) {
-                return@switchMapCompletable Completable.error(
-                    CannotStartSessionWhileActiveSessionExistsException()
-                )
+                return@switchMapCompletable if (selectedSession.id == activeSession.id) {
+                    /** All good, resume the session */
+                    Completable.complete()
+                } else {
+                    Completable.error(CannotStartSessionWhileActiveSessionExistsException())
+                }
             }
 
             val newActiveSession = SessionModel(
@@ -311,6 +325,7 @@ class HomeSessionSummaryViewModel @Inject constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
+    class SessionNotFoundException : Exception()
     class CannotStartCompletedSessionException : Exception()
     class CannotStartSkippedSessionException : Exception()
     class CannotStartSessionWhileActiveSessionExistsException : Exception()

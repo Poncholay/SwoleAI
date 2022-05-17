@@ -2,6 +2,7 @@ package com.guillaumewilmot.swoleai.hilt
 
 import android.content.Context
 import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
+import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstackImpl
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import com.guillaumewilmot.swoleai.util.storage.DataStorageImpl
 import dagger.Binds
@@ -18,10 +19,13 @@ import javax.inject.Singleton
 @ExperimentalCoroutinesApi
 class AppModule {
 
+    /**
+     * DataStorage
+     */
+
     @Module
     @InstallIn(SingletonComponent::class)
     abstract class DataStorageModule {
-
         @Binds
         abstract fun bindDataStorage(
             dataStorageImpl: DataStorageImpl
@@ -31,7 +35,6 @@ class AppModule {
     @Module
     @InstallIn(SingletonComponent::class)
     object DataStorageImplModule {
-
         @Provides
         @Singleton
         fun provideDataStorageImpl(
@@ -39,12 +42,24 @@ class AppModule {
         ): DataStorageImpl = DataStorageImpl(applicationContext)
     }
 
+    /**
+     * FragmentBackstack
+     */
+
     @Module
     @InstallIn(SingletonComponent::class)
-    object FragmentBackstackModule {
+    abstract class FragmentBackstackModule {
+        @Binds
+        abstract fun bindFragmentBackstack(
+            fragmentBackstackImpl: FragmentBackstackImpl
+        ): FragmentBackstack
+    }
 
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object FragmentBackstackImplModule {
         @Provides
         @Singleton
-        fun provideFragmentBackstack() = FragmentBackstack()
+        fun provideFragmentBackstackImpl(): FragmentBackstackImpl = FragmentBackstackImpl()
     }
 }

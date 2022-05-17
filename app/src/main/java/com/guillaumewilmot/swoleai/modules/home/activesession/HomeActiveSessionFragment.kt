@@ -26,19 +26,19 @@ class HomeActiveSessionFragment : ParentFragment<FragmentHomeActiveSessionBindin
         inflater,
         container,
         false
-    ).also {
-        binding = it
+    ).also { binding ->
+        viewModel.toolbarActiveSessionText
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                this.binding?.toolbarLayout?.toolbarContent?.toolbarTitle?.text = it
+            }
+
+        this.binding = binding
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
-
-        viewModel.toolbarActiveSessionText
-            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            .subscribe {
-                binding?.toolbarLayout?.toolbarContent?.toolbarTitle?.text = it
-            }
     }
 
     private fun ui() {

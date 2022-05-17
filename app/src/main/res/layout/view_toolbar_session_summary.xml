@@ -52,11 +52,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginSmall"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cornerRadiusCardView"
                 app:cardElevation="@dimen/elevationCardView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/marginView">
+                app:layout_constraintTop_toBottomOf="@id/marginView"
+                tools:visibility="visible">
 
                 <TextView
                     android:id="@+id/sessionStatusText"

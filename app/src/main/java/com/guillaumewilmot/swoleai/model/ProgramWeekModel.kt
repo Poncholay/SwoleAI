@@ -25,7 +25,7 @@ data class ProgramWeekModel(
 ) : Serializable {
 
     val isComplete: Boolean
-        get() = sessions.all { sessionModel -> sessionModel.isComplete }
+        get() = sessions.all { sessionModel -> sessionModel.status == SessionModel.Status.COMPLETE }
 
 
     //FIXME: Remove

@@ -32,18 +32,18 @@ class RestartSessionDialog(
         inflater,
         container,
         false
-    ).also {
-        binding = it
+    ).also { binding ->
+        viewModel.loaderVisibility
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                this.binding?.loader?.visibility = it
+            }
+
+        this.binding = binding
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.loaderVisibility
-            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            .subscribe {
-                binding?.loader?.visibility = it
-            }
 
         when (status) {
             Status.COMPLETED -> {

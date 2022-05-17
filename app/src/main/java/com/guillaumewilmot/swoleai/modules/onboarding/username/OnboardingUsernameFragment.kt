@@ -28,32 +28,32 @@ class OnboardingUsernameFragment : ParentFragment<FragmentOnboardingUsernameBind
         inflater,
         container,
         false
-    ).also {
-        binding = it
-    }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        ui()
-
+    ).also { binding ->
         viewModel.nextButtonEnabled
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.continueButton?.isEnabled = it
+                this.binding?.continueButton?.isEnabled = it
             }
 
         viewModel.usernameFieldError
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.usernameLayout?.error = it.value
-                binding?.usernameLayout?.errorContentDescription = it.value
+                this.binding?.usernameLayout?.error = it.value
+                this.binding?.usernameLayout?.errorContentDescription = it.value
             }
 
         viewModel.loaderVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.loader?.visibility = it
+                this.binding?.loader?.visibility = it
             }
+
+        this.binding = binding
+    }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ui()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

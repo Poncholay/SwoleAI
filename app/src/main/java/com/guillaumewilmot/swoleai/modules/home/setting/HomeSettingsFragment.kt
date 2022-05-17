@@ -30,19 +30,19 @@ class HomeSettingsFragment : ParentFragment<FragmentHomeSettingsBinding>() {
         inflater,
         container,
         false
-    ).also {
-        binding = it
+    ).also { binding ->
+        viewModel.loaderVisibility
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                this.binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
+            }
+
+        this.binding = binding
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ui()
-
-        viewModel.loaderVisibility
-            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            .subscribe {
-                binding?.toolbarLayout?.toolbarContent?.loader?.visibility = it
-            }
     }
 
     private fun ui() {

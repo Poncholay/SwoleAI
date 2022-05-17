@@ -34,6 +34,11 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
     private val exerciseSummaryAdapter: ExerciseSummaryAdapter?
         get() = binding?.exerciseSummary?.adapter as? ExerciseSummaryAdapter
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        clearFragmentResultListener(RestartSessionDialog.REQUEST_KEY)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,19 +47,7 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         inflater,
         container,
         false
-    ).also {
-        binding = it
-    }.root
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        clearFragmentResultListener(RestartSessionDialog.REQUEST_KEY)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        ui()
-
+    ).also { binding ->
         setFragmentResultListener(RestartSessionDialog.REQUEST_KEY) { _, result ->
             when (result.getString(RestartSessionDialog.ACTION)) {
                 RestartSessionDialog.ACTION_RESTART -> startSession()
@@ -65,22 +58,22 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         viewModel.loaderVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.appBar?.toolbarContent?.loader?.visibility = it
+                this.binding?.appBar?.toolbarContent?.loader?.visibility = it
             }
 
         viewModel.toolbarSelectedSessionText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.appBar?.selectedSessionText?.text = it
+                this.binding?.appBar?.selectedSessionText?.text = it
             }
 
         viewModel.sessionStatusState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.appBar?.sessionStatus?.setCardBackgroundColor(it.backgroundColor)
-                binding?.appBar?.sessionStatusText?.text = it.text
-                binding?.appBar?.sessionStatusText?.setTextColor(it.textColor)
-                binding?.appBar?.sessionStatus?.visibility = it.visibility
+                this.binding?.appBar?.sessionStatus?.setCardBackgroundColor(it.backgroundColor)
+                this.binding?.appBar?.sessionStatusText?.text = it.text
+                this.binding?.appBar?.sessionStatusText?.setTextColor(it.textColor)
+                this.binding?.appBar?.sessionStatus?.visibility = it.visibility
             }
 
         viewModel.sessionExercises
@@ -92,26 +85,33 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         viewModel.startButtonText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.startButton?.text = it
+                this.binding?.startButton?.text = it
             }
 
         viewModel.previewButtonText
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.previewButton?.text = it
+                this.binding?.previewButton?.text = it
             }
 
         viewModel.skipButtonVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.skipButton?.visibility = it
+                this.binding?.skipButton?.visibility = it
             }
 
         viewModel.previewButtonVisibility
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                binding?.previewButton?.visibility = it
+                this.binding?.previewButton?.visibility = it
             }
+
+        this.binding = binding
+    }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ui()
     }
 
     private fun ui() {
@@ -153,22 +153,20 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
         .subscribe({
             withFragmentManager { fm ->
-                fragmentBackstack.push(
-                    fm,
-                    HomeActiveSessionFragment(),
-                    FragmentBackstack.Animate.FORWARD
-                )
+                fragmentBackstack.push(fm, HomeActiveSessionFragment())
             }
         }, { exception ->
-            withFragmentManager { fm ->
-                when (exception) {
-                    is HomeSessionSummaryViewModel.CannotStartCompletedSessionException ->
-                        RestartSessionDialog(RestartSessionDialog.Status.COMPLETED).show(fm, name())
-                    is HomeSessionSummaryViewModel.CannotStartSkippedSessionException ->
-                        RestartSessionDialog(RestartSessionDialog.Status.SKIPPED).show(fm, name())
-                    is HomeSessionSummaryViewModel.CannotStartSessionWhileActiveSessionExistsException ->
-                        RestartSessionDialog(RestartSessionDialog.Status.ACTIVE).show(fm, name())
-                    else -> Unit
+            when (exception) {
+                is HomeSessionSummaryViewModel.CannotStartCompletedSessionException ->
+                    RestartSessionDialog.Status.COMPLETED
+                is HomeSessionSummaryViewModel.CannotStartSkippedSessionException ->
+                    RestartSessionDialog.Status.SKIPPED
+                is HomeSessionSummaryViewModel.CannotStartSessionWhileActiveSessionExistsException ->
+                    RestartSessionDialog.Status.ACTIVE
+                else -> null
+            }?.let { status ->
+                withFragmentManager { fm ->
+                    RestartSessionDialog(status).show(fm, name())
                 }
             }
         })

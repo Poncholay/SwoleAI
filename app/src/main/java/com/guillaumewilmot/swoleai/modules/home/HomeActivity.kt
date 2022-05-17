@@ -125,13 +125,13 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
                 true
             }
             setOnItemReselectedListener {
-                fragmentBackstack.popOrHandle(supportFragmentManager, null)
+                fragmentBackstack.popOrHandle(supportFragmentManager, onNoPreviousFragment = null)
             }
         }
     }
 
     /** Programmatically select a tab in the bottomNavigationBar */
-    fun selectTab(tab: FragmentBackstack.FragmentTab, firstSelect: Boolean) {
+    fun selectTab(tab: FragmentBackstack.FragmentTab, firstSelect: Boolean = false) {
         val currentTab = binding?.bottomNavigationView?.selectedItemId
         if (currentTab != tab.navId()) {
             binding?.bottomNavigationView?.selectedItemId = tab.navId()
@@ -165,18 +165,20 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
         val finishResult = fragmentBackstack.popOrHandle(
             supportFragmentManager,
             onNoPreviousFragment = object : FragmentBackstack.OnNoPreviousFragment {
-                override fun finishFragment(currentTab: FragmentBackstack.FragmentTab): FragmentBackstack.Finishresult {
-                    return if (currentTab != FragmentBackstack.Tab.DASHBOARD) {
-                        selectTab(FragmentBackstack.Tab.DASHBOARD, firstSelect = false)
-                        FragmentBackstack.Finishresult.WENT_BACK
-                    } else {
-                        FragmentBackstack.Finishresult.DID_NO_GO_BACK
-                    }
+                override fun handleNoPreviousFragment(
+                    currentTab: FragmentBackstack.FragmentTab
+                ): FragmentBackstack.Finishresult = if (
+                    currentTab != FragmentBackstack.Tab.DASHBOARD
+                ) {
+                    selectTab(FragmentBackstack.Tab.DASHBOARD)
+                    FragmentBackstack.Finishresult.HANDLED
+                } else {
+                    FragmentBackstack.Finishresult.NOT_HANDLED
                 }
             }
         )
 
-        if (finishResult == FragmentBackstack.Finishresult.DID_NO_GO_BACK) {
+        if (finishResult == FragmentBackstack.Finishresult.NOT_HANDLED) {
             //No more more fragments, already in dashboard, quit the app
             finish()
         }

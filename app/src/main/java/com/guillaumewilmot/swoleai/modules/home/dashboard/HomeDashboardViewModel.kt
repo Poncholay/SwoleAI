@@ -15,10 +15,7 @@ import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.*
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
-import com.guillaumewilmot.swoleai.model.Nullable
-import com.guillaumewilmot.swoleai.model.ProgramBlockModel
-import com.guillaumewilmot.swoleai.model.ProgramWeekModel
-import com.guillaumewilmot.swoleai.model.asNullable
+import com.guillaumewilmot.swoleai.model.*
 import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgram
 import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgramImpl
 import com.guillaumewilmot.swoleai.util.DateHelper
@@ -419,29 +416,29 @@ class HomeDashboardViewModel @Inject constructor(
 
             currentWeek.value?.sessions?.map { session ->
                 SessionAdapter.SessionViewHolder.ViewDataModel(
-                    nameText = when {
-                        session.isActive -> application.getString(
+                    nameText = when (session.status) {
+                        SessionModel.Status.ACTIVE -> application.getString(
                             R.string.app_home_dashboard_week_summary_session_active_text,
                             session.name
                         )
-                        session.isSkipped -> application.getString(
+                        SessionModel.Status.SKIPPED -> application.getString(
                             R.string.app_home_dashboard_week_summary_session_skipped_text,
                             session.name
                         )
                         else -> session.name
                     },
-                    nameTextColor = when {
-                        session.isComplete -> textColorCompleted
-                        session.isSkipped -> textColorSkipped
-                        session.isActive -> textColorActive
+                    nameTextColor = when (session.status) {
+                        SessionModel.Status.COMPLETE -> textColorCompleted
+                        SessionModel.Status.SKIPPED -> textColorSkipped
+                        SessionModel.Status.ACTIVE -> textColorActive
                         else -> textColor
                     },
-                    iconId = when {
-                        session.isComplete -> R.drawable.icon_check_circle
-                        session.isSkipped -> R.drawable.icon_cross_circle
+                    iconId = when (session.status) {
+                        SessionModel.Status.COMPLETE -> R.drawable.icon_check_circle
+                        SessionModel.Status.SKIPPED -> R.drawable.icon_cross_circle
                         else -> null
                     },
-                    isLoading = session.isActive
+                    isLoading = session.status == SessionModel.Status.ACTIVE
                 )
             } ?: listOf()
         }
@@ -466,7 +463,7 @@ class HomeDashboardViewModel @Inject constructor(
 
     private val _weekSummaryCompleteButtonIsEnabled: Flowable<Boolean> = _currentWeek.map {
         it.value?.sessions?.all { session ->
-            session.isComplete
+            session.status == SessionModel.Status.COMPLETE
         } == true
     }
 
@@ -519,12 +516,20 @@ class HomeDashboardViewModel @Inject constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(Schedulers.io())
 
-    fun onSessionSelected(index: Int): Completable = _currentWeek
+    fun onSessionSelected(index: Int): Flowable<Boolean> = Flowable.combineLatest(
+        _currentWeek,
+        activeSession
+    ) { currentWeek, activeSession ->
+        Pair(currentWeek, activeSession)
+    }
         .linkToLoader(this)
         .take(1)
-        .switchMapCompletable { currentWeek ->
+        .switchMap { (currentWeek, activeSession) ->
             val session = currentWeek.value?.sessions?.getOrNull(index)
+            val activeSessionId = activeSession.value?.id
+            val shouldGoBackToRoot = activeSessionId == null || activeSessionId != session?.id
             dataStorage.toStorage(DataDefinition.SELECTED_SESSION_ID, session?.id)
+                .andThen(Flowable.just(shouldGoBackToRoot))
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -532,14 +537,23 @@ class HomeDashboardViewModel @Inject constructor(
     fun completeWeek(): Completable = Completable.complete() //TODO
 
     //FIXME : TMP, should be done when we generate the real program
-    fun preselectSelectedSession(): Completable = _currentWeek
+    fun preselectSelectedSession(): Completable = Flowable.combineLatest(
+        dataStorage.dataHolder.selectedSessionIdField,
+        _currentWeek,
+    ) { selectedSessionId, currentWeek ->
+        Pair(selectedSessionId, currentWeek)
+    }
         .linkToLoader(this)
         .take(1)
-        .switchMapCompletable { currentWeek ->
-            dataStorage.toStorage(
-                DataDefinition.SELECTED_SESSION_ID,
-                currentWeek.value?.sessions?.getOrNull(0)?.id
-            )
+        .switchMapCompletable { (selectedSessionId, currentWeek) ->
+            if (selectedSessionId.value == null) {
+                dataStorage.toStorage(
+                    DataDefinition.SELECTED_SESSION_ID,
+                    currentWeek.value?.sessions?.getOrNull(0)?.id
+                )
+            } else {
+                Completable.complete()
+            }
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
