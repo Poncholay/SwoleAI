@@ -1,27 +1,23 @@
 package com.guillaumewilmot.swoleai.modules.home.sessionsummary
 
-import android.annotation.SuppressLint
 import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.guillaumewilmot.swoleai.controller.ParentAdapter
 import com.guillaumewilmot.swoleai.databinding.AdapterViewExerciseSummaryBinding
 
-class ExerciseSummaryAdapter :
-    RecyclerView.Adapter<ExerciseSummaryAdapter.ExerciseSummaryViewHolder>() {
-    var data: List<ExerciseSummaryViewHolder.ViewModel> = listOf()
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class ExerciseSummaryAdapter : ParentAdapter<
+        ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel,
+        ExerciseSummaryAdapter.ExerciseSummaryViewHolder
+        >() {
 
     override fun onBindViewHolder(holder: ExerciseSummaryViewHolder, position: Int) = try {
-        holder.bind(data[position])
+        holder.bind(dataset[position])
     } catch (ignored: IndexOutOfBoundsException) {
     }
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount(): Int = dataset.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ExerciseSummaryViewHolder(
         AdapterViewExerciseSummaryBinding.inflate(
@@ -34,7 +30,7 @@ class ExerciseSummaryAdapter :
     class ExerciseSummaryViewHolder(
         private val binding: AdapterViewExerciseSummaryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(sessionViewModel: ViewModel) {
+        fun bind(sessionViewModel: ViewDataModel) {
             binding.contentRoot.setOnClickListener {
 //                callbackWrapper.wrap(sessionViewModel.onClickCallback::onClick)
             }
@@ -52,9 +48,10 @@ class ExerciseSummaryAdapter :
             binding.nameText.text = sessionViewModel.nameText
         }
 
-        data class ViewModel(
+        data class ViewDataModel(
             val nameText: SpannableString,
             val backgroundColor: Int,
+            //TODO : Use observable
 //            val onClickCallback: ParentActivity.AdapterCallback,
 //            val infoCallback: ParentActivity.AdapterCallback,
 //            val swapCallback: ParentActivity.AdapterCallback

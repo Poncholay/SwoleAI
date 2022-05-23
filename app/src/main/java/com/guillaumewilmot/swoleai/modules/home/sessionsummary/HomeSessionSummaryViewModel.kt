@@ -10,7 +10,9 @@ import android.view.View
 import androidx.core.graphics.ColorUtils
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
+import com.guillaumewilmot.swoleai.model.Nullable
 import com.guillaumewilmot.swoleai.model.SessionModel
+import com.guillaumewilmot.swoleai.model.asNullable
 import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgram
 import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgramImpl
 import com.guillaumewilmot.swoleai.util.extension.withSpans
@@ -21,7 +23,6 @@ import com.guillaumewilmot.swoleai.util.storage.DataDefinition
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -85,40 +86,43 @@ class HomeSessionSummaryViewModel @Inject constructor(
         }
     }
 
-    private val _sessionStatusText: Flowable<String> = selectedSession.map { selectedSession ->
-        when (selectedSession.value?.status) {
-            SessionModel.Status.ACTIVE ->
-                application.getString(R.string.app_session_status_active)
-            SessionModel.Status.SKIPPED ->
-                application.getString(R.string.app_session_status_skipped)
-            SessionModel.Status.COMPLETE ->
-                application.getString(R.string.app_session_status_completed)
-            else -> ""
+    private val _sessionStatusText: Flowable<Nullable<String>> =
+        selectedSession.map { selectedSession ->
+            when (selectedSession.value?.status) {
+                SessionModel.Status.ACTIVE ->
+                    application.getString(R.string.app_session_status_active)
+                SessionModel.Status.SKIPPED ->
+                    application.getString(R.string.app_session_status_skipped)
+                SessionModel.Status.COMPLETE ->
+                    application.getString(R.string.app_session_status_completed)
+                else -> null
+            }.asNullable()
         }
-    }
 
-    private val _sessionStatusTextColor: Flowable<Int> = Flowable.combineLatest(
+    private val _sessionStatusTextColor: Flowable<Nullable<Int>> = Flowable.combineLatest(
         selectedSession,
         _currentBlock
     ) { selectedSession, currentBlock ->
-        val textColor = application.getColor(R.color.textPrimary)
         val textColorCompleted = application.getColor(R.color.textTertiary)
         val textColorSkipped = application.getColor(R.color.textQuaternary)
         val textColorActive = currentBlock.value?.type?.colorId?.let {
             application.getColor(it)
-        } ?: textColor
+        } ?: application.getColor(R.color.textPrimary)
 
         when (selectedSession.value?.status) {
             SessionModel.Status.ACTIVE -> textColorActive
             SessionModel.Status.SKIPPED -> textColorSkipped
             SessionModel.Status.COMPLETE -> textColorCompleted
-            else -> textColor
-        }
+            else -> null
+        }.asNullable()
     }
 
-    private val _sessionStatusBackgroundColor: Flowable<Int> = _sessionStatusTextColor.map {
-        ColorUtils.setAlphaComponent(it, 0x88)
-    }
+    private val _sessionStatusBackgroundColor: Flowable<Nullable<Int>> =
+        _sessionStatusTextColor.map {
+            it.value?.let { color ->
+                ColorUtils.setAlphaComponent(color, 0x88)
+            }.asNullable()
+        }
 
     val sessionStatusState: Flowable<SessionStatusState> = Flowable.combineLatest(
         _sessionStatusVisibility,
@@ -126,19 +130,19 @@ class HomeSessionSummaryViewModel @Inject constructor(
         _sessionStatusTextColor,
         _sessionStatusBackgroundColor
     ) { visibility, text, color, backgroundColor ->
-        SessionStatusState(visibility, text, color, backgroundColor)
+        SessionStatusState(visibility, text.value, color.value, backgroundColor.value)
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
     data class SessionStatusState(
         val visibility: Int,
-        val text: String,
-        val textColor: Int,
-        val backgroundColor: Int
+        val text: String?,
+        val textColor: Int?,
+        val backgroundColor: Int?
     )
 
-    val startButtonText: Flowable<String> = selectedSession.map { selectedSession ->
+    private val _startButtonText: Flowable<String> = selectedSession.map { selectedSession ->
         when (selectedSession.value?.status) {
             SessionModel.Status.ACTIVE ->
                 application.getString(R.string.app_home_session_summary_start_button_text_active)
@@ -150,10 +154,8 @@ class HomeSessionSummaryViewModel @Inject constructor(
                 application.getString(R.string.app_home_session_summary_start_button_text_default)
         }
     }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
 
-    val previewButtonText: Flowable<String> = selectedSession.map { selectedSession ->
+    private val _previewButtonText: Flowable<String> = selectedSession.map { selectedSession ->
         when (selectedSession.value?.status == SessionModel.Status.COMPLETE) {
             true -> application.getString(
                 R.string.app_home_session_summary_preview_button_text_completed
@@ -161,10 +163,8 @@ class HomeSessionSummaryViewModel @Inject constructor(
             else -> application.getString(R.string.app_home_session_summary_preview_button_text)
         }
     }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
 
-    val skipButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
+    private val _skipButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
         if (
             selectedSession.value?.status == SessionModel.Status.ACTIVE ||
             selectedSession.value?.status == SessionModel.Status.SKIPPED ||
@@ -175,52 +175,128 @@ class HomeSessionSummaryViewModel @Inject constructor(
             View.VISIBLE
         }
     }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
 
-    val previewButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
+    private val _previewButtonVisibility: Flowable<Int> = selectedSession.map { selectedSession ->
         if (selectedSession.value?.status == SessionModel.Status.ACTIVE) View.GONE else View.VISIBLE
+    }
+
+    val actionButtonsState: Flowable<ActionButtonsState> = Flowable.zip(
+        _startButtonText,
+        _previewButtonText,
+        _skipButtonVisibility,
+        _previewButtonVisibility
+    ) { startButtonText, previewButtonText, skipButtonVisibility, previewButtonVisibility ->
+        ActionButtonsState(
+            startButtonText = startButtonText,
+            startButtonVisibility = View.VISIBLE,
+            previewButtonText = previewButtonText,
+            previewButtonVisibility = previewButtonVisibility,
+            skipButtonText = application.getString(R.string.app_home_session_summary_skip_button_text),
+            skipButtonVisibility = skipButtonVisibility,
+        )
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
+    data class ActionButtonsState(
+        val startButtonText: String,
+        val startButtonVisibility: Int,
+        val previewButtonText: String,
+        val previewButtonVisibility: Int,
+        val skipButtonText: String,
+        val skipButtonVisibility: Int
+    )
 
     //FIXME : TMP hardcoded data for now
-    val sessionExercises: Flowable<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel>> =
-        Flowable.create<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel>>({
-            it.onNext(
+    val sessionExercises: Flowable<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel>> =
+        Flowable.combineLatest(
+            selectedSession,
+            _currentBlock
+        ) { selectedSession, currentBlock ->
+            if (selectedSession.value?.name?.contains("Lower") == true) {
                 listOf(
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
-                        nameText = SpannableString("New rep max attempt\nCompetition deadlift").withSpans(
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                        nameText = SpannableString(
+                            "New rep max attempt\nCompetition deadlift"
+                        ).withSpans(
                             "New rep max attempt",
                             RelativeSizeSpan(0.8f),
-                            ForegroundColorSpan(application.getColor(R.color.hypertrophy))
+                            ForegroundColorSpan(
+                                application.getColor(
+                                    currentBlock.value?.type?.colorId ?: R.color.hypertrophy
+                                )
+                            )
                         ),
-                        backgroundColor = application.getColor(R.color.hypertrophyPast),
+                        backgroundColor = ColorUtils.setAlphaComponent(
+                            application.getColor(
+                                currentBlock.value?.type?.colorId ?: R.color.hypertrophy
+                            ), 0x88
+                        ),
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
                         nameText = SpannableString("Pause front squat"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
                         nameText = SpannableString("Pendulum squat"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
                         nameText = SpannableString("Hamstring curl"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
                         nameText = SpannableString("Lunge"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewModel(
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
                         nameText = SpannableString("Calve raise"),
                         backgroundColor = application.getColor(R.color.transparent)
                     )
                 )
-            )
-        }, BackpressureStrategy.LATEST)
+            } else {
+                listOf(
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                        nameText = SpannableString(
+                            "New rep max attempt\nCompetition bench press"
+                        ).withSpans(
+                            "New rep max attempt",
+                            RelativeSizeSpan(0.8f),
+                            ForegroundColorSpan(
+                                application.getColor(
+                                    currentBlock.value?.type?.colorId ?: R.color.hypertrophy
+                                )
+                            )
+                        ),
+                        backgroundColor = ColorUtils.setAlphaComponent(
+                            application.getColor(
+                                currentBlock.value?.type?.colorId ?: R.color.hypertrophy
+                            ), 0x88
+                        ),
+                    ),
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                        nameText = SpannableString("DB rows"),
+                        backgroundColor = application.getColor(R.color.transparent)
+                    ),
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                        nameText = SpannableString("Seated military press"),
+                        backgroundColor = application.getColor(R.color.transparent)
+                    ),
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                        nameText = SpannableString("DB bench"),
+                        backgroundColor = application.getColor(R.color.transparent)
+                    ),
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                        nameText = SpannableString("DB curls"),
+                        backgroundColor = application.getColor(R.color.transparent)
+                    ),
+                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                        nameText = SpannableString("DB skullcrushers"),
+                        backgroundColor = application.getColor(R.color.transparent)
+                    )
+                )
+            }
+        }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 

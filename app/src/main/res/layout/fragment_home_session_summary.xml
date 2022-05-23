@@ -21,52 +21,66 @@
         app:layout_constraintTop_toBottomOf="@id/appBar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.guillaumewilmot.swoleai.view.AnimatedButton
-                android:id="@+id/startButton"
-                style="@style/ButtonMainStyle"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonContainer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/heightButton"
-                android:layout_margin="@dimen/marginSmall"
-                android:text="@string/app_home_session_summary_start_button_text_default"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/marginSmall"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <com.guillaumewilmot.swoleai.view.AnimatedButton
-                android:id="@+id/skipButton"
-                style="@style/ButtonSecondaryStyle"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/heightButton"
-                android:layout_marginStart="@dimen/marginSmall"
-                android:layout_marginTop="@dimen/marginSmall"
-                android:layout_marginBottom="@dimen/marginSmall"
-                android:text="@string/app_home_session_summary_skip_button_text"
-                app:layout_constraintEnd_toStartOf="@id/previewButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/startButton" />
+                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                    android:id="@+id/startButton"
+                    style="@style/ButtonMainStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/heightButton"
+                    android:layout_margin="@dimen/marginSmall"
+                    android:text="@string/app_home_session_summary_start_button_text_default"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.guillaumewilmot.swoleai.view.AnimatedButton
-                android:id="@+id/previewButton"
-                style="@style/ButtonSecondaryStyle"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/heightButton"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="@dimen/marginSmall"
-                android:layout_marginEnd="@dimen/marginSmall"
-                android:layout_marginBottom="@dimen/marginSmall"
-                android:text="@string/app_home_session_summary_preview_button_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/skipButton"
-                app:layout_constraintTop_toBottomOf="@id/startButton" />
+                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                    android:id="@+id/skipButton"
+                    style="@style/ButtonSecondaryStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/heightButton"
+                    android:layout_marginStart="@dimen/marginSmall"
+                    android:layout_marginTop="@dimen/marginSmall"
+                    android:layout_marginBottom="@dimen/marginSmall"
+                    android:text="@string/app_home_session_summary_skip_button_text"
+                    app:layout_constraintEnd_toStartOf="@id/previewButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/startButton" />
+
+                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                    android:id="@+id/previewButton"
+                    style="@style/ButtonSecondaryStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/heightButton"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="@dimen/marginSmall"
+                    android:layout_marginEnd="@dimen/marginSmall"
+                    android:layout_marginBottom="@dimen/marginSmall"
+                    android:text="@string/app_home_session_summary_preview_button_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/skipButton"
+                    app:layout_constraintTop_toBottomOf="@id/startButton" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/overviewText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginSmall"
+                android:layout_marginStart="@dimen/marginSmall"
+                android:layout_marginEnd="@dimen/marginSmall"
                 android:text="@string/app_home_session_summary_overview_text"
                 android:textAlignment="textStart"
                 android:textFontWeight="600"
@@ -74,7 +88,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/previewButton" />
+                app:layout_constraintTop_toBottomOf="@id/buttonContainer" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/exerciseSummary"

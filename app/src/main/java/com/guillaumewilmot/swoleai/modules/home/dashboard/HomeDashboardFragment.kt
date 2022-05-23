@@ -189,7 +189,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         viewModel.weekSessions
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                sessionAdapter?.data = it
+                sessionAdapter?.setDataset(it)
             }
 
         viewModel.weekSummaryCompleteButtonState

@@ -9,6 +9,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
 import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.R
@@ -70,40 +72,49 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         viewModel.sessionStatusState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                this.binding?.appBar?.sessionStatus?.setCardBackgroundColor(it.backgroundColor)
-                this.binding?.appBar?.sessionStatusText?.text = it.text
-                this.binding?.appBar?.sessionStatusText?.setTextColor(it.textColor)
-                this.binding?.appBar?.sessionStatus?.visibility = it.visibility
+                this.binding?.appBar?.sessionStatus?.let { statusView ->
+                    TransitionManager.beginDelayedTransition(statusView, AutoTransition().apply {
+                        duration = 150
+                    })
+
+                    it.text?.let {
+                        this.binding?.appBar?.sessionStatusText?.text = it
+                    }
+                    it.textColor?.let {
+                        this.binding?.appBar?.sessionStatusText?.setTextColor(it)
+                    }
+                    it.backgroundColor?.let {
+                        statusView.setCardBackgroundColor(it)
+                    }
+                    statusView.visibility = it.visibility
+                }
             }
 
         viewModel.sessionExercises
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                exerciseSummaryAdapter?.data = it
+                exerciseSummaryAdapter?.setDataset(it)
             }
 
-        viewModel.startButtonText
+        viewModel.actionButtonsState
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                this.binding?.startButton?.text = it
-            }
+                this.binding?.buttonContainer?.let { buttonContainer ->
+                    TransitionManager.beginDelayedTransition(
+                        buttonContainer,
+                        AutoTransition().apply {
+                            duration = 150
+                        })
 
-        viewModel.previewButtonText
-            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            .subscribe {
-                this.binding?.previewButton?.text = it
-            }
+                    this.binding?.startButton?.visibility = it.startButtonVisibility
+                    this.binding?.startButton?.text = it.startButtonText
 
-        viewModel.skipButtonVisibility
-            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            .subscribe {
-                this.binding?.skipButton?.visibility = it
-            }
+                    this.binding?.previewButton?.visibility = it.previewButtonVisibility
+                    this.binding?.previewButton?.text = it.previewButtonText
 
-        viewModel.previewButtonVisibility
-            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
-            .subscribe {
-                this.binding?.previewButton?.visibility = it
+                    this.binding?.skipButton?.visibility = it.skipButtonVisibility
+                    this.binding?.skipButton?.text = it.skipButtonText
+                }
             }
 
         this.binding = binding

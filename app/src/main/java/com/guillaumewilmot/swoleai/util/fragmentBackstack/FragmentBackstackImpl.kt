@@ -158,10 +158,10 @@ class FragmentBackstackImpl : FragmentBackstack {
         fragmentManager.commit {
             setReorderingAllowed(true)
             setCustomAnimations(
-                R.anim.slide_left_in,
-                R.anim.slide_left_out,
-                R.anim.slide_right_in,
-                R.anim.slide_right_out
+                R.anim.fade_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.fade_out
             )
             if (addToBackStack) {
                 addToBackStack(fragmentTag)

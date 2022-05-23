@@ -61,9 +61,6 @@ class DataStorageImpl constructor(
                 preferences[stringPreferencesKey(key)].asNullable()
             }
             .distinctUntilChanged()
-            .doOnNext {
-                Log.d("DataStorage", "Sending new value downstream for $key: ${it.value.toJson()}")
-            }
             .subscribeOn(Schedulers.io())
     }
 
