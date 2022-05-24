@@ -61,6 +61,9 @@ class DataStorageImpl constructor(
                 preferences[stringPreferencesKey(key)].asNullable()
             }
             .distinctUntilChanged()
+            .doOnNext {
+                Log.d("DataStorage", "Sending new value downstream for $key: ${it.value.toJson()}")
+            }
             .subscribeOn(Schedulers.io())
     }
 
@@ -122,16 +125,32 @@ class DataStorageImpl constructor(
     override val dataHolder by lazy { DataHolderImpl() }
 
     inner class DataHolderImpl : DataHolder {
+
         override val userField: Flowable<Nullable<UserModel>> by lazy {
-            this@DataStorageImpl.fromStorage(DataDefinition.USER)
+            this@DataStorageImpl.fromStorage<UserModel>(DataDefinition.USER)
+                .replay(1)
+                .refCount()
+                .doOnNext {
+                    Log.d("DataStorage", "Sending new replay value downstream $it")
+                }
         }
 
         override val programField: Flowable<Nullable<ProgramModel>> by lazy {
-            this@DataStorageImpl.fromStorage(DataDefinition.PROGRAM)
+            this@DataStorageImpl.fromStorage<ProgramModel>(DataDefinition.PROGRAM)
+                .replay(1)
+                .refCount()
+                .doOnNext {
+                    Log.d("DataStorage", "Sending new replay value downstream $it")
+                }
         }
 
         override val selectedSessionIdField: Flowable<Nullable<Int>> by lazy {
-            this@DataStorageImpl.fromStorage(DataDefinition.SELECTED_SESSION_ID)
+            this@DataStorageImpl.fromStorage<Int>(DataDefinition.SELECTED_SESSION_ID)
+                .replay(1)
+                .refCount()
+                .doOnNext {
+                    Log.d("DataStorage", "Sending new replay value downstream $it")
+                }
         }
     }
 }

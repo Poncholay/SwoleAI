@@ -33,8 +33,10 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
     lateinit var fragmentBackstack: FragmentBackstack
 
     private val viewModel: HomeSessionSummaryViewModel by viewModels()
-    private val exerciseSummaryAdapter: ExerciseSummaryAdapter?
-        get() = binding?.exerciseSummary?.adapter as? ExerciseSummaryAdapter
+
+    private val exerciseSummaryAdapter by lazy {
+        ExerciseSummaryAdapter()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -93,7 +95,7 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         viewModel.sessionExercises
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                exerciseSummaryAdapter?.setDataset(it)
+                exerciseSummaryAdapter.setDataset(it)
             }
 
         viewModel.actionButtonsState
@@ -156,7 +158,7 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
         binding?.exerciseSummary?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
-            adapter = ExerciseSummaryAdapter()
+            adapter = exerciseSummaryAdapter
         }
     }
 

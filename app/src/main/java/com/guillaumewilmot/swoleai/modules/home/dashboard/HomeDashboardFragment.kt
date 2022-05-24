@@ -48,8 +48,9 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
     lateinit var fragmentBackstack: FragmentBackstack
 
     private val viewModel: HomeDashboardViewModel by viewModels()
-    private val sessionAdapter: SessionAdapter?
-        get() = binding?.weekSessions?.adapter as? SessionAdapter
+    private val sessionAdapter by lazy {
+        SessionAdapter()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,7 +190,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         viewModel.weekSessions
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
-                sessionAdapter?.setDataset(it)
+                sessionAdapter.setDataset(it)
             }
 
         viewModel.weekSummaryCompleteButtonState
@@ -239,7 +240,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
         binding?.weekSessions?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
-            adapter = SessionAdapter().apply {
+            adapter = sessionAdapter.apply {
                 getIndexClickedObservable()
                     .switchMap { indexClicked ->
                         viewModel.onSessionSelected(indexClicked).toObservable()
