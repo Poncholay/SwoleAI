@@ -186,9 +186,9 @@
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:clipToPadding="false"
                             android:orientation="horizontal"
-                            android:paddingStart="@dimen/marginSmall"
-                            android:paddingEnd="8dp">
+                            android:paddingStart="@dimen/marginSmall">
 
                             <TextView
                                 android:id="@+id/weekTitle"
@@ -218,37 +218,63 @@
                                 app:tint="@color/textSecondary"
                                 tools:visibility="visible" />
 
-                            <ImageButton
-                                android:id="@+id/previousWeekButton"
+                            <LinearLayout
+                                android:id="@+id/navigationContainer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/marginSmall"
-                                android:layout_marginEnd="@dimen/marginSmall"
-                                android:background="?selectableItemBackgroundBorderless"
-                                android:contentDescription="@string/app_home_dashboard_week_summary_previous_week_button_content_description"
-                                android:padding="8dp"
-                                android:src="@drawable/icon_arrow"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/nextWeekButton"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/textSecondary" />
-
-                            <ImageButton
-                                android:id="@+id/nextWeekButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/marginRegular"
-                                android:background="?selectableItemBackgroundBorderless"
-                                android:contentDescription="@string/app_home_dashboard_week_summary_next_week_button_content_description"
-                                android:padding="8dp"
-                                android:rotation="180"
-                                android:src="@drawable/icon_arrow"
+                                android:clipToPadding="false"
+                                android:gravity="end"
+                                android:orientation="vertical"
+                                android:paddingStart="@dimen/marginTiny"
+                                android:paddingTop="@dimen/marginTiny"
+                                android:paddingEnd="@dimen/marginTiny"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/textSecondary" />
+                                app:layout_constraintVertical_bias="1">
+
+                                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                                    android:id="@+id/goToActiveWeekButton"
+                                    style="@style/ButtonSecondaryStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingStart="@dimen/marginSmall"
+                                    android:paddingTop="4dp"
+                                    android:paddingEnd="@dimen/marginSmall"
+                                    android:paddingBottom="4dp"
+                                    android:text="@string/app_home_session_summary_go_to_active_session_button_text"
+                                    android:textFontWeight="600"
+                                    android:visibility="invisible"
+                                    tools:visibility="visible" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/marginTiny"
+                                    android:orientation="horizontal">
+
+                                    <ImageButton
+                                        android:id="@+id/previousWeekButton"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="?selectableItemBackgroundBorderless"
+                                        android:contentDescription="@string/app_home_dashboard_week_summary_previous_week_button_content_description"
+                                        android:padding="8dp"
+                                        android:src="@drawable/icon_arrow"
+                                        app:tint="@color/textSecondary" />
+
+                                    <ImageButton
+                                        android:id="@+id/nextWeekButton"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="?selectableItemBackgroundBorderless"
+                                        android:contentDescription="@string/app_home_dashboard_week_summary_next_week_button_content_description"
+                                        android:padding="8dp"
+                                        android:rotation="180"
+                                        android:src="@drawable/icon_arrow"
+                                        app:tint="@color/textSecondary" />
+                                </LinearLayout>
+                            </LinearLayout>
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.recyclerview.widget.RecyclerView

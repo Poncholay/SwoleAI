@@ -32,8 +32,7 @@ class CanInteractWithProgramImpl(private val dataStorage: DataStorage) : CanInte
         programSessions,
         _selectedSessionId
     ) { sessions, selectedSessionId ->
-        val id = selectedSessionId.value
-        sessions.find { id != null && it.id == id }.asNullable()
+        sessions.find { it.id == selectedSessionId }.asNullable()
     }.distinctUntilChanged()
 
     override val activeSession: Flowable<Nullable<SessionModel>> = programSessions.map { sessions ->
@@ -41,6 +40,10 @@ class CanInteractWithProgramImpl(private val dataStorage: DataStorage) : CanInte
             it.status == SessionModel.Status.ACTIVE
         }.asNullable()
     }
+
+    /**
+     * Getters
+     */
 
     override fun getProgramBlockFromProgramWeek(
         weekFlowable: Flowable<Nullable<ProgramWeekModel>>
@@ -59,6 +62,18 @@ class CanInteractWithProgramImpl(private val dataStorage: DataStorage) : CanInte
     ) { session, programWeeks ->
         getProgramWeekFromSession(session.value, programWeeks).asNullable()
     }.distinctUntilChanged()
+
+    /**
+     * Select active session
+     */
+
+    override fun selectActiveSession(): Completable = activeSession
+        .take(1)
+        .switchMapCompletable { activeSession ->
+            dataStorage.toStorage(DataDefinition.SELECTED_SESSION_ID, activeSession.value?.id)
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
 
     /**
      * Insert session

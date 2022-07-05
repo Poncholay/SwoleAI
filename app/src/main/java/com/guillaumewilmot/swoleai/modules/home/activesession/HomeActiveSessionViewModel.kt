@@ -1,6 +1,7 @@
 package com.guillaumewilmot.swoleai.modules.home.activesession
 
 import android.app.Application
+import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentViewModel
 import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgram
 import com.guillaumewilmot.swoleai.modules.home.program.CanInteractWithProgramImpl
@@ -21,7 +22,9 @@ class HomeActiveSessionViewModel @Inject constructor(
     CanInteractWithProgram by CanInteractWithProgramImpl(dataStorage) {
 
     val toolbarActiveSessionText: Flowable<String> = activeSession.map { activeSession ->
-        activeSession.value?.name ?: ""
+        activeSession.value?.let {
+            application.getString(R.string.app_session_day_name, it.fullName)
+        } ?: ""
     }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

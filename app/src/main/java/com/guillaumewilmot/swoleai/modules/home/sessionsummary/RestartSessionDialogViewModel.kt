@@ -38,6 +38,7 @@ class RestartSessionDialogViewModel @Inject constructor(
             val updatedSession = SessionModel(
                 id = sessionToUpdate.id,
                 weekId = sessionToUpdate.weekId,
+                day = sessionToUpdate.day,
                 name = sessionToUpdate.name,
                 isComplete = false,
                 isSkipped = false,

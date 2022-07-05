@@ -29,4 +29,5 @@
     <dimen name="heightSettingsOption">56dp</dimen>
     <dimen name="cornerRadiusCardView">8dp</dimen>
     <dimen name="elevationCardView">8dp</dimen>
+    <dimen name="elevationButtonSecondary">4dp</dimen>
 </resources>

@@ -35,7 +35,8 @@ data class ProgramWeekModel(
             SessionModel(
                 id = FakeProgram.generateSessionindex++,
                 weekId = id,
-                name = "Day 1 - Lower body",
+                day = 1,
+                name = "Lower body",
                 isComplete = date.before(Date()),
                 isSkipped = false,
                 isActive = false,
@@ -44,7 +45,8 @@ data class ProgramWeekModel(
             SessionModel(
                 id = FakeProgram.generateSessionindex++,
                 weekId = id,
-                name = "Day 2 - Upper body",
+                day = 2,
+                name = "Upper body",
                 isComplete = date.plusDays(2).before(Date()),
                 isSkipped = false,
                 isActive = false,
@@ -53,7 +55,8 @@ data class ProgramWeekModel(
             SessionModel(
                 id = FakeProgram.generateSessionindex++,
                 weekId = id,
-                name = "Day 3 - Lower body",
+                day = 3,
+                name = "Lower body",
                 isComplete = date.plusDays(3).before(Date()),
                 isSkipped = false,
                 isActive = false,
@@ -62,7 +65,8 @@ data class ProgramWeekModel(
             SessionModel(
                 id = FakeProgram.generateSessionindex++,
                 weekId = id,
-                name = "Day 4 - Upper body",
+                day = 4,
+                name = "Upper body",
                 isComplete = date.plusDays(5).before(Date()),
                 isSkipped = false,
                 isActive = false,

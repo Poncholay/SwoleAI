@@ -23,5 +23,7 @@ interface CanInteractWithProgram {
         weekFlowable: Flowable<Nullable<ProgramWeekModel>>
     ): Flowable<Nullable<ProgramBlockModel>>
 
+    fun selectActiveSession(): Completable
+
     fun insertSession(newSession: SessionModel): Completable
 }

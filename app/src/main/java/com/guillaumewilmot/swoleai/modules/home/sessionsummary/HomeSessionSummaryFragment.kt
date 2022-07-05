@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.clearFragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
+import autodispose2.androidx.lifecycle.autoDispose
 import autodispose2.autoDispose
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
@@ -36,6 +38,14 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
 
     private val exerciseSummaryAdapter by lazy {
         ExerciseSummaryAdapter()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.refreshSelectedSession()
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe()
     }
 
     override fun onDestroyView() {
@@ -92,6 +102,12 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
                 }
             }
 
+        viewModel.goToActiveSessionButtonVisibility
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                this.binding?.appBar?.goToActiveSessionButton?.visibility = it
+            }
+
         viewModel.sessionExercises
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
@@ -132,13 +148,19 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
             R.string.app_home_session_summary_toolbar_text
         )
 
+        binding?.appBar?.goToActiveSessionButton?.setOnClickListener {
+            viewModel.goToActiveSession()
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                .subscribe()
+        }
+
         binding?.appBar?.nextSessionButton?.setOnClickListener {
-            viewModel.nextSession()
+            viewModel.goToNextSession()
                 .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe()
         }
         binding?.appBar?.previousSessionButton?.setOnClickListener {
-            viewModel.previousSession()
+            viewModel.goToPreviousSession()
                 .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                 .subscribe()
         }

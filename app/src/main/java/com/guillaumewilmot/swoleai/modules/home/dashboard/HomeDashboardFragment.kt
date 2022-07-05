@@ -55,8 +55,7 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //FIXME : TMP, should be done when we generate the real program
-        viewModel.preselectSelectedSession()
+        viewModel.refreshViewedWeek()
             .autoDispose(this, Lifecycle.Event.ON_DESTROY)
             .subscribe()
     }
@@ -187,6 +186,12 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
                 }
             }
 
+        viewModel.goToActiveWeekButtonVisibility
+            .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+            .subscribe {
+                this.binding?.goToActiveWeekButton?.visibility = it
+            }
+
         viewModel.weekSessions
             .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
             .subscribe {
@@ -258,6 +263,11 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
 
         binding?.programReviewButton?.setOnClickListener {
             //TODO
+        }
+        binding?.goToActiveWeekButton?.setOnClickListener {
+            viewModel.goToActiveWeek()
+                .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                .subscribe()
         }
         binding?.nextWeekButton?.setOnClickListener {
             viewModel.goToNextWeek()

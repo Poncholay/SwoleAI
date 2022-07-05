@@ -8,6 +8,8 @@ data class SessionModel(
     val id: Int,
     @SerializedName("weekId")
     val weekId: Int,
+    @SerializedName("day")
+    val day: Int,
     @SerializedName("name")
     val name: String,
     @SerializedName("isComplete")
@@ -19,6 +21,9 @@ data class SessionModel(
     @SerializedName("exercises")
     val exercises: List<SessionExerciseModel>
 ) : Serializable {
+
+    val fullName: String
+        get() = "$day - $name"
 
     val status: Status
         get() = when {

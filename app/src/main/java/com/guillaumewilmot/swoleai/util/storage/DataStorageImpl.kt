@@ -25,7 +25,7 @@ class DataStorageImpl constructor(
     private val applicationContext: Context
 ) : DataStorage {
     private val Context.rxDataStore: RxDataStore<Preferences> by rxPreferencesDataStore(
-        name = "AppStorage", //Down the road it might be worth it to open more than one file
+        name = "AppStorage",
         scheduler = Schedulers.single() //Allows save operation to be done in order
     )
     private val gson by lazy { Gson() }
@@ -97,7 +97,7 @@ class DataStorageImpl constructor(
      * Set
      */
 
-    private fun putStringRx(key: String, value: String): Completable {
+    private fun putString(key: String, value: String): Completable {
         return applicationContext.rxDataStore
             .updateDataAsync { preferences ->
                 val mutablePreferences = preferences.toMutablePreferences()
@@ -115,7 +115,7 @@ class DataStorageImpl constructor(
 
     override fun <T> toStorage(dataDefinition: DataDefinition, obj: T): Completable {
         val jsonValue = obj.toJson() ?: ""
-        return putStringRx(dataDefinition.key, jsonValue)
+        return putString(dataDefinition.key, jsonValue)
     }
 
     /**
@@ -126,31 +126,20 @@ class DataStorageImpl constructor(
 
     inner class DataHolderImpl : DataHolder {
 
+        private fun <T : Any> cacheLatest(flowable: Flowable<T>) = flowable
+            .replay(1)
+            .refCount()
+
         override val userField: Flowable<Nullable<UserModel>> by lazy {
-            this@DataStorageImpl.fromStorage<UserModel>(DataDefinition.USER)
-                .replay(1)
-                .refCount()
-                .doOnNext {
-                    Log.d("DataStorage", "Sending new replay value downstream $it")
-                }
+            cacheLatest(fromStorage(DataDefinition.USER))
         }
 
         override val programField: Flowable<Nullable<ProgramModel>> by lazy {
-            this@DataStorageImpl.fromStorage<ProgramModel>(DataDefinition.PROGRAM)
-                .replay(1)
-                .refCount()
-                .doOnNext {
-                    Log.d("DataStorage", "Sending new replay value downstream $it")
-                }
+            cacheLatest(fromStorage(DataDefinition.PROGRAM))
         }
 
-        override val selectedSessionIdField: Flowable<Nullable<Int>> by lazy {
-            this@DataStorageImpl.fromStorage<Int>(DataDefinition.SELECTED_SESSION_ID)
-                .replay(1)
-                .refCount()
-                .doOnNext {
-                    Log.d("DataStorage", "Sending new replay value downstream $it")
-                }
+        override val selectedSessionIdField: Flowable<Int> by lazy {
+            cacheLatest(fromStorageOrDefault(DataDefinition.SELECTED_SESSION_ID, 0))
         }
     }
 }

@@ -4,14 +4,12 @@
     android:id="@+id/appBar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/backgroundToolbar"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
         android:id="@+id/collapsingToolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:contentScrim="@color/backgroundToolbar"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:statusBarScrim="@color/transparent">
 
@@ -19,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/backgroundCardView"
-            app:layout_collapseMode="parallax"
-            tools:elevation="8dp">
+            app:layout_collapseMode="parallax">
 
             <View
                 android:id="@+id/marginView"
@@ -37,83 +34,101 @@
                 android:padding="@dimen/marginSmall"
                 android:textAlignment="textStart"
                 android:textColor="@color/textPrimary"
+                android:textFontWeight="600"
                 android:textSize="@dimen/textParagraphPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/previousSessionButton"
-                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintEnd_toStartOf="@id/rightContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/marginView"
-                app:layout_constraintVertical_bias="1"
-                tools:text="Hypertrophy\nWeek4\nDay 1 - Lower body"
-                tools:textSize="@dimen/textParagraphTitle" />
+                tools:text="Hypertrophy\nWeek 4 - Day 1\nLower body"
+                tools:textSize="@dimen/textParagraphTitleBig" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/sessionStatus"
+            <LinearLayout
+                android:id="@+id/rightContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginSmall"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cornerRadiusCardView"
-                app:cardElevation="@dimen/elevationCardView"
+                android:clipToPadding="false"
+                android:gravity="end"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/marginTiny"
+                android:paddingTop="@dimen/marginSmall"
+                android:paddingEnd="@dimen/marginTiny"
+                android:paddingBottom="@dimen/marginTiny"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/selectedSessionText"
                 app:layout_constraintTop_toBottomOf="@id/marginView"
-                tools:visibility="visible">
+                app:layout_constraintVertical_bias="0">
 
-                <TextView
-                    android:id="@+id/sessionStatusText"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/sessionStatus"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/marginTiny"
+                    android:visibility="invisible"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/cornerRadiusCardView"
+                    app:cardElevation="0dp"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/sessionStatusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/marginSmall"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="@dimen/marginSmall"
+                        android:paddingBottom="4dp"
+                        android:textFontWeight="600"
+                        tools:background="@color/hypertrophyPast"
+                        tools:text="Active"
+                        tools:textColor="@color/hypertrophy" />
+                </androidx.cardview.widget.CardView>
+
+                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                    android:id="@+id/goToActiveSessionButton"
+                    style="@style/ButtonSecondaryStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginSmall"
+                    android:layout_marginEnd="@dimen/marginTiny"
                     android:paddingStart="@dimen/marginSmall"
                     android:paddingTop="4dp"
                     android:paddingEnd="@dimen/marginSmall"
                     android:paddingBottom="4dp"
+                    android:text="@string/app_home_session_summary_go_to_active_session_button_text"
                     android:textFontWeight="600"
-                    tools:background="@color/hypertrophyPast"
-                    tools:text="Active"
-                    tools:textColor="@color/hypertrophy" />
-            </androidx.cardview.widget.CardView>
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
 
-            <ImageButton
-                android:id="@+id/previousSessionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/marginSmall"
-                android:layout_marginTop="@dimen/marginTiny"
-                android:layout_marginEnd="@dimen/marginSmall"
-                android:layout_marginBottom="@dimen/marginSmall"
-                android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="@string/app_home_dashboard_week_summary_previous_week_button_content_description"
-                android:padding="8dp"
-                android:src="@drawable/icon_arrow"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/nextSessionButton"
-                app:layout_constraintTop_toBottomOf="@id/sessionStatus"
-                app:layout_constraintVertical_bias="1"
-                app:tint="@color/textSecondary" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginTiny">
 
-            <ImageButton
-                android:id="@+id/nextSessionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/marginRegular"
-                android:layout_marginTop="@dimen/marginTiny"
-                android:layout_marginEnd="@dimen/marginTiny"
-                android:layout_marginBottom="@dimen/marginSmall"
-                android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="@string/app_home_dashboard_week_summary_next_week_button_content_description"
-                android:padding="8dp"
-                android:rotation="180"
-                android:src="@drawable/icon_arrow"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sessionStatus"
-                app:layout_constraintVertical_bias="1"
-                app:tint="@color/textSecondary" />
+                    <ImageButton
+                        android:id="@+id/previousSessionButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/app_home_dashboard_week_summary_previous_week_button_content_description"
+                        android:padding="8dp"
+                        android:src="@drawable/icon_arrow"
+                        app:tint="@color/textSecondary" />
 
+                    <ImageButton
+                        android:id="@+id/nextSessionButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/app_home_dashboard_week_summary_next_week_button_content_description"
+                        android:padding="8dp"
+                        android:rotation="180"
+                        android:src="@drawable/icon_arrow"
+                        app:tint="@color/textSecondary" />
+                </LinearLayout>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--This view is here to prevent content being seen under the navigation bar-->
@@ -129,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/heightToolbar"
             android:background="@color/backgroundToolbar"
-            android:elevation="8dp"
+            android:elevation="16dp"
             android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
             app:contentInsetStart="0dp"
             app:layout_collapseMode="pin"

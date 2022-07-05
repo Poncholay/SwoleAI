@@ -9,6 +9,7 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.LimitLine
@@ -90,18 +91,17 @@ class HomeDashboardViewModel @Inject constructor(
         )
     }, BackpressureStrategy.LATEST)
 
-    //FIXME : TMP hardcoded data, should be stored
-    private val _currentWeekIndexSubject = BehaviorSubject.createDefault(2)
-    private val _currentWeekIndex = _currentWeekIndexSubject.toFlowable(BackpressureStrategy.LATEST)
+    private val _viewedWeekIdSubject = BehaviorSubject.createDefault(1)
+    private val _viewedWeekId = _viewedWeekIdSubject.toFlowable(BackpressureStrategy.LATEST)
 
-    private val _currentWeek: Flowable<Nullable<ProgramWeekModel>> = Flowable.combineLatest(
+    private val _viewedWeek: Flowable<Nullable<ProgramWeekModel>> = Flowable.combineLatest(
         programWeeks,
-        _currentWeekIndex
-    ) { programWeeks, currentWeekIndex ->
-        programWeeks.getOrNull(currentWeekIndex).asNullable()
+        _viewedWeekId
+    ) { programWeeks, viewedWeekIndex ->
+        programWeeks.find { it.id == viewedWeekIndex }.asNullable()
     }.distinctUntilChanged()
 
-    private val _currentBlock = getProgramBlockFromProgramWeek(_currentWeek)
+    private val _viewedBlock = getProgramBlockFromProgramWeek(_viewedWeek)
 
     /**
      * FATIGUE CHART
@@ -227,13 +227,13 @@ class HomeDashboardViewModel @Inject constructor(
 
     private val _programChartVolumeDataSet: Flowable<BarData> = Flowable.combineLatest(
         programBlocks,
-        _currentWeek
-    ) { programBlocks, currentWeek ->
+        _viewedWeek
+    ) { programBlocks, viewedWeek ->
         BarData().apply {
             var index = 0
             fun createDataset(
                 weeksData: List<ProgramWeekModel>,
-                barColor: Int,
+                barBackgroundColor: Int,
                 barBorderColor: Int
             ) = BarDataSet(
                 weeksData.map { programWeek ->
@@ -242,15 +242,15 @@ class HomeDashboardViewModel @Inject constructor(
                 ""
             ).apply {
                 setDrawValues(false)
-                color = barColor
+                color = barBackgroundColor
                 barBorderWidth = application.pixelToDp(3f)
                 this.barBorderColor = barBorderColor
             }
 
-            val pivotDate = currentWeek.value?.date ?: Date(0)
+            val pivotDate = viewedWeek.value?.date ?: Date(0)
 
             programBlocks.forEach { programBlock ->
-                val currentColor = application.getColor(
+                val borderColor = application.getColor(
                     when (programBlock.type) {
                         ProgramBlockModel.BlockType.HYPERTROPHY -> R.color.hypertrophy
                         ProgramBlockModel.BlockType.STRENGTH -> R.color.strength
@@ -264,14 +264,8 @@ class HomeDashboardViewModel @Inject constructor(
                 }.takeIf {
                     it.isNotEmpty()
                 }?.let {
-                    val pastColor = application.getColor(
-                        when (programBlock.type) {
-                            ProgramBlockModel.BlockType.HYPERTROPHY -> R.color.hypertrophyPast
-                            ProgramBlockModel.BlockType.STRENGTH -> R.color.strengthPast
-                            ProgramBlockModel.BlockType.PEAKING -> R.color.peakingPast
-                        }
-                    )
-                    addDataSet(createDataset(it, pastColor, currentColor))
+                    val backgroundColor = ColorUtils.setAlphaComponent(borderColor, 0x88)
+                    addDataSet(createDataset(it, backgroundColor, borderColor))
                 }
 
                 //Current
@@ -280,7 +274,7 @@ class HomeDashboardViewModel @Inject constructor(
                 }.takeIf {
                     it.isNotEmpty()
                 }?.let {
-                    addDataSet(createDataset(it, currentColor, currentColor))
+                    addDataSet(createDataset(it, barBackgroundColor = borderColor, borderColor))
                 }
 
                 //Future
@@ -289,8 +283,8 @@ class HomeDashboardViewModel @Inject constructor(
                 }.takeIf {
                     it.isNotEmpty()
                 }?.let {
-                    val futureColor = application.getColor(R.color.transparent)
-                    addDataSet(createDataset(it, futureColor, currentColor))
+                    val backgroundColor = application.getColor(R.color.transparent)
+                    addDataSet(createDataset(it, backgroundColor, borderColor))
                 }
             }
 
@@ -315,7 +309,9 @@ class HomeDashboardViewModel @Inject constructor(
                 .apply {
                     add(
                         LegendEntry(
-                            application.getString(R.string.app_home_dashboard_program_summary_chart_legend_intensity),
+                            application.getString(
+                                R.string.app_home_dashboard_program_summary_chart_legend_intensity
+                            ),
                             Legend.LegendForm.LINE,
                             Float.NaN,
                             1f,
@@ -348,27 +344,27 @@ class HomeDashboardViewModel @Inject constructor(
 
     val weekSummaryTitle: Flowable<SpannableString> =
         Flowable.combineLatest(
-            _currentWeek,
-            _currentBlock
-        ) { currentWeek, currentBlock ->
-            if (currentBlock.value == null || currentWeek.value == null) {
+            _viewedWeek,
+            _viewedBlock
+        ) { viewedWeek, viewedBlock ->
+            if (viewedBlock.value == null || viewedWeek.value == null) {
                 return@combineLatest SpannableString("Empty")
             }
 
-            val now = currentWeek.value.date
-            val blockType = application.getString(currentBlock.value.type.nameId)
+            val now = viewedWeek.value.date
+            val blockType = application.getString(viewedBlock.value.type.nameId)
             val currentDate = DateHelper.withFormat(
                 now,
                 DateHelper.DATE_FORMAT_MONTH_DAY,
                 application.getUserLocale()
             )
-            val weekNumber = currentWeek.value.name
+            val weekNumber = viewedWeek.value.name
 
             val title = "$blockType\n$currentDate\n$weekNumber"
             SpannableString(title)
                 .withSpans(
                     title,
-                    ForegroundColorSpan(application.getColor(currentBlock.value.type.colorId))
+                    ForegroundColorSpan(application.getColor(viewedBlock.value.type.colorId))
                 )
                 .withSpans(
                     weekNumber,
@@ -379,11 +375,11 @@ class HomeDashboardViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    private val _weekSummaryIsCompleteIconVisibility: Flowable<Int> = _currentWeek.map {
+    private val _weekSummaryIsCompleteIconVisibility: Flowable<Int> = _viewedWeek.map {
         if (it.value?.isComplete == true) View.VISIBLE else View.GONE
     }
 
-    private val _weekSummaryIsCompleteIconColor: Flowable<Int> = _currentBlock.map {
+    private val _weekSummaryIsCompleteIconColor: Flowable<Int> = _viewedBlock.map {
         application.getColor(it.value?.type?.colorId ?: R.color.textPrimary)
     }
 
@@ -402,30 +398,49 @@ class HomeDashboardViewModel @Inject constructor(
         val iconColor: Int
     )
 
+    //TODO : goToActiveWeek
+    val goToActiveWeekButtonVisibility: Flowable<Int> = Flowable.combineLatest(
+        _viewedWeek,
+        activeSession
+    ) { viewedWeek, activeSession ->
+        if (activeSession.value != null && viewedWeek.value != null &&
+            activeSession.value.weekId != viewedWeek.value.id
+        ) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
+    }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
+
     val weekSessions: Flowable<List<SessionAdapter.SessionViewHolder.ViewDataModel>> =
         Flowable.combineLatest(
-            _currentWeek,
-            _currentBlock
-        ) { currentWeek, currentBlock ->
+            _viewedWeek,
+            _viewedBlock
+        ) { viewedWeek, viewedBlock ->
             val textColor = application.getColor(R.color.textPrimary)
             val textColorCompleted = application.getColor(R.color.textTertiary)
             val textColorSkipped = application.getColor(R.color.textQuaternary)
-            val textColorActive = currentBlock.value?.type?.colorId?.let {
+            val textColorActive = viewedBlock.value?.type?.colorId?.let {
                 application.getColor(it)
             } ?: textColor
 
-            currentWeek.value?.sessions?.map { session ->
+            viewedWeek.value?.sessions?.map { session ->
+                val sessionName =
+                    application.getString(R.string.app_session_day_name, session.fullName)
                 SessionAdapter.SessionViewHolder.ViewDataModel(
                     nameText = when (session.status) {
                         SessionModel.Status.ACTIVE -> application.getString(
                             R.string.app_home_dashboard_week_summary_session_active_text,
-                            session.name
+                            sessionName
                         )
                         SessionModel.Status.SKIPPED -> application.getString(
                             R.string.app_home_dashboard_week_summary_session_skipped_text,
-                            session.name
+                            sessionName
                         )
-                        else -> session.name
+                        else -> sessionName
                     },
                     nameTextColor = when (session.status) {
                         SessionModel.Status.COMPLETE -> textColorCompleted
@@ -445,15 +460,19 @@ class HomeDashboardViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    private val _weekSummaryCompleteButtonText: Flowable<String> = _currentWeek.map {
+    private val _weekSummaryCompleteButtonText: Flowable<String> = _viewedWeek.map {
         if (it.value?.isComplete == true) {
-            application.getString(R.string.app_home_dashboard_week_summary_complete_week_button_text_completed)
+            application.getString(
+                R.string.app_home_dashboard_week_summary_complete_week_button_text_completed
+            )
         } else {
-            application.getString(R.string.app_home_dashboard_week_summary_complete_week_button_text_incomplete)
+            application.getString(
+                R.string.app_home_dashboard_week_summary_complete_week_button_text_incomplete
+            )
         }
     }
 
-    private val _weekSummaryCompleteButtonBackgroundId: Flowable<Int> = _currentWeek.map {
+    private val _weekSummaryCompleteButtonBackgroundId: Flowable<Int> = _viewedWeek.map {
         if (it.value?.isComplete == true) {
             R.drawable.background_button_success
         } else {
@@ -461,7 +480,7 @@ class HomeDashboardViewModel @Inject constructor(
         }
     }
 
-    private val _weekSummaryCompleteButtonIsEnabled: Flowable<Boolean> = _currentWeek.map {
+    private val _weekSummaryCompleteButtonIsEnabled: Flowable<Boolean> = _viewedWeek.map {
         it.value?.sessions?.all { session ->
             session.status == SessionModel.Status.COMPLETE
         } == true
@@ -487,12 +506,24 @@ class HomeDashboardViewModel @Inject constructor(
      * LOGIC
      */
 
-    fun goToPreviousWeek(): Completable = _currentWeekIndexSubject
+    fun goToActiveWeek(): Completable = activeSession
         .linkToLoader(this)
         .take(1)
-        .switchMapCompletable { currentWeekIndex ->
-            if (currentWeekIndex > 0) {
-                _currentWeekIndexSubject.onNext(currentWeekIndex - 1)
+        .switchMapCompletable { activeSession ->
+            activeSession.value?.weekId?.let {
+                _viewedWeekIdSubject.onNext(it)
+            }
+            Completable.complete()
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(Schedulers.io())
+
+    fun goToPreviousWeek(): Completable = _viewedWeekIdSubject
+        .linkToLoader(this)
+        .take(1)
+        .switchMapCompletable { viewedWeekIndex ->
+            if (viewedWeekIndex > 1) {
+                _viewedWeekIdSubject.onNext(viewedWeekIndex - 1)
             }
             Completable.complete()
         }
@@ -500,16 +531,16 @@ class HomeDashboardViewModel @Inject constructor(
         .observeOn(Schedulers.io())
 
     fun goToNextWeek(): Completable = Flowable.combineLatest(
-        _currentWeekIndex,
+        _viewedWeekId,
         programWeeks
-    ) { currentWeekIndex, programWeeks ->
-        Pair(currentWeekIndex, programWeeks)
+    ) { viewedWeekIndex, programWeeks ->
+        Pair(viewedWeekIndex, programWeeks)
     }
         .linkToLoader(this)
         .take(1)
-        .switchMapCompletable { (currentWeekIndex, programWeeks) ->
-            if (currentWeekIndex + 1 < programWeeks.size) {
-                _currentWeekIndexSubject.onNext(currentWeekIndex + 1)
+        .switchMapCompletable { (viewedWeekIndex, programWeeks) ->
+            if (viewedWeekIndex + 1 <= programWeeks.maxOf { it.id }) {
+                _viewedWeekIdSubject.onNext(viewedWeekIndex + 1)
             }
             Completable.complete()
         }
@@ -517,15 +548,15 @@ class HomeDashboardViewModel @Inject constructor(
         .observeOn(Schedulers.io())
 
     fun onSessionSelected(index: Int): Flowable<Boolean> = Flowable.combineLatest(
-        _currentWeek,
+        _viewedWeek,
         activeSession
-    ) { currentWeek, activeSession ->
-        Pair(currentWeek, activeSession)
+    ) { viewedWeek, activeSession ->
+        Pair(viewedWeek, activeSession)
     }
         .linkToLoader(this)
         .take(1)
-        .switchMap { (currentWeek, activeSession) ->
-            val session = currentWeek.value?.sessions?.getOrNull(index)
+        .switchMap { (viewedWeek, activeSession) ->
+            val session = viewedWeek.value?.sessions?.getOrNull(index)
             val activeSessionId = activeSession.value?.id
             val shouldGoBackToRoot = activeSessionId == null || activeSessionId != session?.id
             dataStorage.toStorage(DataDefinition.SELECTED_SESSION_ID, session?.id)
@@ -536,24 +567,37 @@ class HomeDashboardViewModel @Inject constructor(
 
     fun completeWeek(): Completable = Completable.complete() //TODO
 
-    //FIXME : TMP, should be done when we generate the real program
-    fun preselectSelectedSession(): Completable = Flowable.combineLatest(
-        dataStorage.dataHolder.selectedSessionIdField,
-        _currentWeek,
-    ) { selectedSessionId, currentWeek ->
-        Pair(selectedSessionId, currentWeek)
+    /**
+     * Ensures the selected viewed week is always up to date.
+     * The selected week will be the first to match one of these conditions in order:
+     * Week contains selected session
+     * Week contains active session
+     * Week is not complete
+     */
+    fun refreshViewedWeek(): Completable = Flowable.combineLatest(
+        activeSession,
+        selectedSession,
+        programWeeks
+    ) { activeSession, selectedSession, programWeeks ->
+        Triple(activeSession, selectedSession, programWeeks)
     }
         .linkToLoader(this)
         .take(1)
-        .switchMapCompletable { (selectedSessionId, currentWeek) ->
-            if (selectedSessionId.value == null) {
-                dataStorage.toStorage(
-                    DataDefinition.SELECTED_SESSION_ID,
-                    currentWeek.value?.sessions?.getOrNull(0)?.id
+        .switchMapCompletable { (activeSession, selectedSession, programWeeks) ->
+            when {
+                selectedSession.value != null -> _viewedWeekIdSubject.onNext(
+                    selectedSession.value.weekId
                 )
-            } else {
-                Completable.complete()
+                activeSession.value != null -> _viewedWeekIdSubject.onNext(
+                    activeSession.value.weekId
+                )
+                else -> programWeeks.find {
+                    !it.isComplete
+                }?.id?.let { id ->
+                    _viewedWeekIdSubject.onNext(id)
+                }
             }
+            Completable.complete()
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

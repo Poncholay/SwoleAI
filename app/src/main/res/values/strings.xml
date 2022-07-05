@@ -51,6 +51,7 @@
     <string name="app_home_session_summary_start_button_text_skipped">Restart session</string>
     <string name="app_home_session_summary_start_button_text_completed">Restart session</string>
     <string name="app_home_session_summary_start_button_text_default">Start session</string>
+    <string name="app_home_session_summary_go_to_active_session_button_text">To Active</string>
     <string name="app_home_session_summary_skip_button_text">Skip session</string>
     <string name="app_home_session_summary_preview_button_text">Preview session</string>
     <string name="app_home_session_summary_preview_button_text_completed">Review session</string>
@@ -90,6 +91,7 @@
     <string name="app_session_status_active">Active</string>
     <string name="app_session_status_skipped">Skipped</string>
     <string name="app_session_status_completed">Completed</string>
+    <string name="app_session_day_name">Day %1$s</string>
 
     <plurals name="app_home_dashboard_program_summary_days_remaining_text">
         <item quantity="one">Hi %1$s,\nYou are %2$s Day out</item>
