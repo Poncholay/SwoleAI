@@ -255,14 +255,14 @@ class HomeDashboardFragment : ParentFragment<FragmentHomeDashboardBinding>() {
                         if (shouldGoBackToRoot) {
                             (activity as? HomeActivity)?.selectTabAndGoToRoot(FragmentBackstack.Tab.SESSION)
                         } else {
-                            (activity as? HomeActivity)?.selectTab(FragmentBackstack.Tab.SESSION)
+                            (activity as? HomeActivity)?.manuallySelectTab(FragmentBackstack.Tab.SESSION)
                         }
                     }
             }
         }
 
         binding?.programReviewButton?.setOnClickListener {
-            //TODO
+            //TODO : Popup
         }
         binding?.goToActiveWeekButton?.setOnClickListener {
             viewModel.goToActiveWeek()

@@ -1,6 +1,7 @@
 package com.guillaumewilmot.swoleai.modules.home.sessionsummary
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -174,13 +175,43 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
                 .subscribe()
         }
         binding?.previewButton?.setOnClickListener {
-            //TODO
+            //TODO: See reps and sets
         }
 
         binding?.exerciseSummary?.apply {
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addItemDecoration(EqualSpacingItemDecoration(this.context.dpToPixel(8f).toInt()))
-            adapter = exerciseSummaryAdapter
+            adapter = exerciseSummaryAdapter.apply {
+                getIndexClickedObservable()
+//                    .switchMap { indexClicked ->
+//                        viewModel.onExerciseSelected(indexClicked).toObservable()
+//                    }
+                    .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                    .subscribe {
+                        Log.d(name(), "Click $it")
+                        //TODO : Expand sets and reps
+                    }
+
+                getIndexInfoClickedObservable()
+//                    .switchMap { indexClicked ->
+//                        viewModel.onExerciseSelected(indexClicked).toObservable()
+//                    }
+                    .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                    .subscribe {
+                        Log.d(name(), "Click info $it")
+                        //TODO : Open exercise popup
+                    }
+
+                getIndexSwapClickedObservable()
+//                    .switchMap { indexClicked ->
+//                        viewModel.onExerciseSelected(indexClicked).toObservable()
+//                    }
+                    .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
+                    .subscribe {
+                        Log.d(name(), "Click swap $it")
+                        //TODO : Open exercise list popup
+                    }
+            }
         }
     }
 

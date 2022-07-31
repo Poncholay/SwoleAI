@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import autodispose2.androidx.lifecycle.autoDispose
@@ -38,12 +37,22 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
         viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
 
         initBottomNavigationBar()
-        selectTab(getTabNumber(savedInstanceState), firstSelect = true)
+        manuallySelectTab(getTabNumber(savedInstanceState), firstSelect = true)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
         outState.putSerializable(CURRENT_TAB, fragmentBackstack.currentTab)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.redirectToOnboarding
+            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
+            .subscribe {
+                redirectToOnboarding()
+            }
     }
 
     /**
@@ -54,21 +63,6 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
             ?: (intent?.extras?.getSerializable(CURRENT_TAB) as? FragmentBackstack.FragmentTab)?.also {
                 intent?.removeExtra(CURRENT_TAB)
             } ?: FragmentBackstack.Tab.DASHBOARD
-
-
-    /** Called once after onResume and the 1 second splash screen exit animation */
-    private fun splashFinished(splashScreenProvider: SplashScreenViewProvider) {
-        splashScreenProvider.remove()
-
-        /**
-         * We subscribe here to avoid redirecting before splash screen is done
-         */
-        viewModel.redirectToOnboarding
-            .autoDispose(this, Lifecycle.Event.ON_DESTROY)
-            .subscribe {
-                redirectToOnboarding()
-            }
-    }
 
     private fun redirectToOnboarding() {
         startActivity(Intent(this, OnboardingActivity::class.java).apply {
@@ -103,12 +97,12 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
                         this.duration = duration
                         doOnEnd {
                             /** Call SplashScreenView.remove at the end of your custom animation. */
-                            splashFinished(splashScreenProvider)
+                            splashScreenProvider.remove()
                         }
                     }.start()
                 } else {
                     /** Can't access the icon so we skip the animation */
-                    splashFinished(splashScreenProvider)
+                    splashScreenProvider.remove()
                 }
             }
         }
@@ -131,7 +125,7 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
     }
 
     /** Programmatically select a tab in the bottomNavigationBar */
-    fun selectTab(tab: FragmentBackstack.FragmentTab, firstSelect: Boolean = false) {
+    fun manuallySelectTab(tab: FragmentBackstack.FragmentTab, firstSelect: Boolean = false) {
         val currentTab = binding?.bottomNavigationView?.selectedItemId
         if (currentTab != tab.navId()) {
             binding?.bottomNavigationView?.selectedItemId = tab.navId()
@@ -170,7 +164,7 @@ class HomeActivity : ParentActivity<ActivityHomeBinding>() {
                 ): FragmentBackstack.Finishresult = if (
                     currentTab != FragmentBackstack.Tab.DASHBOARD
                 ) {
-                    selectTab(FragmentBackstack.Tab.DASHBOARD)
+                    manuallySelectTab(FragmentBackstack.Tab.DASHBOARD)
                     FragmentBackstack.Finishresult.HANDLED
                 } else {
                     FragmentBackstack.Finishresult.NOT_HANDLED

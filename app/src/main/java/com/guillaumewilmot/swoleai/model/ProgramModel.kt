@@ -10,12 +10,15 @@ data class ProgramModel(
     val blocks: List<ProgramBlockModel>,
 ) : Serializable {
 
-    val weeks = blocks.flatMap {
-        it.weeks
-    }
-    val sessions = weeks.flatMap { week ->
-        week.sessions
-    }
+    val weeks: List<ProgramWeekModel>
+        get() = blocks.flatMap {
+            it.weeks
+        }
+
+    val sessions: List<SessionModel>
+        get() = weeks.flatMap { week ->
+            week.sessions
+        }
 
     companion object {
         private const val serialVersionUID = 3L

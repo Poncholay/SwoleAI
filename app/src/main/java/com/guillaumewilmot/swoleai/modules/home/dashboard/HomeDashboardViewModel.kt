@@ -398,7 +398,6 @@ class HomeDashboardViewModel @Inject constructor(
         val iconColor: Int
     )
 
-    //TODO : goToActiveWeek
     val goToActiveWeekButtonVisibility: Flowable<Int> = Flowable.combineLatest(
         _viewedWeek,
         activeSession

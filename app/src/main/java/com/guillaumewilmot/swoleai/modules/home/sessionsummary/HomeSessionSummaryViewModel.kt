@@ -226,14 +226,14 @@ class HomeSessionSummaryViewModel @Inject constructor(
     )
 
     //FIXME : TMP hardcoded data for now
-    val sessionExercises: Flowable<List<ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel>> =
+    val sessionExercises: Flowable<List<ExerciseSummaryAdapter.ViewDataModel>> =
         Flowable.combineLatest(
             selectedSession,
             _currentBlock
         ) { selectedSession, currentBlock ->
             if (selectedSession.value?.name?.contains("Lower") == true) {
                 listOf(
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString(
                             "New rep max attempt\nCompetition deadlift"
                         ).withSpans(
@@ -251,30 +251,30 @@ class HomeSessionSummaryViewModel @Inject constructor(
                             ), 0x88
                         ),
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Pause front squat"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Pendulum squat"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Hamstring curl"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Lunge"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Calve raise"),
                         backgroundColor = application.getColor(R.color.transparent)
                     )
                 )
             } else {
                 listOf(
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString(
                             "New rep max attempt\nCompetition bench press"
                         ).withSpans(
@@ -292,23 +292,23 @@ class HomeSessionSummaryViewModel @Inject constructor(
                             ), 0x88
                         ),
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB rows"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Seated military press"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB bench"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB curls"),
                         backgroundColor = application.getColor(R.color.transparent)
                     ),
-                    ExerciseSummaryAdapter.ExerciseSummaryViewHolder.ViewDataModel(
+                    ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB skullcrushers"),
                         backgroundColor = application.getColor(R.color.transparent)
                     )

@@ -21,56 +21,64 @@ data class ProgramWeekModel(
     @SerializedName("volume")
     val volume: Float,
     @SerializedName("sessions")
-    var sessions: List<SessionModel>
+    val sessions: List<SessionModel>
 ) : Serializable {
 
     val isComplete: Boolean
         get() = sessions.all { sessionModel -> sessionModel.status == SessionModel.Status.COMPLETE }
 
 
-    //FIXME: Remove
+    //FIXME: Remove later
     @ExperimentalCoroutinesApi
-    fun generateFakeSessions() {
-        sessions = listOf(
-            SessionModel(
-                id = FakeProgram.generateSessionindex++,
-                weekId = id,
-                day = 1,
-                name = "Lower body",
-                isComplete = date.before(Date()),
-                isSkipped = false,
-                isActive = false,
-                exercises = listOf(),
-            ),
-            SessionModel(
-                id = FakeProgram.generateSessionindex++,
-                weekId = id,
-                day = 2,
-                name = "Upper body",
-                isComplete = date.plusDays(2).before(Date()),
-                isSkipped = false,
-                isActive = false,
-                exercises = listOf(),
-            ),
-            SessionModel(
-                id = FakeProgram.generateSessionindex++,
-                weekId = id,
-                day = 3,
-                name = "Lower body",
-                isComplete = date.plusDays(3).before(Date()),
-                isSkipped = false,
-                isActive = false,
-                exercises = listOf(),
-            ),
-            SessionModel(
-                id = FakeProgram.generateSessionindex++,
-                weekId = id,
-                day = 4,
-                name = "Upper body",
-                isComplete = date.plusDays(5).before(Date()),
-                isSkipped = false,
-                isActive = false,
-                exercises = listOf(),
+    fun generateFakeSessions(): ProgramWeekModel {
+        return ProgramWeekModel(
+            this.id,
+            this.blockId,
+            this.name,
+            this.date,
+            this.intensity,
+            this.volume,
+            sessions = listOf(
+                SessionModel(
+                    id = FakeProgram.generateSessionindex++,
+                    weekId = id,
+                    day = 1,
+                    name = "Lower body",
+                    isComplete = date.before(Date()),
+                    isSkipped = false,
+                    isActive = false,
+                    exercises = listOf(),
+                ),
+                SessionModel(
+                    id = FakeProgram.generateSessionindex++,
+                    weekId = id,
+                    day = 2,
+                    name = "Upper body",
+                    isComplete = date.plusDays(2).before(Date()),
+                    isSkipped = false,
+                    isActive = false,
+                    exercises = listOf(),
+                ),
+                SessionModel(
+                    id = FakeProgram.generateSessionindex++,
+                    weekId = id,
+                    day = 3,
+                    name = "Lower body",
+                    isComplete = date.plusDays(3).before(Date()),
+                    isSkipped = false,
+                    isActive = false,
+                    exercises = listOf(),
+                ),
+                SessionModel(
+                    id = FakeProgram.generateSessionindex++,
+                    weekId = id,
+                    day = 4,
+                    name = "Upper body",
+                    isComplete = date.plusDays(5).before(Date()),
+                    isSkipped = false,
+                    isActive = false,
+                    exercises = listOf(),
+                )
             )
         )
     }

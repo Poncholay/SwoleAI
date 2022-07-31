@@ -46,18 +46,18 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.fragment:fragment-ktx:1.4.1'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
     implementation 'androidx.transition:transition:1.4.1'
     implementation 'androidx.transition:transition-ktx:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
 
     // Retrofit & OkHttp
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     //Rx
     implementation 'io.reactivex.rxjava3:rxjava:3.1.3'
@@ -80,7 +80,7 @@ dependencies {
 
     //Dagger
     implementation "com.google.dagger:hilt-android:2.40.1"
-    kapt "com.google.dagger:hilt-compiler:2.40.1" //TODO : fix hilt
+    kapt "com.google.dagger:hilt-compiler:2.40.1"
 
     //UI
     implementation 'me.relex:circleindicator:2.1.6'

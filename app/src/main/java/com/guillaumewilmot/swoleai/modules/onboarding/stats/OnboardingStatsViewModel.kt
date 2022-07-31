@@ -146,12 +146,14 @@ class OnboardingStatsViewModel @Inject constructor(
             .linkToLoader(this)
             .take(1)
             .switchMapCompletable { user ->
-                val newUser = user.value ?: UserModel()
-                dataStorage.toStorage(DataDefinition.USER, newUser.apply {
-                    this.isMale = isMale
-                    this.height = height
-                    this.weight = weight
-                })
+                val oldUser = user.value ?: UserModel()
+                val newUser = UserModel(
+                    username = oldUser.username,
+                    isMale = isMale,
+                    height = height,
+                    weight = weight
+                )
+                dataStorage.toStorage(DataDefinition.USER, newUser)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

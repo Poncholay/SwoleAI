@@ -1,6 +1,7 @@
 package com.guillaumewilmot.swoleai
 
 import android.app.Application
+import com.guillaumewilmot.swoleai.model.ExerciseModel
 import com.guillaumewilmot.swoleai.util.storage.DataDefinition
 import com.guillaumewilmot.swoleai.util.storage.DataStorage
 import dagger.hilt.android.HiltAndroidApp
@@ -20,5 +21,9 @@ class SwoleAiApplication : Application() {
 
         //FIXME : TMP the program is reinitialized with hardcoded data each time we launch the app
 //        dataStorage.toStorage(DataDefinition.PROGRAM, FakeProgram.fakeProgram)
+
+        listOf(
+            ExerciseModel
+        )
     }
 }

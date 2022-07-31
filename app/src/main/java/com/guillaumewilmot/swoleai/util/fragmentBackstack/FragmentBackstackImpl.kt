@@ -119,18 +119,27 @@ class FragmentBackstackImpl : FragmentBackstack {
         fragmentManager: FragmentManager,
         newTab: FragmentBackstack.FragmentTab
     ) {
-        val currentTabRootTag = _tagStacks[_currentTab]?.getOrNull(0)
-        if (currentTabRootTag != null) {
-            fragmentManager.saveBackStack(currentTabRootTag)
+        if (_currentTab != newTab) {
+            saveBackstack(fragmentManager)
+            _currentTab = newTab
         }
 
-        _currentTab = newTab
         val newTabRootTag = _tagStacks[newTab]?.getOrNull(0)
         if (newTabRootTag != null) {
             fragmentManager.restoreBackStack(newTabRootTag)
         } else {
             val rootFragment = newTab.root().java.newInstance()
             push(fragmentManager, rootFragment)
+        }
+    }
+
+    /**
+     * Save the current backstack
+     */
+    override fun saveBackstack(fragmentManager: FragmentManager) {
+        val currentTabRootTag = _tagStacks[_currentTab]?.getOrNull(0)
+        if (currentTabRootTag != null) {
+            fragmentManager.saveBackStack(currentTabRootTag)
         }
     }
 

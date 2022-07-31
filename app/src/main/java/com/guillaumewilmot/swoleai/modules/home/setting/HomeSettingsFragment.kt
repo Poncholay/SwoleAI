@@ -68,7 +68,7 @@ class HomeSettingsFragment : ParentFragment<FragmentHomeSettingsBinding>() {
                 }
         }
         binding?.optionDarkMode?.setOnClickListener {
-            //TODO
+            //TODO : Dark mode screen
         }
 
         binding?.appVersion?.text = getString(

@@ -34,7 +34,7 @@ object FakeProgram {
                         0.5f,
                         1.5f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         2,
                         1,
@@ -43,7 +43,7 @@ object FakeProgram {
                         2.5f,
                         2f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         3,
                         1,
@@ -52,7 +52,7 @@ object FakeProgram {
                         3f,
                         3f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         4,
                         1,
@@ -61,7 +61,7 @@ object FakeProgram {
                         2.5f,
                         4f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         5,
                         1,
@@ -70,10 +70,8 @@ object FakeProgram {
                         1.8f,
                         1f,
                         listOf()
-                    )
-                ).onEach {
-                    it.generateFakeSessions()
-                }
+                    ).generateFakeSessions()
+                )
             ),
             ProgramBlockModel(
                 2,
@@ -87,7 +85,7 @@ object FakeProgram {
                         2f,
                         2f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         7,
                         2,
@@ -96,7 +94,7 @@ object FakeProgram {
                         2.8f,
                         3f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         8,
                         2,
@@ -105,7 +103,7 @@ object FakeProgram {
                         2.5f,
                         4f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         9,
                         2,
@@ -114,10 +112,8 @@ object FakeProgram {
                         1.8f,
                         1f,
                         listOf()
-                    )
-                ).onEach {
-                    it.generateFakeSessions()
-                }
+                    ).generateFakeSessions()
+                )
             ),
             ProgramBlockModel(
                 3,
@@ -131,7 +127,7 @@ object FakeProgram {
                         4f,
                         3.5f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         11,
                         3,
@@ -140,7 +136,7 @@ object FakeProgram {
                         4.5f,
                         2.5f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         12,
                         3,
@@ -149,7 +145,7 @@ object FakeProgram {
                         5f,
                         1.5f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         13,
                         3,
@@ -158,10 +154,8 @@ object FakeProgram {
                         4f,
                         1f,
                         listOf()
-                    )
-                ).onEach {
-                    it.generateFakeSessions()
-                }
+                    ).generateFakeSessions()
+                )
             ),
             ProgramBlockModel(
                 4,
@@ -175,7 +169,7 @@ object FakeProgram {
                         7.5f,
                         2.5f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         15,
                         4,
@@ -184,7 +178,7 @@ object FakeProgram {
                         8f,
                         2f,
                         listOf()
-                    ),
+                    ).generateFakeSessions(),
                     ProgramWeekModel(
                         16,
                         4,
@@ -193,10 +187,8 @@ object FakeProgram {
                         4f,
                         1.5f,
                         listOf()
-                    ),
-                ).onEach {
-                    it.generateFakeSessions()
-                }
+                    ).generateFakeSessions(),
+                )
             )
         ).also {
             val a = Gson().toJson(it)

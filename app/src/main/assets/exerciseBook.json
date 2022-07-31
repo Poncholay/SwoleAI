@@ -1,0 +1,32 @@
+{
+  "id": 1,
+  "exercises": [
+    {
+      "id": 1,
+      "name": "Comp Squat",
+      "weightIncrement": 2.5,
+      "oneRM": null,
+      "tenRM": null,
+      "history": [],
+      "cues": ""
+    },
+    {
+      "id": 2,
+      "name": "Comp Bench",
+      "weightIncrement": 2.5,
+      "oneRM": null,
+      "tenRM": null,
+      "history": [],
+      "cues": ""
+    },
+    {
+      "id": 1,
+      "name": "Comp Deadlift",
+      "weightIncrement": 2.5,
+      "oneRM": null,
+      "tenRM": null,
+      "history": [],
+      "cues": ""
+    }
+  ]
+}

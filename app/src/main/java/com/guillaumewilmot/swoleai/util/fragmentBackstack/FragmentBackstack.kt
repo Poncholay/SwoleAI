@@ -78,6 +78,11 @@ interface FragmentBackstack {
     fun selectTab(fragmentManager: FragmentManager, newTab: FragmentTab)
 
     /**
+     * Save the current backstack
+     */
+    fun saveBackstack(fragmentManager: FragmentManager)
+
+    /**
      * Switch to another tab and go back to the root of that tab
      */
     fun goToTabRoot(fragmentManager: FragmentManager)
