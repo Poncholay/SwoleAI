@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.modules.home.sessionsummary
+package com.guillaumewilmot.swoleai.modules.home.sessionsummary.dialogrestartsession
 
 import android.os.Bundle
 import android.view.LayoutInflater

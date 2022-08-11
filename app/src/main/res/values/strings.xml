@@ -88,6 +88,8 @@
     <string name="app_dialog_restart_session_confirm_button_text_active">Cancel the session</string>
     <string name="app_dialog_restart_session_cancel_button_text_active">Let me finish it first</string>
 
+    <string name="app_dialog_choose_exercise_title_text">Choose an exercise</string>
+
     <string name="app_session_status_active">Active</string>
     <string name="app_session_status_skipped">Skipped</string>
     <string name="app_session_status_completed">Completed</string>

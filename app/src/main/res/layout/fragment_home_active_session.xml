@@ -59,7 +59,7 @@
                 app:layout_constraintVertical_bias="0"
                 tools:itemCount="8" />
 
-            <com.guillaumewilmot.swoleai.view.AnimatedButton
+            <com.guillaumewilmot.swoleai.ui.AnimatedButton
                 android:id="@+id/finishButton"
                 style="@style/ButtonMainStyle"
                 android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <com.guillaumewilmot.swoleai.view.AnimatedButton
+            <com.guillaumewilmot.swoleai.ui.AnimatedButton
                 android:id="@+id/cancelButton"
                 style="@style/ButtonSecondaryStyle"
                 android:layout_width="match_parent"

@@ -250,26 +250,38 @@ class HomeSessionSummaryViewModel @Inject constructor(
                                 currentBlock.value?.type?.colorId ?: R.color.hypertrophy
                             ), 0x88
                         ),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Pause front squat"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Pendulum squat"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Hamstring curl"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Lunge"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Calve raise"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     )
                 )
             } else {
@@ -291,26 +303,38 @@ class HomeSessionSummaryViewModel @Inject constructor(
                                 currentBlock.value?.type?.colorId ?: R.color.hypertrophy
                             ), 0x88
                         ),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB rows"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("Seated military press"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB bench"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB curls"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     ),
                     ExerciseSummaryAdapter.ViewDataModel(
                         nameText = SpannableString("DB skullcrushers"),
-                        backgroundColor = application.getColor(R.color.transparent)
+                        backgroundColor = application.getColor(R.color.transparent),
+                        infoButtonVisibility = View.VISIBLE,
+                        swapButtonVisibility = View.VISIBLE
                     )
                 )
             }

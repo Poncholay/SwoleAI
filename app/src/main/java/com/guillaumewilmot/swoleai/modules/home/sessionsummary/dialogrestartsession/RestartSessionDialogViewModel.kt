@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.modules.home.sessionsummary
+package com.guillaumewilmot.swoleai.modules.home.sessionsummary.dialogrestartsession
 
 import android.app.Application
 import com.guillaumewilmot.swoleai.controller.ParentViewModel

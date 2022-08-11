@@ -233,7 +233,7 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintVertical_bias="1">
 
-                                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                                <com.guillaumewilmot.swoleai.ui.AnimatedButton
                                     android:id="@+id/goToActiveWeekButton"
                                     style="@style/ButtonSecondaryStyle"
                                     android:layout_width="wrap_content"
@@ -285,7 +285,7 @@
                             tools:itemCount="4"
                             tools:listitem="@layout/adapter_view_session" />
 
-                        <com.guillaumewilmot.swoleai.view.AnimatedButton
+                        <com.guillaumewilmot.swoleai.ui.AnimatedButton
                             android:id="@+id/completeWeekButton"
                             style="@style/ButtonMainStyle"
                             android:layout_width="match_parent"

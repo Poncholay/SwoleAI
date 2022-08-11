@@ -27,13 +27,13 @@ import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeDashboardBinding
 import com.guillaumewilmot.swoleai.modules.home.HomeActivity
-import com.guillaumewilmot.swoleai.modules.home.setting.HomeSettingsFragment
+import com.guillaumewilmot.swoleai.modules.home.settings.HomeSettingsFragment
+import com.guillaumewilmot.swoleai.ui.EqualSpacingItemDecoration
 import com.guillaumewilmot.swoleai.util.extension.dpToPixel
 import com.guillaumewilmot.swoleai.util.extension.pixelToDp
 import com.guillaumewilmot.swoleai.util.extension.withFragmentManager
 import com.guillaumewilmot.swoleai.util.extension.withSpans
 import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
-import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.Float.max

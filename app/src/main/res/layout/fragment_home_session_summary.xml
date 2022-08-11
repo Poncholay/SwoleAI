@@ -35,7 +35,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                <com.guillaumewilmot.swoleai.ui.AnimatedButton
                     android:id="@+id/startButton"
                     style="@style/ButtonMainStyle"
                     android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                <com.guillaumewilmot.swoleai.ui.AnimatedButton
                     android:id="@+id/skipButton"
                     style="@style/ButtonSecondaryStyle"
                     android:layout_width="0dp"
@@ -59,7 +59,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/startButton" />
 
-                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                <com.guillaumewilmot.swoleai.ui.AnimatedButton
                     android:id="@+id/previewButton"
                     style="@style/ButtonSecondaryStyle"
                     android:layout_width="0dp"

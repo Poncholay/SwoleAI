@@ -86,7 +86,7 @@
                         tools:textColor="@color/hypertrophy" />
                 </androidx.cardview.widget.CardView>
 
-                <com.guillaumewilmot.swoleai.view.AnimatedButton
+                <com.guillaumewilmot.swoleai.ui.AnimatedButton
                     android:id="@+id/goToActiveSessionButton"
                     style="@style/ButtonSecondaryStyle"
                     android:layout_width="wrap_content"

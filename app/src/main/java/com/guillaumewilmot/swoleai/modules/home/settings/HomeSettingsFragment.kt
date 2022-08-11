@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.modules.home.setting
+package com.guillaumewilmot.swoleai.modules.home.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater

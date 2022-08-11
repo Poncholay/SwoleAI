@@ -43,7 +43,7 @@
         app:layout_constraintStart_toStartOf="@id/acceptButton"
         app:layout_constraintTop_toTopOf="@id/acceptButton" />
 
-    <com.guillaumewilmot.swoleai.view.AnimatedButton
+    <com.guillaumewilmot.swoleai.ui.AnimatedButton
         android:id="@+id/acceptButton"
         style="@style/ButtonMainStyle"
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@id/descriptionText"
         tools:text="Accept" />
 
-    <com.guillaumewilmot.swoleai.view.AnimatedButton
+    <com.guillaumewilmot.swoleai.ui.AnimatedButton
         android:id="@+id/refuseButton"
         style="@style/ButtonSecondaryStyle"
         android:layout_width="match_parent"

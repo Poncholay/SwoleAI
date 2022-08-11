@@ -1,4 +1,4 @@
-package com.guillaumewilmot.swoleai.view
+package com.guillaumewilmot.swoleai.ui
 
 import android.content.Context
 import android.graphics.LightingColorFilter

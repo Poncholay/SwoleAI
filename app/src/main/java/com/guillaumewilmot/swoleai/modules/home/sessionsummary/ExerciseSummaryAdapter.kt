@@ -57,10 +57,12 @@ class ExerciseSummaryAdapter : ParentAdapter<
 
             binding.contentRoot.setBackgroundColor(sessionViewModel.backgroundColor)
 
+            binding.infoButton.visibility = sessionViewModel.infoButtonVisibility
             binding.infoButton.setOnClickListener {
                 infoClickListenerSubject.onNext(position)
             }
 
+            binding.swapButton.visibility = sessionViewModel.swapButtonVisibility
             binding.swapButton.setOnClickListener {
                 swapClickListenerSubject.onNext(position)
             }
@@ -72,5 +74,7 @@ class ExerciseSummaryAdapter : ParentAdapter<
     data class ViewDataModel(
         val nameText: SpannableString,
         val backgroundColor: Int,
+        val infoButtonVisibility: Int,
+        val swapButtonVisibility: Int
     )
 }

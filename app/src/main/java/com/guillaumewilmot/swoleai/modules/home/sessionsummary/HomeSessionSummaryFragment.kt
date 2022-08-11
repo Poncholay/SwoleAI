@@ -20,10 +20,12 @@ import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentFragment
 import com.guillaumewilmot.swoleai.databinding.FragmentHomeSessionSummaryBinding
 import com.guillaumewilmot.swoleai.modules.home.activesession.HomeActiveSessionFragment
+import com.guillaumewilmot.swoleai.modules.home.dialogchooseexercise.ChooseExerciseDialog
+import com.guillaumewilmot.swoleai.modules.home.sessionsummary.dialogrestartsession.RestartSessionDialog
+import com.guillaumewilmot.swoleai.ui.EqualSpacingItemDecoration
 import com.guillaumewilmot.swoleai.util.extension.dpToPixel
 import com.guillaumewilmot.swoleai.util.extension.withFragmentManager
 import com.guillaumewilmot.swoleai.util.fragmentBackstack.FragmentBackstack
-import com.guillaumewilmot.swoleai.view.EqualSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -208,8 +210,9 @@ class HomeSessionSummaryFragment : ParentFragment<FragmentHomeSessionSummaryBind
 //                    }
                     .autoDispose(AndroidLifecycleScopeProvider.from(viewLifecycleOwner))
                     .subscribe {
-                        Log.d(name(), "Click swap $it")
-                        //TODO : Open exercise list popup
+                        withFragmentManager { fm ->
+                            ChooseExerciseDialog().show(fm, name())
+                        }
                     }
             }
         }
