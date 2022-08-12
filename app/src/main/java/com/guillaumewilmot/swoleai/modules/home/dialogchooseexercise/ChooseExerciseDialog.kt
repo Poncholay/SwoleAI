@@ -30,8 +30,9 @@ import androidx.fragment.app.viewModels
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentDialog
 import com.guillaumewilmot.swoleai.databinding.DialogDefaultWithActionBinding
-import com.guillaumewilmot.swoleai.model.ExerciseBookModel
-import com.guillaumewilmot.swoleai.ui.compose.components.ListItemExercise
+import com.guillaumewilmot.swoleai.ui.compose.components.listitem.ListItemExercise
+import com.guillaumewilmot.swoleai.ui.compose.components.listitem.ListItemExerciseListViewDataModelPreviewParameterProvider
+import com.guillaumewilmot.swoleai.ui.compose.components.listitem.ListItemExerciseViewDataModel
 import com.guillaumewilmot.swoleai.ui.compose.theme.SwoleAiTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -61,24 +62,24 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
 
     @Composable
     fun ChooseExerciseDialogLayout(viewModel: ChooseExerciseDialogViewModel) {
-        val exerciseBookState: State<ExerciseBookModel> = viewModel.exerciseBook
+        val exercisesState: State<List<ListItemExerciseViewDataModel>> = viewModel.exercises
             .subscribeAsState(
-                initial = ExerciseBookModel(id = 0, exercises = listOf())
+                initial = listOf()
             )
-        val loaderState: State<Boolean> = viewModel.loaderIsLoading
+        val showLoaderState: State<Boolean> = viewModel.loaderIsLoading
             .subscribeAsState(
                 initial = false
             )
 
         ChooseExerciseDialogLayout(
-            exerciseBook = exerciseBookState.value,
-            showLoader = loaderState.value
+            exercises = exercisesState.value,
+            showLoader = showLoaderState.value
         )
     }
 
     @Composable
     fun ChooseExerciseDialogLayout(
-        exerciseBook: ExerciseBookModel,
+        exercises: List<ListItemExerciseViewDataModel>,
         showLoader: Boolean
     ) {
         Surface {
@@ -107,9 +108,8 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
                     }
                 }
                 ExerciseList(
-                    exerciseBook = exerciseBook,
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    exercises = exercises,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -117,7 +117,7 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
 
     @Composable
     fun ExerciseList(
-        exerciseBook: ExerciseBookModel,
+        exercises: List<ListItemExerciseViewDataModel>,
         modifier: Modifier
     ) {
         val exerciseListState: LazyListState = rememberLazyListState()
@@ -128,8 +128,8 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(dimensionResource(id = R.dimen.marginSmall))
         ) {
-            this.items(exerciseBook.exercises) { exercise ->
-                ListItemExercise(exercise)
+            this.items(exercises) { exercise ->
+                ListItemExercise(dataModel = exercise)
             }
         }
     }
@@ -142,12 +142,12 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
     @Preview(name = "ChooseExerciseDialogPreviewLight", uiMode = UI_MODE_NIGHT_NO)
     @Preview(name = "ChooseExerciseDialogPreviewDark", uiMode = UI_MODE_NIGHT_YES)
     fun ChooseExerciseDialogPreviewLight(
-        @PreviewParameter(ExerciseBookModelPreviewParameterProvider::class)
-        exerciseBook: ExerciseBookModel
+        @PreviewParameter(ListItemExerciseListViewDataModelPreviewParameterProvider::class)
+        exercises: List<ListItemExerciseViewDataModel>
     ) {
         SwoleAiTheme {
             ChooseExerciseDialogLayout(
-                exerciseBook = exerciseBook,
+                exercises = exercises,
                 showLoader = true
             )
         }

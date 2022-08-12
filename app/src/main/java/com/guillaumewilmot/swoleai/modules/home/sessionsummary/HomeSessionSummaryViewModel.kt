@@ -53,7 +53,10 @@ class HomeSessionSummaryViewModel @Inject constructor(
         val blockType = currentBlock.value.type
         val blockTypeName = application.getString(blockType.nameId)
         val weekDay =
-            application.getString(R.string.app_session_day_name, selectedSession.value.day)
+            application.getString(
+                R.string.app_session_day_name,
+                selectedSession.value.day.toString()
+            )
         val weekName = "${currentWeek.value.name} - $weekDay"
         val sessionName =
             application.getString(R.string.app_session_day_name, selectedSession.value.name)

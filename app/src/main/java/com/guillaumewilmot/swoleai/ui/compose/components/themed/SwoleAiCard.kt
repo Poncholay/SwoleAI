@@ -1,12 +1,18 @@
-package com.guillaumewilmot.swoleai.ui.compose.components.defaults
+package com.guillaumewilmot.swoleai.ui.compose.components.themed
 
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.guillaumewilmot.swoleai.R
 
 @Composable
-fun SwoleAiCard(content: @Composable () -> Unit) = Card(
+fun SwoleAiCard(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) = Card(
+
     elevation = dimensionResource(id = R.dimen.elevationCardView),
+    modifier = modifier,
     content = content
 )
