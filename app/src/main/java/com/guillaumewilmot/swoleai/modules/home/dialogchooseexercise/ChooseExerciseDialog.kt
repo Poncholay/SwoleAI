@@ -7,10 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -25,14 +21,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.guillaumewilmot.swoleai.R
 import com.guillaumewilmot.swoleai.controller.ParentDialog
 import com.guillaumewilmot.swoleai.databinding.DialogDefaultWithActionBinding
-import com.guillaumewilmot.swoleai.ui.compose.components.listitem.ListItemExercise
-import com.guillaumewilmot.swoleai.ui.compose.components.listitem.ListItemExerciseListViewDataModelPreviewParameterProvider
-import com.guillaumewilmot.swoleai.ui.compose.components.listitem.ListItemExerciseViewDataModel
+import com.guillaumewilmot.swoleai.ui.compose.components.list.exercise.ListOfExercise
+import com.guillaumewilmot.swoleai.ui.compose.components.listitem.exercise.ListItemOfExercise
+import com.guillaumewilmot.swoleai.ui.compose.components.listitem.exercise.ListItemOfExerciseListViewDataModelPreviewParameterProvider
 import com.guillaumewilmot.swoleai.ui.compose.theme.SwoleAiTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,7 +47,7 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             SwoleAiTheme {
-                ChooseExerciseDialogLayout(viewModel)
+                ChooseExerciseDialogLayout()
             }
         }
     }
@@ -61,8 +57,8 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
      */
 
     @Composable
-    fun ChooseExerciseDialogLayout(viewModel: ChooseExerciseDialogViewModel) {
-        val exercisesState: State<List<ListItemExerciseViewDataModel>> = viewModel.exercises
+    fun ChooseExerciseDialogLayout(viewModel: ChooseExerciseDialogViewModel = viewModel()) {
+        val exercisesState: State<List<ListItemOfExercise.ViewDataModel>> = viewModel.exercises
             .subscribeAsState(
                 initial = listOf()
             )
@@ -73,14 +69,22 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
 
         ChooseExerciseDialogLayout(
             exercises = exercisesState.value,
-            showLoader = showLoaderState.value
+            showLoader = showLoaderState.value,
+            onExerciseClicked = { index ->
+                viewModel.onExerciseClicked(index)
+                                },
+            onExerciseInfoClicked = { index ->
+                viewModel.onExerciseInfoClicked(index)
+                                    },
         )
     }
 
     @Composable
     fun ChooseExerciseDialogLayout(
-        exercises: List<ListItemExerciseViewDataModel>,
-        showLoader: Boolean
+        exercises: List<ListItemOfExercise.ViewDataModel>,
+        showLoader: Boolean,
+        onExerciseClicked: (Int) -> Unit = {},
+        onExerciseInfoClicked: (Int) -> Unit = {},
     ) {
         Surface {
             Column {
@@ -107,29 +111,17 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
                         )
                     }
                 }
-                ExerciseList(
+
+                ListOfExercise.View(
                     exercises = exercises,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { index ->
+                        onExerciseClicked(index)
+                    },
+                    onClickInfo = { index ->
+                        onExerciseInfoClicked(index)
+                    }
                 )
-            }
-        }
-    }
-
-    @Composable
-    fun ExerciseList(
-        exercises: List<ListItemExerciseViewDataModel>,
-        modifier: Modifier
-    ) {
-        val exerciseListState: LazyListState = rememberLazyListState()
-
-        LazyColumn(
-            state = exerciseListState,
-            modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(dimensionResource(id = R.dimen.marginSmall))
-        ) {
-            this.items(exercises) { exercise ->
-                ListItemExercise(dataModel = exercise)
             }
         }
     }
@@ -141,9 +133,9 @@ class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
     @Composable
     @Preview(name = "ChooseExerciseDialogPreviewLight", uiMode = UI_MODE_NIGHT_NO)
     @Preview(name = "ChooseExerciseDialogPreviewDark", uiMode = UI_MODE_NIGHT_YES)
-    fun ChooseExerciseDialogPreviewLight(
-        @PreviewParameter(ListItemExerciseListViewDataModelPreviewParameterProvider::class)
-        exercises: List<ListItemExerciseViewDataModel>
+    fun ChooseExerciseDialogPreview(
+        @PreviewParameter(ListItemOfExerciseListViewDataModelPreviewParameterProvider::class)
+        exercises: List<ListItemOfExercise.ViewDataModel>
     ) {
         SwoleAiTheme {
             ChooseExerciseDialogLayout(

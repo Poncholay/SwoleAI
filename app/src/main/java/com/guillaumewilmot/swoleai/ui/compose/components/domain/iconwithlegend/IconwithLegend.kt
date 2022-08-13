@@ -1,6 +1,7 @@
 package com.guillaumewilmot.swoleai.ui.compose.components.domain.iconwithlegend
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,10 +27,13 @@ import com.guillaumewilmot.swoleai.ui.compose.theme.SwoleAiTheme
 fun IconWithLegend(
     icon: ImageVector,
     legendStringId: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .padding(dimensionResource(id = R.dimen.marginTiny))
     ) {
         Icon(
             imageVector = icon,
@@ -51,8 +56,8 @@ fun IconWithLegend(
  */
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "IconWithLegendPreviewLight", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "IconWithLegendPreviewDark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun IconWithLegendPreview() {
     SwoleAiTheme {
         Surface {

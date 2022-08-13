@@ -53,7 +53,7 @@ class OnboardingUsernameViewModel @Inject constructor(
         .observeOn(AndroidSchedulers.mainThread())
 
     /**
-     * Logic
+     * LOGIC
      */
 
     val usernameFieldChangeListener: (Editable?) -> Unit = { s ->
