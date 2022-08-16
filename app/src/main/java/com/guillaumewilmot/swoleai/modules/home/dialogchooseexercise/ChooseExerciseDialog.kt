@@ -38,8 +38,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class ChooseExerciseDialog : ParentDialog<DialogDefaultWithActionBinding>() {
 
-    private val viewModel: ChooseExerciseDialogViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
